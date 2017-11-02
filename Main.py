@@ -1,4 +1,5 @@
-import Owner, Phone
+import Owner as o
+import Phone as p
 
 database = {}
 running = True
@@ -8,13 +9,6 @@ while running:
     input_phone = input("What is your desired phone number?")
     input_name = input("What is your name?")
     input_email = input("What is your email?")
-
-    Owner.name = input_name
-    Owner.email = input_email
-
-    Phone.owner = input_name
-    Phone.number = input_phone
-
     
     if input_phone in database:
          print("The number is not avaliable, please try again.")
@@ -29,7 +23,8 @@ while running:
          else:
              pass
 
-         
+
+
 
 
         

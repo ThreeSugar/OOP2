@@ -1,5 +1,6 @@
 class Phone:
     count = 0
+
     def __init__(self, number, owner):
         self._number = number
         self._owner = owner

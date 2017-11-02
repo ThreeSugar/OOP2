@@ -14,7 +14,9 @@ while running:
          print("The number is not avaliable, please try again.")
 
     else:
-         database.update({input_phone:input_name})
+         owner = o.Owner(input_name, input_email)
+         phone = p.Phone(input_phone, owner)
+         database[phone.number] = owner
          print("The number " + input_phone + " has been assigned to " + input_name)
 
          break_input = input("Do you wish to quit the program? Enter y to quit or any other key to continue.").lower()

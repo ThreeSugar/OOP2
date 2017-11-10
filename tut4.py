@@ -1,36 +1,92 @@
-class Vehicle:
-    bicycle_count = 0
-    skateboard_count = 0
+import re
 
-
-class Bicycle(Vehicle):
-
-    def __init__(self, gear_count=1):
-        Vehicle.bicycle_count += 1
-        self.gear_count = gear_count
-        self.reg = 'BY' + str(Vehicle.bicycle_count)
+class Person:
+    def __init__(self, ic, name):
+        self.ic = ic
+        self.name = name
 
     def __str__(self):
-        return 'Registration Number: ' + self.reg + ' Gear Count: ' + str(self.gear_count)
+        return 'Name: ' + self.name + ' NRIC ' + self.ic
 
-
-class Skateboard(Vehicle):
-
-    def __init__(self, length):
-        Vehicle.skateboard_count += 1
-        self.length = length
-        self.reg = 'SK' + str(Vehicle.skateboard_count)
+class Employee(Person):
+    def __init__(self, ic, name, salary):
+        super().__init__(ic, name)
+        self.salary = salary
 
     def __str__(self):
-        return 'Registration Number: ' + self.reg + ' Length: ' + str(self.length)
+        return super().__str__() + 'Salary: ' + self.salary
 
 
-mountainBike = Bicycle(2)
-roadBike = Bicycle()
-rollerskate = Skateboard(1)
-b = Bicycle(30)
+class Student(Person):
+    def __init__(self, ic, name, gpa):
+        super().__init__(ic, name)
+        self.gpa = gpa
 
-print(mountainBike)
-print(roadBike)
-print(rollerskate)
-print(b)
+    def __str__(self):
+        return "Name: " + self.name + ' NRIC: ' + self.ic + ' GPA: ' + self.gpa
+
+
+emp_data = {}
+stu_data = {}
+
+running = True
+
+while running:
+
+        while True:
+            try:
+                user_nric = input('Enter NRIC: ')
+                match = re.search('(?i)^[STFG]\d{7}[A-Z]$', user_nric)
+                if match:
+                    break
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Invalid NRIC')
+
+        user_name = input('Enter Name: ')
+        choice = input('Student or Employee? (S or E)').lower()
+
+        if choice == 's':
+            while True:
+                try:
+                    get_gpa = float(input('Enter GPA: '))
+                    break
+                except ValueError:
+                    print('Invalid GPA!')
+
+            students = Student(user_nric, user_name, str(get_gpa))
+            stu_data[user_nric] = students
+            quits = input("Do you wish to quit? Y/N").lower()
+
+            if quits == 'y':
+                running = False
+            else:
+                pass
+
+        elif choice == 'e':
+            while True:
+                try:
+                    get_salary = float(input('Enter Salary: '))
+                    break
+                except ValueError:
+                    print('Invalid input!')
+                    
+            employees = Employee(user_nric, user_name, str(get_salary))
+            emp_data[user_nric] = employees
+            quits = input("Do you wish to quit? Y/N").lower()
+
+            if quits == 'y':
+                running = False
+            else:
+                pass
+
+        else:
+            print('Please enter a valid input!')
+
+
+for key in emp_data:
+    print(emp_data[key])
+
+for key in stu_data:
+print(stu_data[key])

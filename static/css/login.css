@@ -1,0 +1,22 @@
+.container {
+    margin-top: 20px;
+   
+}
+
+.form-control {
+    width:400px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.formz {
+    text-align:center
+}
+
+.btn {
+    width:400px;
+    margin-top:30px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom: 30px;
+}

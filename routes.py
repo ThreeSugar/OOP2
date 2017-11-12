@@ -80,6 +80,10 @@ def video():
 def beginnervideo():
     return render_template('beginnervid.html')
 
+@app.route('/video/advanced')
+def advancedvideo():
+    return render_template('advancedvid.html')
+
 
 if __name__ == '__main__':
     login_manager = LoginManager()

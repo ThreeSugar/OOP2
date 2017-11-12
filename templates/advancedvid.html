@@ -1,0 +1,53 @@
+{% extends 'vidlayout.html' %}
+
+{% block title %} Videos {% endblock %}
+
+{% block style %}
+
+<link href= "{{url_for('static', filename='css/advancedvid.css')}}" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="pure-menu pure-menu-horizontal">
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                <a href="#" id="menuLink1" class="pure-menu-link">FILTER</a>
+                <ul class="pure-menu-children">
+                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Recommended</a></li>
+                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Calisthenics</a></li>
+                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Weight Lifting</a></li>
+                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Aerobic</a></li>
+                </ul>
+            </li>
+        </ul>
+</div>
+
+<div class="input-group">
+        <input class="form-control"
+                    placeholder="">
+        <div class="input-group-addon" ><i class="fa fa-search"></i></div>
+</div>
+
+<div class = "vidcontainer">
+    <ul>
+        <li>     
+                <a href = "{{ url_for('beginnervideo') }}"> <img class = 'advancedpics' src = "{{url_for('static', filename = 'img/running.jpeg')}}"></a>
+                
+        </li>
+            
+            AdvancedX 1
+
+        <li>     
+          <a href = "{{ url_for('beginnervideo') }}">   <img class = 'advancedpics' src = "{{url_for('static', filename = 'img/running.jpeg')}}"></a>
+                    
+        </li>
+
+        AdvancedX 2</a>
+
+    </ul>
+</div>
+
+
+{% endblock %}

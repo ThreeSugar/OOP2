@@ -15,34 +15,33 @@ db.init_app(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-
-
 @app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/index')
-def index1():
+def index():
     return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.check_password(form.password.data):
                 login_user(user)
                 return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid username or password!')
+            return render_template('login.html', form=form)
 
-    flash('Invalid username or password!')
     return render_template('login.html', form=form)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
+
+    if current_user.is_authenticated == True:
+        return redirect(url_for('index'))
 
     if form.validate_on_submit():
         new_user = User(firstname=form.firstname.data, lastname= form.lastname.data, 
@@ -72,40 +71,15 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/videos')
-def videos():
-    return render_template('upload.html')
+@app.route('/video')
+def video():
+    return render_template('videos.html')
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload():
-    target = os.path.join(APP_ROOT, 'assets/vids')
-    print(target)
 
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    else:
-        print("Couldn't create upload directory: {}".format(target))
-    
-    print(request.files.getlist('file'))
+@app.route('/video/beginners')
+def beginnervideo():
+    return render_template('beginnervid.html')
 
-    for file in request.files.getlist('file'):
-        print(file)
-        filename = file.filename
-        destination = '/'.join([target, filename])
-        print('Accept incoming file: ', filename)
-        print('Save it to: ', destination)
-        file.save(destination)
-    
-    return render_template('complete.html', filename = filename)
-
-@app.route('/upload/<filename>')
-def send_vid(filename):
-    return send_from_directory("assets/vids", filename)
-
-@app.route('/gallery')
-def get_gallery():
-  vid_names = os.listdir('./assets/vids') #return list of filename
-  return render_template('gallery.html', vid_names = vid_names)
 
 if __name__ == '__main__':
     login_manager = LoginManager()

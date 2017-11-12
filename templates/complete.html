@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<p>Uploaded</p>
+<video width="320" height="200" controls>
+    <source src="{{url_for('send_vid', filename = filename)}}" type="video/mp4">
+    <source src="{{url_for('send_vid', filename = filename)}}" type="video/webm">
+    <source src="{{url_for('send_vid', filename = filename)}}" type="video/opgg">
+</video> 
+
+<img src = "{{url_for('send_vid', filename = filename)}}">
+
+{% endblock %}

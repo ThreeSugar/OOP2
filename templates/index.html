@@ -53,35 +53,42 @@
 	<!--header-end-->
 
 	
-	<nav class="main-nav-outer" id="test">
-			<!--main-nav-start-->
-			<div class="container">
-				<ul class="main-nav">
-					<li><a href="#">Home</a></li>
-					
-	
-					<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Features
-							<span class="caret"></span></a>
-							<ul class="dropdown-menu">
-							  <li><a href="#service">Something</a></li>
-							  <li><a href="#Portfolio">Something</a></li>
-							  <li><a href="#client">Something</a></li>
-							  <li><a href="#team">Something</a></li>
-							  <li><a href="#contact">Something</a></li>
-							</ul>
-					</li>
-	
-					<li><a href="#">About</a></li>
-					<li class="small-logo"><a href="#header"><img src="static/img/small-logo.png" alt=""></a></li>
-					<li><a href="#">Contact</a></li>
-					<li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-					<li><a href="{{ url_for('login') }}">Login</a></li>
-				</ul>
-				<a class="res-nav_click" href="#"><i class="fa-bars"></i></a>
-			</div>
-		</nav>
-		<!--main-nav-end-->
+		<nav class="main-nav-outer" id="test">
+				<!--main-nav-start-->
+				<div class="container">
+					<ul class="main-nav">
+						<li><a href="{{ url_for('index') }}">Home</a></li>
+						
+						<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Features
+								<span class="caret"></span></a>
+								<ul class="dropdown-menu">
+								  <li><a href="{{ url_for('index', _anchor='service') }}">Something</a></li>
+								  <li><a href="{{ url_for('index', _anchor='Portfolio') }}">Something</a></li>
+								  <li><a href="{{ url_for('index', _anchor='client') }}">Something</a></li>
+								  <li><a href="{{ url_for('index', _anchor='team') }}">Something</a></li>
+								  <li><a href="{{ url_for('index', _anchor='contact') }}">Something</a></li>
+								</ul>
+						</li>
+		
+						<li><a href="#">About</a></li>
+						<li class="small-logo"><a href="#header"><img src="static/img/small-logo.png" alt=""></a></li>
+						<li><a href="#">Contact</a></li>
+
+						{% if current_user.is_authenticated %}
+							<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>
+							<li><a href="{{ url_for('logout') }}">Logout</a></li>
+
+						{% else %}
+							<li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+							<li><a href="{{ url_for('login') }}">Login</a></li>
+						{% endif %}
+
+					</ul>
+					<a class="res-nav_click" href="#"><i class="fa-bars"></i></a>
+				</div>
+			</nav>
+            <!--main-nav-end-->
 
 
 

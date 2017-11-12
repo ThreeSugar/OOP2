@@ -1,0 +1,43 @@
+.input-group{
+    margin-top: 100px;
+    margin-bottom: 30px;
+    left:25%;
+    width:700px;
+    height:30px;
+    position: absolute;
+}
+
+.navbar{
+    background: black;
+}
+
+/* img{
+    height:500px;
+    width: 800px;
+} */
+
+.video {
+    float: right;
+    margin-left: 20px;
+    margin-top:200px;
+    margin-bottom:200px;
+    padding-bottom: 200px;
+    position: absolute;
+}
+
+.sidearea{
+    float: right;
+    margin-left: 900px;
+    margin-top:190px;
+    margin-bottom:200px;
+    padding-bottom: 200px;
+    position: absolute;
+}
+
+.related{
+    height:200px;
+    width: 250px;
+    padding: 10px;
+}
+
+

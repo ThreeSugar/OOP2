@@ -75,7 +75,6 @@ def logout():
 def video():
     return render_template('videos.html')
 
-
 @app.route('/video/beginners')
 def beginnervideo():
     return render_template('beginnervid.html')
@@ -83,6 +82,14 @@ def beginnervideo():
 @app.route('/video/advanced')
 def advancedvideo():
     return render_template('advancedvid.html')
+
+@app.route('/video/explore')
+def explorevideo():
+    return render_template('freevid.html')
+
+@app.route('/video/explore/view')
+def viewvideo():
+    return render_template('viewvid.html')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,289 @@
+{% extends 'vidlayout.html' %} 
+
+{% block title %} Videos {% endblock %} 
+
+{% block style %}
+<link href="{{url_for('static', filename='css/new-style.css')}}" rel="stylesheet" type="text/css">
+<link href="{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css"> 
+
+{% endblock %} 
+
+{% block content %}
+
+<div class="input-group">
+    <input class="form-control" placeholder="Search Videos">
+    <div class="input-group-addon">
+        <a href="free.html">
+            <i class="fa fa-search"></i>
+        </a>
+    </div>
+</div>
+
+
+<!-- Info Block-02 -->
+<section class="section-01 float-left w-100 py-5">
+    <div class="container-fluid">
+        <div class="row px-3">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="heading-large">Recommended</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="img/exercise1.jpg" alt="">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <h2 class=" title-small">
+                                        <a href="#">What is more important? Exercise or Diet?</a>
+                                    </h2>
+                                </div>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <p class="card-text">
+                                    <small class="text-time">
+                                        <em>3 mins ago</em>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="img/exercise2.jpg" alt="">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <h2 class=" title-small">
+                                        <a href="#">Top 10 Reasons Why Children Should Exercise</a>
+                                    </h2>
+                                </div>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <p class="card-text">
+                                    <small class="text-time">
+                                        <em>3 mins ago</em>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="img/exercise3.jpg" alt="">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <h2 class=" title-small">
+                                        <a href="#">What weights are most suitable for you?</a>
+                                    </h2>
+                                </div>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <p class="card-text">
+                                    <small class="text-time">
+                                        <em>3 mins ago</em>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <img class="img-fluid" src="img/exercise4.jpg" alt="">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <h2 class=" title-small">
+                                        <a href="#">Light exercises that are suitable for everyone!</a>
+                                    </h2>
+                                </div>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <p class="card-text">
+                                    <small class="text-time">
+                                        <em>3 mins ago</em>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="col-md-4 side-bar">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Latest</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Top</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#messages" role="tab">Featured</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content sidebar-tabing">
+                    <div class="tab-pane active" id="home" role="tabpanel">
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">Learn To Swim Today</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/lifestyle.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">Benefits of waking up early</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/food1.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">How chicken dishes aren't as bad as you think</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="tab-pane" id="profile" role="tabpanel">
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/exercise5.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">Tips to playing soccer</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/exercise6.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">Basic Rugby Technique</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/running.jpeg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">How to run longer and faster</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="tab-pane" id="messages" role="tabpanel">
+
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/food.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">How chicken dishes aren't as bad as you think</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/exercise6.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">Basic Rugby Technique</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media">
+                            <a href="#">
+                                <img class="d-flex mr-3" src="img/sport1.jpg" alt="Generic placeholder image">
+                            </a>
+                            <div class="media-body">
+                                <div class="news-title">
+                                    <h2 class="title-small">
+                                        <a href="#">Origin of the Rugby Sport</a>
+                                    </h2>
+                                </div>
+                                <div class="news-auther">
+                                    <span class="time">1h ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-sec">
+                    <h4 class="heading-small">Saved Videos</h4>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="{{url_for('static', filename='js/popper.js')}}"></script>
+<script src="{{url_for('static', filename='js/core.css')}}"></script>
+<script src="{{url_for('static', filename='js/lightbox-plus-jquery.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/lity.min.js')}}"></script>
+
+{% endblock %}

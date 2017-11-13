@@ -9,7 +9,12 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 
 app = Flask(__name__)
 Bootstrap(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:class@localhost/flaskvids'
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
+
+#'postgresql://postgres:class@localhost/flaskvids'
+
 app.secret_key = "development-key"
 db.init_app(app)
 

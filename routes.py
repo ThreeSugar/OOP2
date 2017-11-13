@@ -1,3 +1,6 @@
+#on the command line, please change directory with 'cd' to wherever this app is
+#then enter 'python routes.py' on the command line to activate website
+
 import os
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -6,26 +9,40 @@ from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from models import LoginForm, RegisterForm, User, db
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.fileadmin import FileAdmin
 
 app = Flask(__name__)
+admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
+
 Bootstrap(app)
-
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
-
-#'postgresql://postgres:class@localhost/flaskvids'
+# 'postgresql://postgres:class@localhost/flaskvids'
 
 app.secret_key = "development-key"
 db.init_app(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+#ADMIN
+
+admin.add_view(ModelView(User, db.session))
+path = os.path.join(os.path.dirname(__file__), 'static/assets')
+admin.add_view(FileAdmin(path, name='Videos'))
+
+###
+
+
+#HOMEPAGE (DO NOT TOUCH)
 @app.route('/')
 @app.route('/index')
 def index():
     return render_template('index.html')
 
+###
 
+#LOGIN/REGISTER/SIGNUP (DO NOT TOUCH)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -76,6 +93,11 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+####
+
+
+#VIDEO
+
 @app.route('/video')
 def video():
     return render_template('videos.html')
@@ -96,6 +118,11 @@ def explorevideo():
 def viewvideo():
     return render_template('viewvid.html')
 
+
+####
+
+
+### (DO NOT TOUCH)
 
 if __name__ == '__main__':
     login_manager = LoginManager()

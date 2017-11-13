@@ -22,12 +22,14 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique = True)
     pwdhash = db.Column(db.String(54))
 
-    def __init__(self, username, firstname, lastname, email, password):
+    def __init__(self, username = '', firstname= '', lastname= '', email= '', password= ''):
         self.firstname = firstname.title()
         self.lastname = lastname.title()
         self.username = username
         self.email = email.lower()
         self.set_password(password)
+
+ #init has default arguments passed in for flask-admin to do its CRUD magic for the model.
 
     def set_password(self, password):
             self.pwdhash = generate_password_hash(password)
@@ -41,6 +43,14 @@ class User(UserMixin, db.Model):
         except NameError:
             return str(self.uid)  # python 3
 
+class Blog(db.Model):
+    __tablename__ = 'blog'
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(100), unique= True)
+    article = db.Column(db.String(120))
+    comments = db.Column(db.String(100))
+    likes = db.Column(db.Integer)
+    
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])

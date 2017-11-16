@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
-from models import LoginForm, RegisterForm, User, db
+from models import LoginForm, RegisterForm, User, db, Video
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -24,6 +24,7 @@ app.secret_key = "development-key"
 db.init_app(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(APP_ROOT, 'static')
 
 #ADMIN
 
@@ -118,6 +119,41 @@ def explorevideo():
 def viewvideo():
     return render_template('viewvid.html')
 
+@app.route('/video/test')
+def videos():
+    return render_template('upload.html')
+
+@app.route('/video/upload', methods=['GET', 'POST'])
+def upload():
+    target = os.path.join(APP_ROOT, 'static/assets')
+    print(target)
+
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    else:
+        print("Couldn't create upload directory: {}".format(target))
+    
+    print(request.files.getlist('file'))
+
+    for file in request.files.getlist('file'):
+        print(file)
+        filename = file.filename
+        destination = '/'.join([target, filename])
+
+        new_vid = Video(link= filename)
+        db.session.add(new_vid)
+        db.session.commit()
+
+        print('Accept incoming file: ', filename)
+        print('Save it to: ', destination)
+        file.save(destination)
+    
+    return render_template('complete.html', filename = filename)
+
+@app.route('/video/upload/<filename>')
+def send_vid(filename):
+    video = User.query.filter_by(link=filename).first_or_404()
+    return send_from_directory("assets/vids", filename, video)
 
 ####
 

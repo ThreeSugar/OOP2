@@ -23,6 +23,11 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique= True)
     email = db.Column(db.String(120), unique = True)
     pwdhash = db.Column(db.String(54))
+
+class Video(db.Model):
+    __tablename__ = 'video'
+    id = db.Column(db.Integer, primary_key = True)
+    link = db.Column(db.String(100), unique= True)
     
 
 manager = Manager(app)

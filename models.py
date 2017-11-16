@@ -43,13 +43,11 @@ class User(UserMixin, db.Model):
         except NameError:
             return str(self.uid)  # python 3
 
-class Blog(db.Model):
-    __tablename__ = 'blog'
+class Video(db.Model):
+    __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(100), unique= True)
-    article = db.Column(db.String(120))
-    comments = db.Column(db.String(100))
-    likes = db.Column(db.Integer)
+    link = db.Column(db.String(200), unique= True)
+
     
 
 class LoginForm(FlaskForm):

@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% for v in video %}
+<ul>      
+    <li>
+        
+        <video width="320" height="200" controls>
+            <source src="{{url_for('static', filename = 'assets/' + v)}}" type="video/mp4">
+            <source src="{{url_for('static', filename = 'assets/' + v)}}" type="video/webm">
+            <source src="{{url_for('static', filename = 'assets/' + v)}}" type="video/opgg">
+        </video> 
+        
+        </li>
+        
+        
+</ul>
+
+{% endfor %}
+
+{% endblock %}

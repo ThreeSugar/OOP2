@@ -21,10 +21,34 @@ Lifestyle28 | Dashboard
                                         <a href="#">
                                             <span class="glyphicon glyphicon-dashboard"></span> Profile</a>
                                     </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="glyphicon glyphicon-folder-open"></span> My Content</a>
-                                    </li>
+
+
+                                   <!-- Dropdown-->
+                                    <li class="panel panel-default" id="dropdown">
+                                        <a data-toggle="collapse" href="#dropdown-lvl1">
+                                            <span class="glyphicon glyphicon-user"></span> My Content
+                                            <span class="caret"></span>
+                                        </a>
+    
+                                        <!-- Dropdown level 1 -->
+                                        <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul class="nav navbar-nav">
+                                                    <li>
+                                                        <a href="#">Blog</a>
+                                                    </li>
+                                                    <li>
+                                                        <a id = "video" href="#">Video</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Recipe</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li> 
+
+
                                     <li>
                                         <a href="#">
                                             <span class="glyphicon glyphicon-heart"></span>Favourites</a>
@@ -32,13 +56,13 @@ Lifestyle28 | Dashboard
     
                                     <!-- Dropdown-->
                                     <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl1">
+                                        <a data-toggle="collapse" href="#dropdown-lvl2">
                                             <span class="glyphicon glyphicon-user"></span> My Orders
                                             <span class="caret"></span>
                                         </a>
     
                                         <!-- Dropdown level 1 -->
-                                        <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                        <div id="dropdown-lvl2" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
                                                     <li>
@@ -58,13 +82,13 @@ Lifestyle28 | Dashboard
                                 
                                 <!-- Dropdown-->
                                 <li class="panel panel-default" id="dropdown">
-                                        <a data-toggle="collapse" href="#dropdown-lvl2">
+                                        <a data-toggle="collapse" href="#dropdown-lvl3">
                                             <span class="glyphicon glyphicon-star"></span> Features
                                             <span class="caret"></span>
                                         </a>
     
-                                        <!-- Dropdown level 1 -->
-                                        <div id="dropdown-lvl2" class="panel-collapse collapse">
+                                        <!-- Dropdown level 3 -->
+                                        <div id="dropdown-lvl3" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
                                                     <li>
@@ -118,10 +142,17 @@ Lifestyle28 | Dashboard
                         Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
                         laborum.
                     </div>
-
-    
                 </div>
             </div>
+
+            <div class = "uploadvid">
+                <form id="uploadform" action="{{url_for('upload')}}" method = "POST" enctype="multipart/form-data">
+                    <input type="file" name = "file" accept="video/*, image/*" multiple>
+                    <input type ="submit" value="upload">
+                </form>
+            </div>
+
+
         </div>
     
         <script>
@@ -138,6 +169,15 @@ Lifestyle28 | Dashboard
                     $('.search-input').focus();
                 });
             });
+
+            $(".uploadvid").hide();
+
+            $("#video").click(function(){
+            $(".content").hide(); 
+            $(".uploadvid").show();
+        }); 
+
+        
         </script>
     
 {% endblock %}

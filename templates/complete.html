@@ -3,10 +3,21 @@
 {% block content %}
 
 <p>Uploaded</p>
+
+<ul>
+
+
+<li>
+
 <video width="320" height="200" controls>
     <source src="{{url_for('static', filename = 'assets/' + filename)}}" type="video/mp4">
     <source src="{{url_for('static', filename = 'assets/' + filename)}}" type="video/webm">
     <source src="{{url_for('static', filename = 'assets/' + filename)}}" type="video/opgg">
 </video> 
+
+</li>
+
+
+</ul>
 
 {% endblock %}

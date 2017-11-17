@@ -182,12 +182,17 @@ def upload():
         file.save(destination)
     
     return render_template('complete.html', filename = filename)
-    
 
-@app.route('/video/upload/<filename>')
-def send_vid(filename):
-    video = User.query.filter_by(link=filename).first_or_404()
-    return send_from_directory("assets/vids", filename, video)
+@app.route('/video/display')
+def display_vid():
+    video = []
+    for instance in db.session.query(Video).order_by(Video.id):
+        print(instance.link)
+        video.append(instance.link)
+
+    print(video)
+    return render_template('displayvid.html', video = video)
+
 
 ####
 

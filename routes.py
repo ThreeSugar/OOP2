@@ -38,7 +38,7 @@ config = {
     "authDomain": "webapp-4eb51.firebaseapp.com",
     "databaseURL": "https://webapp-4eb51.firebaseio.com",
     "storageBucket": "webapp-4eb51.appspot.com",
-    "serviceAccount": "firebase.json"
+    "serviceAccount": "firebase.json" #this is to register as an admin with full read/write access
   }
 
 firebase = pyrebase.initialize_app(config)
@@ -57,8 +57,6 @@ user = auth.sign_in_with_email_and_password("john@john.com", "password")
     #lana = {"name": "Lana Kane", "agency": "Figgis Agency"}
     #firedb.child("agents").child("Lana").set(lana, user['idToken'])
     #return 'Hello World!'
-
-
 
 
 #ADMIN

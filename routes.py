@@ -12,19 +12,54 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
+import pyrebase
+
+
 
 app = Flask(__name__)
 admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
 
+
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
 # 'postgresql://postgres:class@localhost/flaskvids'
+
 
 app.secret_key = "development-key"
 db.init_app(app)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(APP_ROOT, 'static')
+
+#FIREBASE
+
+config = {
+    "apiKey": "AIzaSyC0TLL0UpuWJJpBcTjpv336tZg95SKqR88",
+    "authDomain": "webapp-4eb51.firebaseapp.com",
+    "databaseURL": "https://webapp-4eb51.firebaseio.com",
+    "storageBucket": "webapp-4eb51.appspot.com",
+    "serviceAccount": "firebase.json"
+  }
+
+firebase = pyrebase.initialize_app(config)
+firedb = firebase.database()  
+
+#FIREBASE AUTH
+
+auth = firebase.auth()
+#authenticate a user
+user = auth.sign_in_with_email_and_password("john@john.com", "password")
+
+
+#FIREBASE TEST
+#@app.route('/firebase')
+#def firebase():
+    #lana = {"name": "Lana Kane", "agency": "Figgis Agency"}
+    #firedb.child("agents").child("Lana").set(lana, user['idToken'])
+    #return 'Hello World!'
+
+
+
 
 #ADMIN
 

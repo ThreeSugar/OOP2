@@ -182,6 +182,7 @@ def upload():
         file.save(destination)
     
     return render_template('complete.html', filename = filename)
+    
 
 @app.route('/video/upload/<filename>')
 def send_vid(filename):

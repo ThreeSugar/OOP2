@@ -1,0 +1,116 @@
+{% extends 'vidlayout.html' %} 
+
+{% block title %} Videos {% endblock %} 
+
+{% block style %}
+<link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Page Content -->
+
+<div class="input-group">
+    <input class="form-control" placeholder="Search Videos">
+    <div class="input-group-addon">
+        <a href="free.html">
+            <i class="fa fa-search"></i>
+        </a>
+    </div>
+</div>
+
+
+<div class="video">
+
+
+<video width="800" height="500" controls>
+    <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/mp4">
+    <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/webm">
+    <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">
+</video> 
+
+
+
+    
+    <p style = "font-size:30px; margin-top:10px;">Healthy Food A</p>
+     
+    <p style = "margin-top:5px;">1,000,000 views</p>
+
+    <hr>
+    <p>Posted by: Username</p>
+    <p>Date and Time: </p>
+    <p>Category: </p>
+    <hr>
+
+    
+    <p class = desc> Makes 4 to 6 servings
+        <br>
+        <br> 5 or 6 large eggs (or egg substitute equivalent)
+        <br>
+        <br> 2 tablespoons to 1/3 cup milk, half-and-half, cream or dairy substitute
+        <br>
+        <br> Salt, pepper and a dash of nutmeg or cayenne, or favorite seasoning mix, and maybe a dash of hot sauce
+        <br>
+        <br> 1 frozen 9-inch deep-dish pie shell, or refrigerated pie crust (optional)
+        <br>
+        <br> 2 to 2-1/2 cups total: Any type shredded cheese
+        <br>
+        <br> Chopped, well-drained cooked or raw vegetables
+        <br>
+        <br> Diced deli meat or other cooked diced meat, seafood or poultry
+        <br>
+        <br> Preheat oven to 350 degrees. Beat eggs and milk in a large mixing bowl.
+        <br>
+        <br>
+    </p>
+
+    <hr>
+ 
+    <div class="form-group">
+            <label for="comment"> Add comment:</label>
+            <textarea style = "margin-left:0%;"  class="form-control" rows="5" id="comment"></textarea>
+            <button class = 'btn btn-default'>Post</button>
+    </div>  
+
+    <hr>
+
+    <p>Comments </p>
+
+    <br>
+    <ul>
+        <li>
+            <p>Posted by: Username</p>
+            <p>Comment here</p></li>
+
+            <br>
+
+        <li>
+            <p>Posted by: Username</p>
+            <p>Comment here</p>
+        </li>
+    </ul>
+
+</div>
+
+<div class="sidearea">
+    <p style="font-size:30px;">Related Videos</p>
+    <hr>
+    <img class="related" src="img/healthy2.jpg">
+    <p>Healthy Food B</p>
+    <img class="related" src="img/healthy3.jpg">
+    <p>Healthy Food C</p>
+    <img class="related" src="img/healthy4.jpg">
+    <p>Healthy Food D</p>
+    <img class="related" src="img/healthy5.jpg">
+    <p>Healthy Food E</p>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

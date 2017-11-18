@@ -193,6 +193,12 @@ def display_vid():
     print(video)
     return render_template('displayvid.html', video = video)
 
+@app.route('/video/<videoid>')
+def videoz(videoid):
+    videoid = Video.query.filter_by(id = videoid).first()
+    link = videoid.link
+    return render_template('displayvid1.html', link=link)
+
 
 ####
 

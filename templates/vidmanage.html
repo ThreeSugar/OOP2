@@ -30,7 +30,8 @@ Lifestyle28 | Dashboard
     <thead>
       <tr>
         <th width="15%"> Title </th>
-        <th width="40%"> Description </th>
+        <th width="25%"> Description </th>
+        <th width="25%"> Categories </th>
       </tr>
     </thead>
     <tbody>
@@ -38,6 +39,7 @@ Lifestyle28 | Dashboard
       <tr>
         <td> {{ v.title }} </td>
         <td> {{ v.description }} </td>
+        <td> {{ v.category }} </td>
          
         <td>
           <a href="{{ url_for('videdit', id= v.id) }}">

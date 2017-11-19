@@ -136,14 +136,16 @@ def vidmanage():
 @app.route('/dashboard/video/manage/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def videdit(id):
-    form = EditForm()
     video = Video.query.get_or_404(id)
+    form = EditForm(obj=video, desc = video.description, options = video.category) #default values for form so that users don't have to retype everything
     if form.validate_on_submit():
+
         video.title = form.title.data
         video.description = form.desc.data
+        video.category = form.options.data
         db.session.commit()
         flash('Video successfully edited!')
-        return redirect(url_for('vidmanage'))
+        return redirect(url_for('vidmanage')) #render template will cause a 'function not iterable error'
 
     return render_template('videdit.html', form = form)
 

@@ -72,3 +72,9 @@ class SelectForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=15)])
     options = SelectField(u'Categories', choices=[('edu', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=8, max=300)])
+
+class EditForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), Length(min=4, max=15)])
+    desc = TextAreaField('Description', validators=[InputRequired(), Length(min=8, max=300)])
+
+

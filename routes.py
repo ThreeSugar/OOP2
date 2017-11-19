@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
-from models import LoginForm, RegisterForm, User, db, Video, SelectForm
+from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -130,7 +130,34 @@ def dashboardvid():
 @app.route('/dashboard/video/manage')
 @login_required
 def vidmanage():
-    return render_template('vidmanage.html')
+    videos = Video.query.all()
+    return render_template('vidmanage.html', videos = videos)
+
+@app.route('/dashboard/video/manage/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def videdit(id):
+    form = EditForm()
+    video = Video.query.get_or_404(id)
+    if form.validate_on_submit():
+        video.title = form.title.data
+        video.description = form.desc.data
+        db.session.commit()
+        flash('Video successfully edited!')
+        return redirect(url_for('vidmanage'))
+
+    return render_template('videdit.html', form = form)
+
+
+    
+
+@app.route('/dashboard/video/manage/delete/<int:id>')
+@login_required
+def viddelete(id):
+    video = Video.query.get_or_404(id)
+    db.session.delete(video)
+    db.session.commit()
+    flash('You have successfully deleted the video.')
+    return redirect(url_for('vidmanage'))
 
 @app.route('/dashboard/video/upload', methods=['GET', 'POST'])
 @login_required

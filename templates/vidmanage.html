@@ -19,8 +19,40 @@ Lifestyle28 | Dashboard
 
 {% endblock %}
 
+{% block dashtitle %}
+  Manage Videos
+{% endblock %}
+
 {% block dashboard %}
 
-    <p> A page to manage videos for users.</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th width="15%"> Title </th>
+        <th width="40%"> Description </th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for v in videos %}
+      <tr>
+        <td> {{ v.title }} </td>
+        <td> {{ v.description }} </td>
+         
+        <td>
+          <a href="{{ url_for('videdit', id= v.id) }}">
+            <i class="fa fa-pencil"></i> Edit 
+          </a>
+        </td>
+        <td>
+          <a href="{{ url_for('viddelete', id=v.id)}}">
+            <i class="fa fa-trash"></i> Delete 
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
 
 {% endblock %}

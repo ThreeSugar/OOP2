@@ -19,42 +19,37 @@ Lifestyle28 | Dashboard
 
 {% endblock %}
 
-{% block dashtitle %}
-Upload Videos
-{% endblock %}
-
 {% block dashboard %}
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class = "alert alert-warning">
-        {{message}}
-    </div>         
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class = "alert alert-warning">
+    {{message}}
+</div>         
+{% endfor %}
+{% endif %}
+{% endwith %}
 
 
-    
-    <form style = "padding:15px;" id="uploadform" action="{{url_for('upload')}}" method = "POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        {{ form.title.label }}
-        {{ form.title}}
-        <br>
-        <br>
-        {{ form.options.label }}
-        {{ form.options}}
-        <br>
-        <br>
-        {{form.desc.label}}
-        {{form.desc}}
-        <br>
-        <br>
-        <input type="file" name = "file" accept="video/*, image/*" multiple>
-        <br>
-        <input type ="submit" value="Upload">
-    </form>
+<form method = 'POST'>
+
+{{form.hidden_tag()}}
+
+{{ form.title.label }}
+{{ form.title}}
+
+<br>
+
+
+{{form.desc.label}}
+{{form.desc}}
+
+<br>
+
+<input type ="submit" value="Edit">
+
+</form>
 
 
 {% endblock %}

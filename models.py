@@ -67,5 +67,6 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class SelectForm(FlaskForm):
+    title = StringField('Title', validators=[InputRequired()])
     options = SelectField(u'Categories', choices=[('edu', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
     desc = TextAreaField('Description', validators=[InputRequired()])

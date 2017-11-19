@@ -58,9 +58,9 @@
 				</li>
 
 				<li><a href="#">About</a></li>
-				<li class="small-logo"><a href="#header"><img src="static/img/small-logo.png" alt=""></a></li>
+				<li class="small-logo"><a href="#header"><img src="{{url_for('static', filename='img/small-logo.png')}}" alt=""></a></li>
 				<li><a href="#">Contact</a></li>
-
+				
 				{% if current_user.is_authenticated %}
 					<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>
 					<li><a href="{{ url_for('logout') }}">Logout</a></li>

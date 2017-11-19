@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.functions import func
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_login import UserMixin
@@ -27,7 +28,10 @@ class User(UserMixin, db.Model):
 class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key = True)
-    link = db.Column(db.String(100), unique= True)
+    username = db.Column(db.String(100))
+    link = db.Column(db.String(200), unique= True)
+    category = db.Column(db.String(100))
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
     
 
 manager = Manager(app)

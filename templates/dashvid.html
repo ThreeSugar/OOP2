@@ -1,0 +1,42 @@
+{% extends 'dashboard.html' %}
+
+{% block title %}
+Lifestyle28 | Dashboard
+{% endblock %} 
+
+{% block style %} 
+
+<link rel="icon" href="{{url_for('static', filename='img/favicon.png')}}" type="image/png">
+<link rel="shortcut icon" href="{{url_for('static', filename='img/favicon.ico')}}" type="img/x-icon">
+
+<link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet" type="text/css">
+<link href="{{url_for('static', filename='css/font-awesome.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/responsive.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/animate.css')}}" rel="stylesheet" type="text/css">
+<link href="{{url_for('static', filename='css/user.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/login.css')}}" rel="stylesheet" type="text/css">
+
+
+{% endblock %}
+
+{% block dashboard %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class = "alert alert-warning">
+        {{message}}
+    </div>         
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form style = "padding:15px;" id="uploadform" action="{{url_for('upload')}}" method = "POST" enctype="multipart/form-data">
+        <input type="file" name = "file" accept="video/*, image/*" multiple>
+        <input type ="submit" value="upload"> <br>
+        {{ form.options.label }}
+        {{ form.options}}
+    </form>
+
+
+{% endblock %}

@@ -7,13 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
-from models import LoginForm, RegisterForm, User, db, Video
+from models import LoginForm, RegisterForm, User, db, Video, SelectForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
-import pyrebase
 
+import pyrebase
 
 
 app = Flask(__name__)
@@ -31,6 +31,8 @@ db.init_app(app)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(APP_ROOT, 'static')
 
+
+
 #FIREBASE
 
 config = {
@@ -47,7 +49,6 @@ firedb = firebase.database()
 #FIREBASE AUTH
 
 auth = firebase.auth()
-#authenticate a user
 user = auth.sign_in_with_email_and_password("john@john.com", "password")
 
 
@@ -121,6 +122,31 @@ def signup():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/dashboard/video/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
+    form = SelectForm()
+    target = os.path.join(APP_ROOT, 'static/assets')
+    print(target)
+    print(request.files.getlist('file'))
+
+    for file in request.files.getlist('file'):
+        print(file)
+        filename = file.filename
+        destination = '/'.join([target, filename])
+
+        new_vid = Video(link= filename, username = current_user.username)
+        db.session.add(new_vid)
+        db.session.commit()
+
+        print('Accept incoming file: ', filename)
+        print('Save it to: ', destination)
+        file.save(destination)
+
+    return render_template('dashvid.html', form=form)
+   
+         
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -156,42 +182,15 @@ def viewvideo():
 def videos():
     return render_template('upload.html')
 
-@app.route('/video/upload', methods=['GET', 'POST'])
-def upload():
-    target = os.path.join(APP_ROOT, 'static/assets')
-    print(target)
+# @app.route('/video/display')
+# def display_vid():
+#     video = []
+#     for instance in db.session.query(Video).order_by(Video.id):
+#         print(instance.link)
+#         video.append(instance.link)
 
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    else:
-        print("Couldn't create upload directory: {}".format(target))
-    
-    print(request.files.getlist('file'))
-
-    for file in request.files.getlist('file'):
-        print(file)
-        filename = file.filename
-        destination = '/'.join([target, filename])
-
-        new_vid = Video(link= filename)
-        db.session.add(new_vid)
-        db.session.commit()
-
-        print('Accept incoming file: ', filename)
-        print('Save it to: ', destination)
-        file.save(destination)
-    
-    return render_template('complete.html', filename = filename)
-
-@app.route('/video/display')
-def display_vid():
-    video = []
-    for instance in db.session.query(Video).order_by(Video.id):
-        print(instance.link)
-        video.append(instance.link)
-
-    print(video)
-    return render_template('displayvid.html', video = video)
+#     print(video)
+#     return render_template('displayvid.html', video = video)
 
 @app.route('/video/<videoid>')
 def videoz(videoid):

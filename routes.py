@@ -122,6 +122,16 @@ def signup():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/dashboard/video')
+@login_required
+def dashboardvid():
+    return render_template('viddash.html')
+
+@app.route('/dashboard/video/manage')
+@login_required
+def vidmanage():
+    return render_template('vidmanage.html')
+
 @app.route('/dashboard/video/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -130,27 +140,27 @@ def upload():
     print(target)
     print(request.files.getlist('file'))
 
+    
     for file in request.files.getlist('file'):
         print(file)
         filename = file.filename
         destination = '/'.join([target, filename])
 
         try:
-            new_vid = Video(link= filename, username = current_user.username)
+            new_vid = Video(link= filename, username = current_user.username, title =  form.title.data, description = form.desc.data, category= form.options.data)
             db.session.add(new_vid)
             db.session.commit()
             print('Accept incoming file: ', filename)
             print('Save it to: ', destination)
             file.save(destination)
+            return redirect(url_for('vidmanage'))
         
         except IntegrityError: 
             db.session.rollback()
             flash('Video name already exists!')
+            return render_template('dashvid.html', form=form)
 
-    
-    return render_template('dashvid.html', form=form)
-   
-         
+    return render_template('dashvid.html', form=form)     
 
 @app.route('/logout')
 @login_required

@@ -49,6 +49,8 @@ class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(100))
+    title = db.Column(db.String(100))
+    description = db.Column(db.String(500))
     link = db.Column(db.String(200), unique= True)
     category = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -67,6 +69,6 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class SelectForm(FlaskForm):
-    title = StringField('Title', validators=[InputRequired()])
+    title = StringField('Title', validators=[InputRequired(), Length(min=4, max=15)])
     options = SelectField(u'Categories', choices=[('edu', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
-    desc = TextAreaField('Description', validators=[InputRequired()])
+    desc = TextAreaField('Description', validators=[InputRequired(), Length(min=8, max=300)])

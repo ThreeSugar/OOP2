@@ -29,6 +29,8 @@ class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(100))
+    title = db.Column(db.String(100))
+    description = db.Column(db.String(500))
     link = db.Column(db.String(200), unique= True)
     category = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())

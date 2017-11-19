@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SelectField, FileField
+from wtforms import StringField, PasswordField, BooleanField, SelectField, TextAreaField
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
@@ -67,5 +67,5 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class SelectForm(FlaskForm):
-    videos = FileField(validators=[FileRequired(), FileAllowed(['mp4', 'webm', 'opgg'])])
     options = SelectField(u'Categories', choices=[('edu', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
+    desc = TextAreaField('Description', validators=[InputRequired()])

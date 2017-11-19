@@ -130,19 +130,28 @@ def upload():
     print(target)
     print(request.files.getlist('file'))
 
-    for file in request.files.getlist('file'):
-        print(file)
-        filename = file.filename
-        destination = '/'.join([target, filename])
+    if form.validate_on_submit():
+        for file in request.files.getlist('file'):
+            print(file)
+            filename = file.filename
+            destination = '/'.join([target, filename])
 
-        new_vid = Video(link= filename, username = current_user.username)
-        db.session.add(new_vid)
-        db.session.commit()
+            try:
+                new_vid = Video(link= filename, username = current_user.username)
+                db.session.add(new_vid)
+                db.session.commit()
+                print('Accept incoming file: ', filename)
+                print('Save it to: ', destination)
+                file.save(destination)
+            
+            except IntegrityError: 
+                db.session.rollback()
+                flash('Video name already exists!')
 
-        print('Accept incoming file: ', filename)
-        print('Save it to: ', destination)
-        file.save(destination)
-
+    else:
+        flash('Please enter description for the video!')
+        return render_template('dashvid.html', form=form)
+    
     return render_template('dashvid.html', form=form)
    
          

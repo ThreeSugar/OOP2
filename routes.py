@@ -139,7 +139,6 @@ def videdit(id):
     video = Video.query.get_or_404(id)
     form = EditForm(obj=video, desc = video.description, options = video.category) #default values for form so that users don't have to retype everything
     if form.validate_on_submit():
-
         video.title = form.title.data
         video.description = form.desc.data
         video.category = form.options.data
@@ -168,7 +167,7 @@ def upload():
     target = os.path.join(APP_ROOT, 'static/assets')
     print(target)
     print(request.files.getlist('file'))
-
+    
     
     for file in request.files.getlist('file'):
         print(file)
@@ -188,6 +187,7 @@ def upload():
             db.session.rollback()
             flash('Video name already exists!')
             return render_template('dashvid.html', form=form)
+
 
     return render_template('dashvid.html', form=form)     
 
@@ -239,8 +239,14 @@ def videos():
 @app.route('/video/<videoid>')
 def videoz(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
+    title = videoid.title
     link = videoid.link
-    return render_template('displayvid1.html', link=link)
+    name = videoid.username
+    cat = videoid.category
+    desc = videoid.description
+    date = videoid.date
+
+    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title)
 
 
 ####

@@ -28,7 +28,7 @@ Upload Videos
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
-    <div class = "alert alert-warning">
+    <div class = "alert alert-warning alert-dismissable">
         {{message}}
     </div>         
     {% endfor %}

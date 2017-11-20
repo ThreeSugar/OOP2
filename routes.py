@@ -239,23 +239,33 @@ def videos():
 @app.route('/video/<videoid>')
 def videoz(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
+    vid = videoid.id
     title = videoid.title
     link = videoid.link
     name = videoid.username
     cat = videoid.category
     desc = videoid.description
     date = videoid.date
+    comms = VideoComment.query.filter_by(id = videoid).all()
 
-    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title)
+    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid=vid, comms = comms)
 
-# @app.route('/video/comment/<vid>', methods=['GET', 'POST'])
-# def videocomment(vid):
-#     videoid = Video.query.filter_by(id = videoid).first()
-#     vid = videoid.id
-#     comments = VideoComment(videoid = videoid.id, username = current_user.username, comment = request.form['text'])
-#     db.session.add(comments)
-#     db.session.commit()
-#     redirect(url_for(videoz, videoid = videoid))
+@app.route('/video/comment/<videoid>', methods=['GET', 'POST'])
+def videocomment(videoid):
+    videoid = Video.query.filter_by(id = videoid).first()
+    title = videoid.title
+    link = videoid.link
+    name = videoid.username
+    cat = videoid.category
+    desc = videoid.description
+    date = videoid.date
+    vid = videoid.id
+    comments = VideoComment(videoid = videoid.id, username = current_user.username, comment = request.form['text'])
+    db.session.add(comments)
+    db.session.commit()
+    comms = VideoComment.query.all()
+
+    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid=vid, comms = comms)
 
 ####
 

@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SelectField, TextA
 from flask_wtf.file import FileRequired, FileAllowed
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import func
 from werkzeug import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -54,6 +55,23 @@ class Video(db.Model):
     link = db.Column(db.String(200), unique= True)
     category = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+
+class VideoComment(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    videoid = db.Column(db.Integer)
+    username = db.Column(db.String(100))
+    comment = db.Column(db.String(3000))
+
+class VideoLikes(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    videoid = db.Column(db.Integer, unique=True)
+    likes = db.Column(db.Integer)
+    username = db.Column(db.String(100))
+
+
+
+
 
 
 class LoginForm(FlaskForm):

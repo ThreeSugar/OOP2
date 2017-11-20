@@ -6,6 +6,7 @@
 <link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 {% endblock %}
 
 
@@ -43,6 +44,12 @@
     <p>Posted by: {{name}}</p>
     <p>Date and Time: {{date}} </p>
     <p>Category: {{cat}} </p>
+
+    <p>
+            <button style= "width:80px; height:60px;" type="button" class="btn btn-default btn-sm">
+              <span style = "font-size:30px;" class="glyphicon glyphicon-thumbs-up"></span> <p style = "font-size:10px;">Like: 1000</p>
+            </button>
+    </p>
     <hr>
 
     
@@ -53,9 +60,11 @@
     <hr>
  
     <div class="form-group">
+            <form method = 'POST' action = "{{url_for('videocomment')}}">
             <label for="comment"> Add comment:</label>
-            <textarea style = "margin-left:0%;"  class="form-control" rows="5" id="comment"></textarea>
-            <button class = 'btn btn-default'>Post</button>
+            <textarea name = 'text' style = "margin-left:0%;"  class="form-control" rows="5" id="comment"></textarea>
+            <button type = 'submit' class = 'btn btn-default'>Post</button>
+            </form>
     </div>  
 
     <hr>

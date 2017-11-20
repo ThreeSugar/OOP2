@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
-from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm
+from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, VideoComment
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -248,6 +248,14 @@ def videoz(videoid):
 
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title)
 
+# @app.route('/video/comment/<vid>', methods=['GET', 'POST'])
+# def videocomment(vid):
+#     videoid = Video.query.filter_by(id = videoid).first()
+#     vid = videoid.id
+#     comments = VideoComment(videoid = videoid.id, username = current_user.username, comment = request.form['text'])
+#     db.session.add(comments)
+#     db.session.commit()
+#     redirect(url_for(videoz, videoid = videoid))
 
 ####
 

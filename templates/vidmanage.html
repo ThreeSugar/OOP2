@@ -37,7 +37,7 @@ Lifestyle28 | Dashboard
     <tbody>
         {% for v in videos %}
       <tr>
-        <td> {{ v.title }} </td>
+        <td> <a href = "{{url_for('videoz', videoid = v.id)}}">{{ v.title }}</a></td>
         <td> {{ v.description }} </td>
         <td> {{ v.category }} </td>
          

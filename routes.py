@@ -131,7 +131,8 @@ def dashboardvid():
 @login_required
 def vidmanage():
     videos = Video.query.all()
-    return render_template('vidmanage.html', videos = videos)
+    vid = videos.pop().id
+    return render_template('vidmanage.html', videos = videos, vid = vid)
 
 @app.route('/dashboard/video/manage/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -246,7 +247,8 @@ def videoz(videoid):
     cat = videoid.category
     desc = videoid.description
     date = videoid.date
-    comms = VideoComment.query.filter_by(id = videoid).all()
+    comms = 'ok'
+    #VideoComment.query.filter_by(id = videoid).all()
 
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid=vid, comms = comms)
 

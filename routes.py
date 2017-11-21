@@ -131,8 +131,7 @@ def dashboardvid():
 @login_required
 def vidmanage():
     videos = Video.query.all()
-    vid = videos.pop().id
-    return render_template('vidmanage.html', videos = videos, vid = vid)
+    return render_template('vidmanage.html', videos = videos)
 
 @app.route('/dashboard/video/manage/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -239,6 +238,7 @@ def videos():
 
 @app.route('/video/<videoid>')
 def videoz(videoid):
+    vidcomm = []
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
     title = videoid.title
@@ -247,27 +247,28 @@ def videoz(videoid):
     cat = videoid.category
     desc = videoid.description
     date = videoid.date
-    comms = 'ok'
-    #VideoComment.query.filter_by(id = videoid).all()
-
+     
+    comms = VideoComment.query.all()
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid=vid, comms = comms)
 
 @app.route('/video/comment/<videoid>', methods=['GET', 'POST'])
 def videocomment(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
-    title = videoid.title
-    link = videoid.link
-    name = videoid.username
-    cat = videoid.category
-    desc = videoid.description
-    date = videoid.date
+    # title = videoid.title
+    # link = videoid.link
+    # name = videoid.username
+    # cat = videoid.category
+    # desc = videoid.description
+    # date = videoid.date
     vid = videoid.id
     comments = VideoComment(videoid = videoid.id, username = current_user.username, comment = request.form['text'])
     db.session.add(comments)
     db.session.commit()
     comms = VideoComment.query.all()
 
-    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid=vid, comms = comms)
+    return redirect(url_for('videoz', videoid = vid))
+
+    #return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid=vid, comms = comms)
 
 ####
 

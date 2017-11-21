@@ -62,6 +62,7 @@ class VideoComment(db.Model):
     videoid = db.Column(db.Integer)
     username = db.Column(db.String(100))
     comment = db.Column(db.String(3000))
+    #date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 class VideoLikes(db.Model):
     id = db.Column(db.Integer, primary_key = True)

@@ -164,7 +164,7 @@ def viddelete(id):
 @login_required
 def upload():
     form = SelectForm()
-    target = os.path.join(APP_ROOT, 'static/assets')
+    target = os.path.join(APP_ROOT, 'static/assets') #os ensures that the correct path will be rendered regardless of OS.
     print(target)
     print(request.files.getlist('file'))
     
@@ -246,11 +246,13 @@ def videoz(videoid):
     cat = videoid.category
     desc = videoid.description
     date = videoid.date
-    comms = VideoComment.query.filter_by(videoid = vid).all()
+    comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid = vid, comms = comms)
 
-@app.route('/video/comment/<videoid>', methods=['GET', 'POST'])
+@app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
+#this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}
+
 def videocomment(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
@@ -258,6 +260,9 @@ def videocomment(videoid):
     db.session.add(comments)
     db.session.commit()
     return redirect(url_for('videoz', videoid = vid))
+
+# Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment 
+# has a relationship and should have been joined together via a FK.
 
 ####
 

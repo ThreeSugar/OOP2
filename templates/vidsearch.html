@@ -1,0 +1,62 @@
+{% extends 'vidlayout.html' %}
+
+{% block title %} Videos {% endblock %} 
+
+
+{% block style %}
+<link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
+<link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+
+<style>
+    .vidcontainer{
+        margin-top:15%;
+        margin-left:32%;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="input-group">
+    <form method = 'POST'>
+        <input name = "search" class="form-control" placeholder="Search Videos">
+        <div class="input-group-addon">
+            <a href="{{url_for('videosearch')}}">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+
+<div class = "vidcontainer">
+
+    {% for s in search %}
+    <div class="col-md-6">
+            <div class="card mb-4">
+                    <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+            <div class="card-body">
+                <div class="news-title">
+                <h2 class=" title-small"><a href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a>
+                </div>
+            <p class="card-text">{% s.description %}</p>
+            <p class="card-text"><small class="text-time"><em>{% s.date %}</em></small></p>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+    
+
+</div>
+
+</div>
+
+
+
+
+{% endblock %}

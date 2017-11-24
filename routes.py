@@ -268,6 +268,11 @@ def videocomment(videoid):
 # Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment 
 # has a relationship and should have been joined together via a FK.
 
+@app.route('/video/search', methods=['GET', 'POST'])
+def videosearch():
+    search = Video.query.filter(Video.title.like(request.form['search'])).all()
+    return render_template('vidsearch.html', search = search)
+    
 ####
 
 

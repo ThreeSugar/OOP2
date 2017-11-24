@@ -130,7 +130,7 @@ def dashboardvid():
 @app.route('/dashboard/video/manage')
 @login_required
 def vidmanage():
-    videos = Video.query.all()
+    videos = Video.query.filter_by(username = current_user.username).all()
     return render_template('vidmanage.html', videos = videos)
 
 @app.route('/dashboard/video/manage/edit/<int:id>', methods=['GET', 'POST'])
@@ -148,8 +148,6 @@ def videdit(id):
 
     return render_template('videdit.html', form = form)
 
-
-    
 
 @app.route('/dashboard/video/manage/delete/<int:id>')
 @login_required
@@ -216,7 +214,13 @@ def advancedvideo():
 
 @app.route('/video/explore')
 def explorevideo():
-    return render_template('freevid.html')
+    allvid = Video.query.order_by("date desc").limit(6)
+    food = Video.query.filter_by(category = 'food').order_by("date desc").limit(5) #string literal query
+    exercise = Video.query.filter_by(category = 'exercise').order_by("date desc").limit(5)
+    music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
+    edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
+
+    return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, allvid=allvid)
 
 @app.route('/video/explore/view')
 def viewvideo():

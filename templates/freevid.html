@@ -27,98 +27,56 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="heading-large">Recommended</h3>
+                        <h3 class="heading-large">Latest</h3>
                     </div>
+
+                    {% for a in allvid %}
+
                     <div class="col-md-6">
                         <div class="card mb-4">
-                            <img class="img-fluid" src="img/exercise1.jpg" alt="">
+                            <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
                             <div class="card-body">
                                 <div class="news-title">
                                     <h2 class=" title-small">
-                                        <a href="#">What is more important? Exercise or Diet?</a>
+                                        <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
                                     </h2>
                                 </div>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
                                     <small class="text-time">
-                                        <em>3 mins ago</em>
+                                        <em>{{a.date}}</em>
                                     </small>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <img class="img-fluid" src="img/exercise2.jpg" alt="">
-                            <div class="card-body">
-                                <div class="news-title">
-                                    <h2 class=" title-small">
-                                        <a href="#">Top 10 Reasons Why Children Should Exercise</a>
-                                    </h2>
-                                </div>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <p class="card-text">
-                                    <small class="text-time">
-                                        <em>3 mins ago</em>
-                                    </small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card mb-4">
-                            <img class="img-fluid" src="img/exercise3.jpg" alt="">
-                            <div class="card-body">
-                                <div class="news-title">
-                                    <h2 class=" title-small">
-                                        <a href="#">What weights are most suitable for you?</a>
-                                    </h2>
-                                </div>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <p class="card-text">
-                                    <small class="text-time">
-                                        <em>3 mins ago</em>
-                                    </small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <img class="img-fluid" src="img/exercise4.jpg" alt="">
-                            <div class="card-body">
-                                <div class="news-title">
-                                    <h2 class=" title-small">
-                                        <a href="#">Light exercises that are suitable for everyone!</a>
-                                    </h2>
-                                </div>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <p class="card-text">
-                                    <small class="text-time">
-                                        <em>3 mins ago</em>
-                                    </small>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+
+                    {% endfor %}
+
+
                 </div>
             </div>
             <aside class="col-md-4 side-bar">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Latest</a>
+                        <a class="nav-link active" data-toggle="tab" href="#food" role="tab">Food</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Top</a>
+                        <a class="nav-link" data-toggle="tab" href="#educate" role="tab">Educational</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#messages" role="tab">Featured</a>
+                        <a class="nav-link" data-toggle="tab" href="#exercise" role="tab">Exercise</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#music" role="tab">Music</a>
                     </li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content sidebar-tabing">
-                    <div class="tab-pane active" id="home" role="tabpanel">
+                    <div class="tab-pane active" id="food" role="tabpanel"> 
+
+                        {% for f in food %}
                         <div class="media">
                             <a href="#">
                                 <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
@@ -126,147 +84,105 @@
                             <div class="media-body">
                                 <div class="news-title">
                                     <h2 class="title-small">
-                                        <a href="#">Learn To Swim Today</a>
+                                        <a href="{{url_for('videoz', videoid = f.id)}}">{{f.title}}</a>
                                     </h2>
                                 </div>
                                 <div class="news-auther">
-                                    <span class="time">1h ago</span>
+                                        <span class="time">Posted by: {{f.username}}</span>
+                                </div>
+
+                                <div class="news-auther">
+                                    <span class="time">Date: {{f.date}}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/lifestyle.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">Benefits of waking up early</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
 
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/food1.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">How chicken dishes aren't as bad as you think</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
 
-                    <div class="tab-pane" id="profile" role="tabpanel">
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/exercise5.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">Tips to playing soccer</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/exercise6.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">Basic Rugby Technique</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
+                    <div class="tab-pane" id="educate" role="tabpanel">
+
+                        
+                        {% for e in edu %}
+                            <div class="media">
+                                <a href="#">
+                                    <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
+                                </a>
+                                <div class="media-body">
+                                    <div class="news-title">
+                                        <h2 class="title-small">
+                                            <a href="{{url_for('videoz', videoid = e.id)}}">{{e.title}}</a>
+                                        </h2>
+                                    </div>
+                                    <div class="news-auther">
+                                            <span class="time">Posted by: {{e.username}}</span>
+                                    </div>
+    
+                                    <div class="news-auther">
+                                        <span class="time">Date: {{e.date}}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/running.jpeg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">How to run longer and faster</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
-                                </div>
-                            </div>
-                        </div>
+    
+                        {% endfor %}
+
                     </div>
 
 
-                    <div class="tab-pane" id="messages" role="tabpanel">
+                    <div class="tab-pane" id="exercise" role="tabpanel">
 
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/food.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">How chicken dishes aren't as bad as you think</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
+                            {% for e in exercise %}
+                            <div class="media">
+                                <a href="#">
+                                    <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
+                                </a>
+                                <div class="media-body">
+                                    <div class="news-title">
+                                        <h2 class="title-small">
+                                            <a href="{{url_for('videoz', videoid = e.id)}}">{{e.title}}</a>
+                                        </h2>
+                                    </div>
+                                    <div class="news-auther">
+                                            <span class="time">Posted by: {{e.username}}</span>
+                                    </div>
+    
+                                    <div class="news-auther">
+                                        <span class="time">Date: {{e.date}}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+    
+                        {% endfor %}
 
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/exercise6.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">Basic Rugby Technique</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
+                    </div>
+
+                    <div class="tab-pane" id="music" role="tabpanel">
+                                
+                       {% for m in music %}
+                            <div class="media">
+                                <a href="#">
+                                    <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
+                                </a>
+                                <div class="media-body">
+                                    <div class="news-title">
+                                        <h2 class="title-small">
+                                            <a href="{{url_for('videoz', videoid = m.id)}}">{{m.title}}</a>
+                                        </h2>
+                                    </div>
+                                    <div class="news-auther">
+                                            <span class="time">Posted by: {{m.username}}</span>
+                                    </div>
+    
+                                    <div class="news-auther">
+                                        <span class="time">Date: {{m.date}}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+    
+                        {% endfor %}
 
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/sport1.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="#">Origin of the Rugby Sport</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                    <span class="time">1h ago</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="video-sec">

@@ -66,12 +66,9 @@ class VideoComment(db.Model):
 
 class VideoLikes(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    videoid = db.Column(db.Integer, unique=True)
+    videoid = db.Column(db.Integer)
     likes = db.Column(db.Integer)
     username = db.Column(db.String(100))
-
-
-
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])

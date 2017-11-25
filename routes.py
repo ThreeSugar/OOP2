@@ -61,7 +61,7 @@ user = auth.sign_in_with_email_and_password("john@john.com", "password")
     #return 'Hello World!'
 
 
-#ADMIN
+#ADMIN OVERALL
 
 admin.add_view(ModelView(User, db.session))
 path = os.path.join(os.path.dirname(__file__), 'static/assets')
@@ -117,11 +117,18 @@ def signup():
 
     return render_template('signup.html', form = form)
 
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+#VIDEO ADMIN (CRUD)
 
 @app.route('/dashboard/video')
 @login_required
@@ -191,11 +198,6 @@ def upload():
 
     return render_template('dashvid.html', form=form)     
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
 
 ####
 
@@ -225,25 +227,7 @@ def explorevideo():
 
     return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                             allvid=allvid, form=form)
-
-@app.route('/video/explore/view')
-def viewvideo():
-    return render_template('viewvid.html')
-
-@app.route('/video/test')
-def videos():
-    return render_template('upload.html')
-
-# @app.route('/video/display')
-# def display_vid():
-#     video = []
-#     for instance in db.session.query(Video).order_by(Video.id):
-#         print(instance.link)
-#         video.append(instance.link)
-
-#     print(video)
-#     return render_template('displayvid.html', video = video)
-
+                    
 @app.route('/video/<videoid>')
 def videoz(videoid):
     form = VideoSearch()

@@ -7,6 +7,14 @@
 <link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+
+<style>
+        #search {
+            height:30px;
+        }
+
+</style>
+
 {% endblock %}
 
 
@@ -33,7 +41,6 @@
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/mp4">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/webm">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">
-    
 </video> 
 
 

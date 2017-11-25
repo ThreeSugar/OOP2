@@ -6,6 +6,12 @@
 <link href="{{url_for('static', filename='css/new-style.css')}}" rel="stylesheet" type="text/css">
 <link href="{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css"> 
 
+<style>
+    #search{
+        height:30px;
+    }
+</style>
+
 {% endblock %} 
 
 {% block content %}
@@ -13,8 +19,8 @@
     <div class="col-lg-6">
         <div class="input-group">
             {{form.hidden_tag()}}
-            {{form.search}}
-            <button type = "submit"><i class="fa fa-search"></i></button>       
+            {{form.search(placeholder="Search")}}
+            <button style = "margin-left:1px; margin-top:8px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
         </div>   
     </div>
 </form>

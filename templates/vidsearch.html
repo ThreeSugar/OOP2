@@ -14,6 +14,11 @@
         margin-top:15%;
         margin-left:32%;
     }
+
+    #search{
+        height:30px;
+    }
+    
 </style>
 
 {% endblock %}
@@ -24,11 +29,12 @@
         <div class="col-lg-6">
             <div class="input-group">
                 {{form.hidden_tag()}}
-                {{form.search}}
-                <button type = "submit"><i class="fa fa-search"></i></button>       
+                {{form.search(placeholder="Search")}}
+                <button style = "margin-left:1px; margin-top:8px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
             </div>   
         </div>
 </form>
+    
 
 <div class = "vidcontainer">
 

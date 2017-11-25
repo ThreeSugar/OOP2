@@ -68,6 +68,8 @@
     </p>
 
     <hr>
+
+    {% if current_user.is_authenticated %}
  
     <div class="form-group">
             <form method = 'POST' action = "{{url_for('videocomment', videoid = vid)}}">
@@ -76,6 +78,16 @@
             <button type = 'submit' class = 'btn btn-default'>Post</button>
             </form>
     </div>  
+
+    {% else %}
+    
+    <div class="form-group">
+    
+    <p>Please <a href = "{{url_for('login')}}">login</a> to comment!</p>
+    
+    </div>
+    
+    {% endif %}
 
     <hr>
 

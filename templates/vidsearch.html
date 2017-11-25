@@ -18,7 +18,7 @@
     #search{
         height:30px;
     }
-    
+
 </style>
 
 {% endblock %}
@@ -52,6 +52,11 @@
             </div>
         </div>
     </div>
+
+    {% else %}
+
+    <p>Your search returned nothing.</p>
+
     {% endfor %}
 
 </div>

@@ -20,17 +20,15 @@
 
 {% block content %}
 
-<div class="input-group">
-    <form method = 'POST'>
-        <input name = "search" class="form-control" placeholder="Search Videos">
-        <div class="input-group-addon">
-            <a href="{{url_for('videosearch')}}">
-                <i class="fa fa-search"></i>
-            </a>
+<form method = "POST" action = "{{url_for('videosearch')}}" >
+        <div class="col-lg-6">
+            <div class="input-group">
+                {{form.hidden_tag()}}
+                {{form.search}}
+                <button type = "submit"><i class="fa fa-search"></i></button>       
+            </div>   
         </div>
-    </form>
-</div>
-
+</form>
 
 <div class = "vidcontainer">
 
@@ -42,15 +40,13 @@
                 <div class="news-title">
                 <h2 class=" title-small"><a href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a>
                 </div>
-            <p class="card-text">{% s.description %}</p>
-            <p class="card-text"><small class="text-time"><em>{% s.date %}</em></small></p>
+            <p class="card-text">Posted by: {{s.username }}</p>
+            <p class="card-text">{{s.description }}</p>
+            <p class="card-text"><small class="text-time"><em>{{ s.date }}</em></small></p>
             </div>
         </div>
     </div>
-
     {% endfor %}
-
-    
 
 </div>
 

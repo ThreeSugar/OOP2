@@ -14,14 +14,16 @@
 
 <!-- Page Content -->
 
+
+<form method = "POST" action = "{{url_for('videosearch')}}" >
 <div class="input-group">
-    <input class="form-control" placeholder="Search Videos">
+    {{form.hidden_tag()}}
+    {{form.search}}
     <div class="input-group-addon">
-        <a href="free.html">
-            <i class="fa fa-search"></i>
-        </a>
+        <button type = "submit"><i class="fa fa-search"></i></button> 
     </div>
 </div>
+</form>
 
 
 <div class="video">

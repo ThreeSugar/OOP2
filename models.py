@@ -98,6 +98,16 @@ class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
 
+#FIREBASE FORM
+class FireForm(FlaskForm):
+    place = StringField('Place', validators=[InputRequired(), ])
+    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
+
+
+
+   
+
+
 
 
 

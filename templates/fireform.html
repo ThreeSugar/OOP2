@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<br>
+<br>
+
+<div style = "margin-left:50px;">
+    <form method = "POST">
+        {{ form.hidden_tag() }}
+        {{ form.place.label }}
+        {{ form.place}}<br>
+        {{ form.email.label }}
+        {{form.email}}
+        <input type ="submit" value="Submit">
+    </form>
+</div>
+
+{% for u in userlist %}
+
+<p>{{u.place}}</p>
+<p>{{u.email}}</p>
+
+{% endfor %}
+
+{% endblock %}
+  

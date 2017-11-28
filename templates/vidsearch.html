@@ -7,7 +7,6 @@
 <link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
 <style>
     .vidcontainer{
@@ -15,8 +14,10 @@
         margin-left:32%;
     }
 
-    #search{
+    #search {
         height:30px;
+        width:350px;
+        margin-left:40%;
     }
 
 </style>
@@ -30,7 +31,7 @@
             <div class="input-group">
                 {{form.hidden_tag()}}
                 {{form.search(placeholder="Search")}}
-                <button style = "margin-left:1px; margin-top:8px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
+                <button style = "margin-left:1px; margin-top:-1px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
             </div>   
         </div>
 </form>
@@ -55,7 +56,9 @@
 
     {% else %}
 
-    <p>Your search returned nothing.</p>
+    <p style = "font-size:20px;">Your search returned nothing.<br>
+      Click <a href = "{{url_for('explorevideo')}}"><u>here</u></a> to return or make another search.
+    </p>
 
     {% endfor %}
 

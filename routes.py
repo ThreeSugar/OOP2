@@ -9,7 +9,7 @@ from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
-VideoComment, VideoSearch
+VideoComment, VideoSearch, FireForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -63,6 +63,27 @@ user = auth.sign_in_with_email_and_password("john@john.com", "password")
 #     lana = {"name": "Lana Kane", "agency": "Figgis Agency"}
 #     firedb.child("agents").child("Lana").set(lana, user['idToken'] )
 #     return 'Hello World!'
+
+#FIREFORM TEST
+@app.route('/firebase', methods=['GET', 'POST'])
+def firebase():
+    form = FireForm()
+    userlist = []
+    if form.validate_on_submit():
+        info = {"place": form.place.data, "email": form.email.data}
+        firedb.child("booking").child("user").push(info, user['idToken'] )
+        userz = firedb.child("booking").child("user").get(user['idToken'])
+        for u in userz.each():
+            userlist.append(u.val())
+
+        return render_template('fireform.html', form=form, userlist=userlist)
+        
+    else:
+         return render_template('fireform.html', form=form, userlist=userlist)
+
+    return render_template('fireform.html', form=form, userlist=userlist)
+
+
 
 
 #ADMIN OVERALL

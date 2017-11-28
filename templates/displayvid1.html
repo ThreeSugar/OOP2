@@ -7,6 +7,14 @@
 <link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+
+<style>
+        #search {
+            height:30px;
+        }
+
+</style>
+
 {% endblock %}
 
 
@@ -14,14 +22,16 @@
 
 <!-- Page Content -->
 
+
+<form method = "POST" action = "{{url_for('videosearch')}}" >
 <div class="input-group">
-    <input class="form-control" placeholder="Search Videos">
+    {{form.hidden_tag()}}
+    {{form.search}}
     <div class="input-group-addon">
-        <a href="free.html">
-            <i class="fa fa-search"></i>
-        </a>
+        <button type = "submit"><i class="fa fa-search"></i></button> 
     </div>
 </div>
+</form>
 
 
 <div class="video">
@@ -31,7 +41,6 @@
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/mp4">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/webm">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">
-    
 </video> 
 
 
@@ -59,6 +68,8 @@
     </p>
 
     <hr>
+
+    {% if current_user.is_authenticated %}
  
     <div class="form-group">
             <form method = 'POST' action = "{{url_for('videocomment', videoid = vid)}}">
@@ -67,6 +78,16 @@
             <button type = 'submit' class = 'btn btn-default'>Post</button>
             </form>
     </div>  
+
+    {% else %}
+    
+    <div class="form-group">
+    
+    <p>Please <a href = "{{url_for('login')}}">login</a> to comment!</p>
+    
+    </div>
+    
+    {% endif %}
 
     <hr>
 
@@ -92,14 +113,10 @@
 <div class="sidearea">
     <p style="font-size:30px;">Related Videos</p>
     <hr>
-    <img class="related" src="img/healthy2.jpg">
-    <p>Healthy Food B</p>
-    <img class="related" src="img/healthy3.jpg">
-    <p>Healthy Food C</p>
-    <img class="related" src="img/healthy4.jpg">
-    <p>Healthy Food D</p>
-    <img class="related" src="img/healthy5.jpg">
-    <p>Healthy Food E</p>
+    {% for r in related %}
+    <img class="related" src="{{url_for('static', filename = 'img/running.jpeg')}}">
+    <a style = "margin-top:2%;" href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
+    {% endfor %}
 </div>
 
 

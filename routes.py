@@ -5,9 +5,11 @@ import os
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
-from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, VideoComment
+from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
+VideoComment, VideoSearch
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -60,7 +62,7 @@ user = auth.sign_in_with_email_and_password("john@john.com", "password")
     #return 'Hello World!'
 
 
-#ADMIN
+#ADMIN OVERALL
 
 admin.add_view(ModelView(User, db.session))
 path = os.path.join(os.path.dirname(__file__), 'static/assets')
@@ -116,11 +118,18 @@ def signup():
 
     return render_template('signup.html', form = form)
 
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+#VIDEO ADMIN (CRUD)
 
 @app.route('/dashboard/video')
 @login_required
@@ -131,7 +140,8 @@ def dashboardvid():
 @login_required
 def vidmanage():
     videos = Video.query.filter_by(username = current_user.username).all()
-    return render_template('vidmanage.html', videos = videos)
+    form = VideoSearch()
+    return render_template('vidmanage.html', videos = videos, form=form)
 
 @app.route('/dashboard/video/manage/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -189,11 +199,6 @@ def upload():
 
     return render_template('dashvid.html', form=form)     
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
 
 ####
 
@@ -214,34 +219,19 @@ def advancedvideo():
 
 @app.route('/video/explore')
 def explorevideo():
+    form = VideoSearch()
     allvid = Video.query.order_by("date desc").limit(6)
     food = Video.query.filter_by(category = 'food').order_by("date desc").limit(5) #string literal query
     exercise = Video.query.filter_by(category = 'exercise').order_by("date desc").limit(5)
     music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
     edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
 
-    return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, allvid=allvid)
-
-@app.route('/video/explore/view')
-def viewvideo():
-    return render_template('viewvid.html')
-
-@app.route('/video/test')
-def videos():
-    return render_template('upload.html')
-
-# @app.route('/video/display')
-# def display_vid():
-#     video = []
-#     for instance in db.session.query(Video).order_by(Video.id):
-#         print(instance.link)
-#         video.append(instance.link)
-
-#     print(video)
-#     return render_template('displayvid.html', video = video)
-
+    return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
+                            allvid=allvid, form=form)
+                    
 @app.route('/video/<videoid>')
 def videoz(videoid):
+    form = VideoSearch()
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
     title = videoid.title
@@ -251,8 +241,14 @@ def videoz(videoid):
     desc = videoid.description
     date = videoid.date
     comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
+
+    s = select([Video.title]).where(Video.title == videoid.title)
+    print(s) #debug purposes
+    related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
+    # ~Video.title.in_(s) = Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
     
-    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, date=date, title=title, vid = vid, comms = comms)
+    return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
+                            date=date, title=title, vid = vid, comms = comms, form=form, related=related)
 
 @app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
 #this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}
@@ -260,7 +256,8 @@ def videoz(videoid):
 def videocomment(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
-    comments = VideoComment(videoid = videoid.id, username = current_user.username, comment = request.form['text'])
+    comments = VideoComment(videoid = videoid.id, username = current_user.username, \
+    comment = request.form['text'])
     db.session.add(comments)
     db.session.commit()
     return redirect(url_for('videoz', videoid = vid))
@@ -268,6 +265,15 @@ def videocomment(videoid):
 # Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment 
 # has a relationship and should have been joined together via a FK.
 
+@app.route('/video/search', methods=['GET', 'POST'])
+def videosearch():
+    form = VideoSearch()
+    if form.validate_on_submit():
+        search = Video.query.filter(Video.title.ilike('%' + form.search.data + '%')).all() #ilike is case insensitive
+        return render_template('vidsearch.html', search = search, form=form)
+    else:
+        return redirect(url_for('explorevideo'))
+    
 ####
 
 

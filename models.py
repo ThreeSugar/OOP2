@@ -83,13 +83,18 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 class SelectForm(FlaskForm):
-    title = StringField('Title', validators=[InputRequired(), Length(min=4, max=15)])
+    title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     options = SelectField(u'Categories', choices=[('educational', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=8, max=300)])
 
 class EditForm(FlaskForm):
-    title = StringField('Title', validators=[InputRequired(), Length(min=4, max=15)])
+    title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=8, max=300)])
     options = SelectField(u'Categories', choices=[('educational', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
+
+class VideoSearch(FlaskForm):
+    search = StringField(validators=[InputRequired(), ])
+
+
 
 

@@ -245,7 +245,7 @@ def videoz(videoid):
     s = select([Video.title]).where(Video.title == videoid.title)
     print(s) #debug purposes
     related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
-    # ~Video.title.in_(s) = Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
+    # ~Video.title.in_(s) == Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related)

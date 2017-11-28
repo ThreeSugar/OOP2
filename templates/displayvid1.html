@@ -6,11 +6,12 @@
 <link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lity.min.css')}}" rel="stylesheet" type="text/css">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
 <style>
         #search {
             height:30px;
+            width:350px;
+            margin-left:30%;
         }
 
 </style>
@@ -24,13 +25,13 @@
 
 
 <form method = "POST" action = "{{url_for('videosearch')}}" >
-<div class="input-group">
-    {{form.hidden_tag()}}
-    {{form.search}}
-    <div class="input-group-addon">
-        <button type = "submit"><i class="fa fa-search"></i></button> 
+    <div class="col-lg-6">
+        <div class="input-group">
+            {{form.hidden_tag()}}
+            {{form.search(placeholder="Search")}}
+            <button style = "margin-left:1px; margin-top:-1px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
+        </div>   
     </div>
-</div>
 </form>
 
 
@@ -56,8 +57,9 @@
     <p>Category: {{cat}} </p>
 
     <p>
-            <button style= "width:80px; height:60px;" type="button" class="btn btn-default btn-sm">
-              <span style = "font-size:30px;" class="glyphicon glyphicon-thumbs-up"></span> <p style = "font-size:10px;">Like: 1000</p>
+            <button style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
+              <span style = "font-size:30px;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+              </span><p style = "font-size:10px;">Like: 1000</p>
             </button>
     </p>
     <hr>
@@ -115,9 +117,11 @@
     <hr>
     {% for r in related %}
     <img class="related" src="{{url_for('static', filename = 'img/running.jpeg')}}">
+    <div class = 'container'>
     <a style = "margin-top:2%;" href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
     <p>Posted by: {{r.username}}</p>
     <p>Date: {{r.date}}</p>
+    </div>
     {% endfor %}
 </div>
 

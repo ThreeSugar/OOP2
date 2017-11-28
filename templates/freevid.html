@@ -9,7 +9,14 @@
 <style>
     #search{
         height:30px;
+        width:350px;
+        margin-left:30%;
     }
+
+    .searchy{
+        margin-top:70px;
+    }
+    
 </style>
 
 {% endblock %} 
@@ -17,7 +24,7 @@
 {% block content %}
 <form method = "POST" action = "{{url_for('videosearch')}}" >
     <div class="col-lg-6">
-        <div class="input-group">
+        <div class="input-group searchy">
             {{form.hidden_tag()}}
             {{form.search(placeholder="Search")}}
             <button style = "margin-left:1px; margin-top:8px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       

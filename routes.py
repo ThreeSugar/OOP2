@@ -5,6 +5,7 @@ import os
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
@@ -240,9 +241,14 @@ def videoz(videoid):
     desc = videoid.description
     date = videoid.date
     comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
+
+    s = select([Video.title]).where(Video.title == videoid.title)
+    print(s) #debug purposes
+    related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
+    # ~Video.title.in_(s) = Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
-                            date=date, title=title, vid = vid, comms = comms, form=form)
+                            date=date, title=title, vid = vid, comms = comms, form=form, related=related)
 
 @app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
 #this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}

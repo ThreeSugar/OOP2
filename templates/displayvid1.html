@@ -113,14 +113,10 @@
 <div class="sidearea">
     <p style="font-size:30px;">Related Videos</p>
     <hr>
-    <img class="related" src="img/healthy2.jpg">
-    <p>Healthy Food B</p>
-    <img class="related" src="img/healthy3.jpg">
-    <p>Healthy Food C</p>
-    <img class="related" src="img/healthy4.jpg">
-    <p>Healthy Food D</p>
-    <img class="related" src="img/healthy5.jpg">
-    <p>Healthy Food E</p>
+    {% for r in related %}
+    <img class="related" src="{{url_for('static', filename = 'img/running.jpeg')}}">
+    <a style = "margin-top:2%;" href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
+    {% endfor %}
 </div>
 
 

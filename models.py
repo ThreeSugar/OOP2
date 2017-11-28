@@ -15,7 +15,7 @@ login_manager = LoginManager()
 login_manager.init_app(Flask(__name__))
 login_manager.login_view = 'login'
 
-
+#LOGIN
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     uid = db.Column(db.Integer, primary_key = True)
@@ -46,6 +46,21 @@ class User(UserMixin, db.Model):
         except NameError:
             return str(self.uid)  # python 3
 
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+    remember = BooleanField('Remember Me')
+
+class RegisterForm(FlaskForm):
+    firstname = StringField('First Name')
+    lastname = StringField('Last Name')
+    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
+    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+
+
+#VIDEO 
+
 class Video(db.Model):
     __tablename__ = 'video'
     id = db.Column(db.Integer, primary_key = True)
@@ -55,7 +70,6 @@ class Video(db.Model):
     link = db.Column(db.String(200), unique= True)
     category = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-
 
 class VideoComment(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -70,18 +84,6 @@ class VideoLikes(db.Model):
     likes = db.Column(db.Integer)
     username = db.Column(db.String(100))
 
-class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
-    remember = BooleanField('Remember Me')
-
-class RegisterForm(FlaskForm):
-    firstname = StringField('First Name')
-    lastname = StringField('Last Name')
-    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
-    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
-
 class SelectForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     options = SelectField(u'Categories', choices=[('educational', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
@@ -94,6 +96,7 @@ class EditForm(FlaskForm):
 
 class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
+
 
 
 

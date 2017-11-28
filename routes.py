@@ -38,12 +38,15 @@ STATIC_ROOT = os.path.join(APP_ROOT, 'static')
 #FIREBASE
 
 config = {
-    "apiKey": "AIzaSyC0TLL0UpuWJJpBcTjpv336tZg95SKqR88",
-    "authDomain": "webapp-4eb51.firebaseapp.com",
-    "databaseURL": "https://webapp-4eb51.firebaseio.com",
-    "storageBucket": "webapp-4eb51.appspot.com",
-    "serviceAccount": "firebase.json" #this is to register as an admin with full read/write access
+    "apiKey": "AIzaSyDasXfTEmJNbK5446JZlumx1bmZ4rmxeQE",
+    "authDomain": "lifestyle28-14407.firebaseapp.com",
+    "databaseURL": "https://lifestyle28-14407.firebaseio.com",
+    "projectId": "lifestyle28-14407",
+    "storageBucket": "gs://lifestyle28-14407.appspot.com",
+    "messagingSenderId": "260841418499"
   }
+
+  #this is to register as an admin with full read/write access
 
 firebase = pyrebase.initialize_app(config)
 firedb = firebase.database()  
@@ -55,11 +58,11 @@ user = auth.sign_in_with_email_and_password("john@john.com", "password")
 
 
 #FIREBASE TEST
-#@app.route('/firebase')
-#def firebase():
-    #lana = {"name": "Lana Kane", "agency": "Figgis Agency"}
-    #firedb.child("agents").child("Lana").set(lana, user['idToken'])
-    #return 'Hello World!'
+@app.route('/firebase')
+def firebase():
+    lana = {"name": "Lana Kane", "agency": "Figgis Agency"}
+    firedb.child("agents").child("Lana").set(lana, user['idToken'] )
+    return 'Hello World!'
 
 
 #ADMIN OVERALL

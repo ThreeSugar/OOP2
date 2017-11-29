@@ -57,13 +57,6 @@ auth = firebase.auth()
 user = auth.sign_in_with_email_and_password("john@john.com", "password")
 
 
-#FIREBASE TEST
-# @app.route('/firebase')
-# def firebase():
-#     lana = {"name": "Lana Kane", "agency": "Figgis Agency"}
-#     firedb.child("agents").child("Lana").set(lana, user['idToken'] )
-#     return 'Hello World!'
-
 #FIREFORM TEST
 @app.route('/firebase', methods=['GET', 'POST'])
 def firebase():

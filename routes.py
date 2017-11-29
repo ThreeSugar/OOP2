@@ -261,6 +261,20 @@ def videoz(videoid):
     date = videoid.date
     comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
 
+    likes = []
+    dislikes = []
+
+    vidlike = VideoLikes.query.all()
+    for v in vidlike:
+        likes.append(v)
+    
+    viddislike = VideoDislikes.query.all()
+    for d in viddislike:
+        dislikes.append(d)
+
+    tlikes = len(likes)
+    tdislike = len(dislikes)
+    
     s = select([Video.title]).where(Video.title == videoid.title)
     print(s) #debug purposes
     related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
@@ -268,7 +282,8 @@ def videoz(videoid):
     # 'NOT IN' omits all query results that contains videoid.title
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
-                            date=date, title=title, vid = vid, comms = comms, form=form, related=related)
+                            date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
+                            tlikes = tlikes, tdislike = tdislike)
 
 
 
@@ -276,11 +291,27 @@ def videoz(videoid):
 def likevideo(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
+
+
     vidlike = VideoLikes.query.filter_by(videoid = vid).\
     filter_by(username = current_user.username).filter_by(likes = 1).first()
-    if vidlike is None:    
+
+    viddislike = VideoDislikes.query.filter_by(videoid = vid).\
+    filter_by(username = current_user.username).filter_by(dislikes = 1).first()
+
+
+
+    if vidlike is None and viddislike is None:    
         likes = VideoLikes(videoid = vid, username = current_user.username, likes = 1)
         db.session.add(likes)
+        db.session.commit()
+
+    elif vidlike is None and viddislike is not None:
+        likes = VideoLikes(videoid = vid, username = current_user.username, likes = 1)
+        db.session.add(likes)
+        db.session.commit()
+
+        db.session.delete(viddislike)
         db.session.commit()
 
     else:  #user can only like the video once 
@@ -294,11 +325,25 @@ def likevideo(videoid):
 def dislikevideo(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
+
     viddislike = VideoDislikes.query.filter_by(videoid = vid).\
     filter_by(username = current_user.username).filter_by(dislikes = 1).first()
-    if viddislike is None:    
+
+    vidlike = VideoLikes.query.filter_by(videoid = vid).\
+    filter_by(username = current_user.username).filter_by(likes = 1).first()
+
+
+    if viddislike is None and vidlike is None:    
         dislikes = VideoDislikes(videoid = vid, username = current_user.username, dislikes = 1)
         db.session.add(dislikes)
+        db.session.commit()
+
+    elif viddislike is None and vidlike is not None:
+        dislikes = VideoDislikes(videoid = vid, username = current_user.username, dislikes = 1)
+        db.session.add(dislikes)
+        db.session.commit()
+
+        db.session.delete(vidlike)
         db.session.commit()
 
     else:  #user can only dislike the video once 

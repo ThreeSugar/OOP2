@@ -62,7 +62,7 @@
         <a href = "{{url_for('likevideo', videoid = vid)}}">
             <button style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
               <span style = "font-size:30px;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-              </span><p style = "font-size:10px;">Like: 1000</p>
+              </span><p style = "font-size:10px;">Like: {{ tlikes }}</p>
             </button>
         </a>
 
@@ -72,7 +72,7 @@
         <a href = "{{url_for('dislikevideo', videoid = vid)}}">
             <button style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
                 <span style = "font-size:30px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-                </span><p style = "font-size:10px;">Dislike: 1000</p>
+                </span><p style = "font-size:10px;">Dislike: {{ tdislike }}</p>
             </button>
         </a>
 

@@ -66,6 +66,8 @@ def firebase():
         info = {"place": form.place.data, "email": form.email.data}
         firedb.child("booking").child("user").push(info, user['idToken'] )
         userz = firedb.child("booking").child("user").get(user['idToken'])
+        test = firedb.child("booking").child("user").order_by_child("email").equal_to("clever@clever.com").get(user['idToken'])
+        print(test.val())
         for u in userz.each():
             userlist.append(u.val())
 

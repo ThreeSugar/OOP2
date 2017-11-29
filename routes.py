@@ -299,8 +299,6 @@ def likevideo(videoid):
     viddislike = VideoDislikes.query.filter_by(videoid = vid).\
     filter_by(username = current_user.username).filter_by(dislikes = 1).first()
 
-
-
     if vidlike is None and viddislike is None:    
         likes = VideoLikes(videoid = vid, username = current_user.username, likes = 1)
         db.session.add(likes)

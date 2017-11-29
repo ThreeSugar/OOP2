@@ -46,7 +46,13 @@ class VideoLikes(db.Model):
     videoid = db.Column(db.Integer)
     likes = db.Column(db.Integer)
     username = db.Column(db.String(100), unique=True)
-    
+
+class VideoDislikes(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    videoid = db.Column(db.Integer)
+    dislikes = db.Column(db.Integer)
+    username = db.Column(db.String(100))
+
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

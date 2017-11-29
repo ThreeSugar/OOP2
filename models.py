@@ -84,6 +84,12 @@ class VideoLikes(db.Model):
     likes = db.Column(db.Integer)
     username = db.Column(db.String(100))
 
+class VideoDislikes(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    videoid = db.Column(db.Integer)
+    dislikes = db.Column(db.Integer)
+    username = db.Column(db.String(100))
+
 class SelectForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     options = SelectField(u'Categories', choices=[('educational', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])

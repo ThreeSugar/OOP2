@@ -9,7 +9,7 @@ from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
-VideoComment, VideoSearch, FireForm
+VideoComment, VideoSearch, VideoLikes, VideoDislikes, FireForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -269,6 +269,46 @@ def videoz(videoid):
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related)
+
+
+
+@app.route('/video/likes/<videoid>')
+def likevideo(videoid):
+    videoid = Video.query.filter_by(id = videoid).first()
+    vid = videoid.id
+    vidlike = VideoLikes.query.filter_by(videoid = vid).\
+    filter_by(username = current_user.username).filter_by(likes = 1).first()
+    if vidlike is None:    
+        likes = VideoLikes(videoid = vid, username = current_user.username, likes = 1)
+        db.session.add(likes)
+        db.session.commit()
+
+    else:  #user can only like the video once 
+        db.session.delete(vidlike)
+        db.session.commit()
+
+    return redirect(url_for('videoz', videoid = vid))
+
+
+@app.route('/video/dislikes/<videoid>')
+def dislikevideo(videoid):
+    videoid = Video.query.filter_by(id = videoid).first()
+    vid = videoid.id
+    viddislike = VideoDislikes.query.filter_by(videoid = vid).\
+    filter_by(username = current_user.username).filter_by(dislikes = 1).first()
+    if viddislike is None:    
+        dislikes = VideoDislikes(videoid = vid, username = current_user.username, dislikes = 1)
+        db.session.add(dislikes)
+        db.session.commit()
+
+    else:  #user can only dislike the video once 
+        db.session.delete(viddislike)
+        db.session.commit()
+
+    return redirect(url_for('videoz', videoid = vid))
+
+
+
 
 @app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
 #this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}

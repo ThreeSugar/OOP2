@@ -56,12 +56,46 @@
     <p>Date and Time: {{date}} </p>
     <p>Category: {{cat}} </p>
 
-    <p>
+    {% if current_user.is_authenticated %}
+
+    <div style = "display: inline-block;">
+        <a href = "{{url_for('likevideo', videoid = vid)}}">
             <button style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
               <span style = "font-size:30px;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
               </span><p style = "font-size:10px;">Like: 1000</p>
             </button>
-    </p>
+        </a>
+
+            &nbsp;
+            &nbsp;
+            &nbsp;
+        <a href = "{{url_for('dislikevideo', videoid = vid)}}">
+            <button style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
+                <span style = "font-size:30px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                </span><p style = "font-size:10px;">Dislike: 1000</p>
+            </button>
+        </a>
+
+            {% include '_space.html' %} 
+
+            <button id = "saved" style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
+                <span style = "font-size:30px;"><i class="fa fa-plus" aria-hidden="true"></i>                    
+                </span><p style = "font-size:10px;">Save video</p>
+            </button>
+            
+    </div>
+
+    {% else %}
+
+    &nbsp;
+    &nbsp;
+    &nbsp;
+
+    <p><a href = "{{url_for('signup')}}"><u>Sign up</u></a> or <a href = "{{url_for('login')}}"><u>Login</u></a> 
+        to be able to view likes/dislikes and like/dislike videos.</p>
+
+    {% endif %}
+
     <hr>
 
     
@@ -85,7 +119,7 @@
     
     <div class="form-group">
     
-    <p>Please <a href = "{{url_for('login')}}">login</a> to comment!</p>
+    <p>Please <a href = "{{url_for('login')}}"><u>login</u></a> to comment!</p>
     
     </div>
     

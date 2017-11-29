@@ -264,11 +264,13 @@ def videoz(videoid):
     likes = []
     dislikes = []
 
-    vidlike = VideoLikes.query.all()
+    vidlike = VideoLikes.query.filter_by(videoid = vid).filter_by(likes = 1).all()
+
+    viddislike = VideoDislikes.query.filter_by(videoid = vid).filter_by(dislikes = 1).all()
+
     for v in vidlike:
         likes.append(v)
     
-    viddislike = VideoDislikes.query.all()
     for d in viddislike:
         dislikes.append(d)
 
@@ -291,7 +293,6 @@ def videoz(videoid):
 def likevideo(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
-
 
     vidlike = VideoLikes.query.filter_by(videoid = vid).\
     filter_by(username = current_user.username).filter_by(likes = 1).first()

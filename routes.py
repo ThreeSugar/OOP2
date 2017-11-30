@@ -284,7 +284,7 @@ def videoz(videoid):
 
     #SAVE FUNCTION
 
-    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(username = current_user.username).first()
+    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(savedname = current_user.username).first()
     curr_save = False
 
     if saved is None:
@@ -382,33 +382,27 @@ def savevid(videoid):
     desc = videoid.description
     date = videoid.date
 
-    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(username = current_user.username).first()
+    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(savedname = current_user.username).first()
 
-    svid = VideoSaved(videoid = vid, title = title, link = link, username = name, category = cat,
-        description = desc, date = date)
+    svid = VideoSaved(videoid = vid, title = title, link = link, username = name, 
+        savedname = current_user.username,
+        category = cat, description = desc, date = date)
 
-    curr_save = False  
- 
+    curr_save = False
+
     if saved is None:
-        curr_save = False
-        db.session.add(svid)
-        db.session.commit()
+         curr_save = True
+         db.session.add(svid)
+         db.session.commit()
+         return redirect(url_for('videoz', videoid = vid))
 
     elif saved is not None:
-        curr_save = True
-        db.session.delete(saved)
-        db.session.commit()
-
-    return redirect(url_for('videoz', videoid = vid, curr_save = curr_save))
-
-
-    
-
-    
-
-
-
-
+         curr_save = False
+         db.session.delete(saved)
+         db.session.commit()
+         return redirect(url_for('videoz', videoid = vid))
+        
+    return redirect(url_for('videoz', videoid = vid))
 
 @app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
 #this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}
@@ -449,5 +443,3 @@ if __name__ == '__main__':
         return User.query.get(int(uid))
 
     app.run(debug=True)
-
-

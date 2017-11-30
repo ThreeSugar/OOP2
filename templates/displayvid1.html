@@ -78,7 +78,7 @@
 
             {% include '_space.html' %} 
 
-        {% if curr_save == True %}
+        {% if curr_save %}
 
         <a href = "{{url_for('savevid', videoid = vid)}}">
             <button id = "saved" style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">

@@ -93,10 +93,11 @@ class VideoDislikes(db.Model):
 class VideoSaved(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(100))
+    savedname = db.Column(db.String(100))
     videoid = db.Column(db.Integer)
     title = db.Column(db.String(100))
     description = db.Column(db.String(500))
-    link = db.Column(db.String(200), unique= True)
+    link = db.Column(db.String(200))
     category = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 

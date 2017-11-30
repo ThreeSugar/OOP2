@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5c315d86c645
+Revision ID: 622588a8f9e7
 Revises: 
-Create Date: 2017-11-30 09:06:47.562143
+Create Date: 2017-11-30 11:09:56.963657
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5c315d86c645'
+revision = '622588a8f9e7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,14 +21,15 @@ def upgrade():
     op.create_table('video_saved',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=100), nullable=True),
+    sa.Column('savedname', sa.String(length=100), nullable=True),
     sa.Column('videoid', sa.Integer(), nullable=True),
     sa.Column('title', sa.String(length=100), nullable=True),
     sa.Column('description', sa.String(length=500), nullable=True),
     sa.Column('link', sa.String(length=200), nullable=True),
     sa.Column('category', sa.String(length=100), nullable=True),
+    sa.Column('saveddate', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
     sa.Column('date', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('link')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

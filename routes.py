@@ -248,7 +248,7 @@ def explorevideo():
     music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
     edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
 
-    if current_user.is_authenticated:
+    if current_user.is_authenticated: #may have caused a severe reduction in loading speed when the func is called?
         savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                                 allvid=allvid, form=form, savedvid = savedvid)
@@ -413,6 +413,14 @@ def savevid(videoid):
          return redirect(url_for('videoz', videoid = vid))
         
     return redirect(url_for('videoz', videoid = vid))
+
+@app.route('/video/delete/<videoid>')
+def deletevid(videoid):
+    saved = VideoSaved.query.filter_by(videoid = videoid).filter_by(savedname = current_user.username).first()
+    db.session.delete(saved)
+    db.session.commit()
+    return redirect(url_for('explorevideo'))
+
 
 @app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
 #this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}

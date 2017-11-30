@@ -78,10 +78,27 @@
 
             {% include '_space.html' %} 
 
+        {% if curr_save == True %}
+
+        <a href = "{{url_for('savevid', videoid = vid)}}">
+            <button id = "saved" style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
+                <span style = "font-size:30px;"><i class="fa-check" aria-hidden="true"></i>                    
+                </span><p style = "font-size:10px;">Saved</p>
+            </button>
+        </a>
+
+        {% else %}
+
+        <a href = "{{url_for('savevid', videoid = vid)}}">
             <button id = "saved" style= "width:80px; height:80px;" type="button" class="btn btn-default btn-sm">
                 <span style = "font-size:30px;"><i class="fa fa-plus" aria-hidden="true"></i>                    
                 </span><p style = "font-size:10px;">Save video</p>
             </button>
+        </a>
+
+        {% endif %}
+
+
             
     </div>
 
@@ -92,7 +109,7 @@
     &nbsp;
 
     <p><a href = "{{url_for('signup')}}"><u>Sign up</u></a> or <a href = "{{url_for('login')}}"><u>Login</u></a> 
-        to be able to view likes/dislikes and like/dislike videos.</p>
+        to be able to view likes/dislikes, like/dislike videos and save videos.</p>
 
     {% endif %}
 

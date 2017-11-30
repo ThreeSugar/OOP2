@@ -8,8 +8,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
+
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
-VideoComment, VideoSearch, VideoLikes, VideoDislikes, FireForm
+VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, \
+FireForm
+
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -261,6 +264,8 @@ def videoz(videoid):
     date = videoid.date
     comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
 
+    #LIKE/DISLIKE FUNCTION
+
     likes = []
     dislikes = []
 
@@ -276,6 +281,20 @@ def videoz(videoid):
 
     tlikes = len(likes)
     tdislike = len(dislikes)
+
+    #SAVE FUNCTION
+
+    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(username = current_user.username).first()
+    curr_save = False
+
+    if saved is None:
+        curr_save =  False
+
+    elif saved is not None:
+        curr_save = True
+
+
+    #FILTER RELATED
     
     s = select([Video.title]).where(Video.title == videoid.title)
     print(s) #debug purposes
@@ -285,7 +304,8 @@ def videoz(videoid):
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
-                            tlikes = tlikes, tdislike = tdislike)
+                            tlikes = tlikes, tdislike = tdislike, \
+                            curr_save = curr_save)
 
 
 
@@ -350,6 +370,42 @@ def dislikevideo(videoid):
         db.session.commit()
 
     return redirect(url_for('videoz', videoid = vid))
+
+@app.route('/video/save/<videoid>')
+def savevid(videoid):
+    videoid = Video.query.filter_by(id = videoid).first()
+    vid = videoid.id
+    title = videoid.title
+    link = videoid.link
+    name = videoid.username
+    cat = videoid.category
+    desc = videoid.description
+    date = videoid.date
+
+    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(username = current_user.username).first()
+
+    svid = VideoSaved(videoid = vid, title = title, link = link, username = name, category = cat,
+        description = desc, date = date)
+
+    curr_save = False  
+ 
+    if saved is None:
+        curr_save = False
+        db.session.add(svid)
+        db.session.commit()
+
+    elif saved is not None:
+        curr_save = True
+        db.session.delete(saved)
+        db.session.commit()
+
+    return redirect(url_for('videoz', videoid = vid, curr_save = curr_save))
+
+
+    
+
+    
+
 
 
 

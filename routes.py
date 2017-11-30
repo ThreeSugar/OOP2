@@ -247,7 +247,7 @@ def explorevideo():
     exercise = Video.query.filter_by(category = 'exercise').order_by("date desc").limit(5)
     music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
     edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
-
+    
     return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                             allvid=allvid, form=form)
                     
@@ -293,7 +293,7 @@ def videoz(videoid):
     elif saved is not None:
         curr_save = True
 
-
+    
     #FILTER RELATED
     
     s = select([Video.title]).where(Video.title == videoid.title)

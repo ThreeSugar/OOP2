@@ -99,6 +99,7 @@ class VideoSaved(db.Model):
     description = db.Column(db.String(500))
     link = db.Column(db.String(200))
     category = db.Column(db.String(100))
+    saveddate = db.Column(db.DateTime(timezone=True), server_default=func.now())
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 class SelectForm(FlaskForm):

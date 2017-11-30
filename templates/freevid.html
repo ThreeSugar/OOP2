@@ -201,16 +201,25 @@
                 <div class="video-sec">
                     <h4 class="heading-small">Saved Videos</h4>
 
-                        {% for s in savevid %}
+                        {% for s in savedvid %}
+  
     
                         <div style = "margin-top:50px;" class="media">
-                            <a href="{{url_for('videoz', videoid = s.id)}}">
+
+                            <a href = "{{url_for('deletevid', videoid = s.videoid)}}">
+                                <button style = "padding:20px;" type="button" class="close" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                            </a>
+
+                            <a href="{{url_for('videoz', videoid = s.videoid)}}">
                                 <img style = "width:120px; height:100px;" class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
                             </a>
+
                             <div class="media-body">
                                 <div class="news-title">
                                     <h2 class="title-small">
-                                        <a href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a>
+                                        <a href="{{url_for('videoz', videoid = s.videoid)}}">{{s.title}}</a>
                                     </h2>
                                 </div>
                                 <div class="news-auther">

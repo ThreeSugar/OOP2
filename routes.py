@@ -247,9 +247,16 @@ def explorevideo():
     exercise = Video.query.filter_by(category = 'exercise').order_by("date desc").limit(5)
     music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
     edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
-    
-    return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
-                            allvid=allvid, form=form)
+
+    if current_user.is_authenticated:
+        savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)
+        return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
+                                allvid=allvid, form=form, savedvid = savedvid)
+
+    else:
+        return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
+                                allvid=allvid, form=form)
+        
                     
 @app.route('/video/<videoid>')
 def videoz(videoid):
@@ -284,14 +291,17 @@ def videoz(videoid):
 
     #SAVE FUNCTION
 
-    saved = VideoSaved.query.filter_by(videoid = vid).filter_by(savedname = current_user.username).first()
     curr_save = False
+    
+    if current_user.is_authenticated: #to fix a mysterious AnonMixin error that popped out for no reason
+        saved = VideoSaved.query.filter_by(videoid = vid).filter_by(savedname = current_user.username).first()
+        curr_save = False
 
-    if saved is None:
-        curr_save =  False
+        if saved is None:
+            curr_save =  False
 
-    elif saved is not None:
-        curr_save = True
+        elif saved is not None:
+            curr_save = True
 
     
     #FILTER RELATED

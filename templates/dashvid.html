@@ -1,4 +1,5 @@
 {% extends 'dashboard.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
 Lifestyle28 | Dashboard
@@ -37,18 +38,16 @@ Upload Videos
 
 
     
+    
     <form style = "padding:15px;" id="uploadform" action="{{url_for('upload')}}" method = "POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
-        {{ form.title.label }}
-        {{ form.title}}
+        {{wtf.form_field(form.title)}}
         <br>
         <br>
-        {{ form.options.label }}
-        {{ form.options}}
+        {{wtf.form_field(form.options)}}
         <br>
         <br>
-        {{form.desc.label}}
-        {{form.desc}}
+        {{wtf.form_field(form.desc)}}
         <br>
         <br>
         <input type="file" name = "file" accept="video/*, image/*" multiple>

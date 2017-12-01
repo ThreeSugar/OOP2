@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block title %} test {% endblock %}
+
+{% block content %}
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <h1> {{ name }} Dashboard </h1>
+{% endblock %}

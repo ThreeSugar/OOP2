@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %} Lifestyle28 | Shop {% endblock %}
+
+{% block content %}
+
+    <section class="main-section">
+		<!--main-section-start-->
+		<div class="container">
+            <h1>Shop</h1>
+            <div class="row" style="">
+                {% for item in items %}
+                <div class="col-md-4 mb-4 mb-md-4">
+                    <div class="card h-100">
+                      <img class="card-img-top" src="http://placehold.it/750x450" alt="">
+                      <div class="card-body text-center">
+                          <h4 class="card-title m-0"><a href="{{ url_for('item', item_id=item.id) }}">{{ item.name }}</a>
+                          <small class="text-muted">{{ item.price }}</small>
+                              <a href="{{ url_for('item', item_id=item.id) }}" class="btn btn-success" style="cursor: pointer; float: right">Buy</a></h4>
+                      </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

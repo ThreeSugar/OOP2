@@ -25,15 +25,15 @@ Upload Videos
 
 {% block dashboard %}
 
-    <!-- {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class = "alert alert-warning alert-dismissable">
-        {{message}}
-    </div>         
-    {% endfor %}
+    {% if error %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+        </button>
+         <p>Video link already exists!</p>
+    </div>
     {% endif %}
-    {% endwith %} -->
+
 
 
     

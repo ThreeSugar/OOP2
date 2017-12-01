@@ -175,7 +175,7 @@ def videdit(id):
         video.description = form.desc.data
         video.category = form.options.data
         db.session.commit()
-        flash('Video successfully edited!')
+        #flash('Video successfully edited!')
         return redirect(url_for('vidmanage')) #render template will cause a 'function not iterable error'
 
     return render_template('videdit.html', form = form)
@@ -187,7 +187,8 @@ def viddelete(id):
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
-    flash('You have successfully deleted the video.')
+    delete = True
+    #flash('You have successfully deleted the video.')
     return redirect(url_for('vidmanage'))
 
 @app.route('/dashboard/video/upload', methods=['GET', 'POST'])
@@ -214,9 +215,10 @@ def upload():
             return redirect(url_for('vidmanage'))
         
         except IntegrityError: 
+            error = True
             db.session.rollback()
-            flash('Video name already exists!')
-            return render_template('dashvid.html', form=form)
+            return render_template('dashvid.html', form=form, error=error) 
+            #maybe link shouldn't have an unique constraint...
 
 
     return render_template('dashvid.html', form=form)     
@@ -258,7 +260,7 @@ def explorevideo():
                                 allvid=allvid, form=form)
         
                     
-@app.route('/video/<videoid>')
+@app.route('/video/<videoid>', methods=['GET', 'POST'])
 def videoz(videoid):
     form = VideoSearch()
     videoid = Video.query.filter_by(id = videoid).first()
@@ -270,6 +272,21 @@ def videoz(videoid):
     desc = videoid.description
     date = videoid.date
     comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
+
+    error = False
+
+    #CUSTOM LOGIN TO REDIRECT BACK TO VIDEO
+
+    vidform = LoginForm()
+    if vidform.validate_on_submit():
+        user = User.query.filter_by(email=vidform.email.data).first()
+        if user is not None and user.check_password(vidform.password.data):
+                login_user(user)
+                return redirect(url_for('videoz', videoid = vid))
+        else:
+            error = True
+            #flash('Invalid username or password!')
+
 
     #LIKE/DISLIKE FUNCTION
 
@@ -315,7 +332,7 @@ def videoz(videoid):
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
-                            curr_save = curr_save)
+                            curr_save = curr_save, vidform=vidform, error=error)
 
 
 

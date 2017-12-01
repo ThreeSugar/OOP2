@@ -4,11 +4,13 @@
 Videos
 {% endblock %} 
 
+
+
 {% block content %}
 <div class="input-group">
-    <input class="form-control"
-                placeholder="">
-    <div class="input-group-addon" ><i class="fa fa-search"></i></div>
+    <input style = "margin-left:10px;" class="form-control"
+                placeholder="Search here">
+    <div class="input-group-addon" ><i style = "margin-left:10px;" class="fa fa-search"></i></div>
 </div>
 
 <div class = "video">
@@ -23,12 +25,12 @@ Videos
     <br>
     <p class = "title">Title: Exercise 1</p>
        <br>
-    <p class = 'desc'>This is a test description. I need to type as many words as possible.<br>
+    <div style = "padding-bottom:20%;" class = 'desc'>This is a test description. I need to type as many words as possible.<br>
         This is a test description. I need to type as many words as possible.
-    </p>
+    </div>
 </div>
 
-<div class="card playlist">
+<div style = "margin-left:10px;" class="card playlist">
     <div class="card-header">
       Playlist
     </div>
@@ -58,14 +60,16 @@ Videos
     $('#ex2').click( function(){
         $('.videos').attr('src', "{{url_for('static', filename = 'assets/hyouka3.mp4')}}")
         $('.title').text('Title: Exercise 2')
-        $('.desc').html('This is an extra exercise you can do to increase your banana powers! <br> Come on I need more words!')
+        $('.desc').html('This is an extra exercise you can do to increase your banana powers! \
+                     <br> Come on I need more words! More words!')
         $(".videos video").load();
     })
 
     $('#ex3').click( function(){
         $('.videos').attr('src', "{{url_for('static', filename = 'assets/hyouka1.mp4')}}")
         $('.title').text('Title: Exercise 3')
-        $('.desc').html('This is an extra exercise you can do to increase your lifepoints! <br> Come on I need more words!')
+        $('.desc').html('This is an extra exercise you can do to increase your lifepoints! \
+         <br> Come on I need more words!')
         $(".videos video").load();
     })
     $('#ex4').click( function(){

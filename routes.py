@@ -250,7 +250,7 @@ def explorevideo():
     music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
     edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
 
-    if current_user.is_authenticated: #may have caused a severe reduction in loading speed when the func is called?
+    if current_user.is_authenticated: 
         savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                                 allvid=allvid, form=form, savedvid = savedvid)

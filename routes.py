@@ -115,7 +115,8 @@ def index():
     if request.method == 'POST':
         msg = Message(subject= "Feedback",
                               recipients=['threesugar123@gmail.com'])
-        msg.html = 'From: {} ({}) <br> <br> Subject: {} <br> <br> Message: {}'.format(request.form['name'], request.form['email'], request.form['subject'] ,request.form['message'])
+        msg.html = 'From: {} ({}) <br> <br> Subject: {} <br> <br> Message: {}'.format(request.form['name'], 
+        request.form['email'], request.form['subject'], request.form['message'])
         mail.send(msg)
         return render_template('index.html', success=True, show = True)
 

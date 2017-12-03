@@ -69,13 +69,12 @@
 								  <li><a href="{{ url_for('explorevideo') }}">Video</a></li>
 								  <li><a href="{{ url_for('index', _anchor='client') }}">Gym Finder</a></li>
 								  <li><a href="{{ url_for('index', _anchor='team') }}">Blog</a></li>
-								  <li><a href="{{ url_for('index', _anchor='contact') }}">Contact</a></li>
 								</ul>
 						</li>
 		
 						<li><a href="#">About</a></li>
 						<li class="small-logo"><a href="#header"><img src="static/img/small-logo.png" alt=""></a></li>
-						<li><a href="#">Contact</a></li>
+						<li><a href="{{ url_for('index', _anchor='contact') }}">Contact</a></li>
 
 						{% if current_user.is_authenticated %}
 							<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>

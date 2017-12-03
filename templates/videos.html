@@ -4,7 +4,22 @@
 
 {% block content %}
 
-<a href = "{{ url_for('beginnervideo') }}">Beginner!</a>
-<a href = "{{ url_for('advancedvideo') }}">Advanced!</a>
+
+
+
+    
+    <a style = "margin-left: 35%; margin-top:10%;"  class="btn btn-secondary" 
+        href = "{{ url_for('beginnervideo') }}">Beginner!</a>
+  
+
+
+<br>
+
+
+   
+    <a class="btn btn-secondary" role="button"  style = "margin-left: 35%; margin-top:10%;" 
+       href = "{{ url_for('advancedvideo') }}">Advanced!</a>
+    
+
 
 {% endblock %}

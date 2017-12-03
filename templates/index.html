@@ -25,7 +25,7 @@
 	<script type="text/javascript" src="static/js/jquery.isotope.js"></script>
 	<script type="text/javascript" src="static/js/wow.js"></script>
 	<script type="text/javascript" src="static/js/classie.js"></script>
-	<script src="static/js/contactform.js"></script>
+	<!-- <script src="static/js/contactform.js"></script> -->
 
 	<!-- =======================================================
     Theme Name: Knight
@@ -447,9 +447,17 @@
 				<div class="col-lg-6 col-sm-5 wow fadeInUp delay-05s">
 					<div class="form">
 
-						<div id="sendmessage">Your message has been sent. Thank you!</div>
+
+                        {% if success %}
+						<div class="alert alert-success alert-dismissable">
+						    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							Thank you for your feedback!
+						</div>
+						{% endif %}
+
+
 						<div id="errormessage"></div>
-						<form action="" method="post" role="form" class="contactForm">
+						<form method="POST" class="contactForm">
 							<div class="form-group">
 								<input type="text" name="name" class="form-control input-text" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
 								<div class="validation"></div>
@@ -510,6 +518,16 @@
 		});
 		wow.init();
 	</script>
+
+	{% if show %}
+
+	<script>
+		$(document).ready(function() {
+			window.location.hash="contact"; 
+        });	
+	</script>
+
+	{% endif %}
 
 
 	<script type="text/javascript">

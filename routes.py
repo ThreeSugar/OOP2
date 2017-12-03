@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
+from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, \
@@ -23,6 +24,19 @@ import pyrebase
 
 app = Flask(__name__)
 admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
+
+#EMAIL SETTINGS
+app.config.update(
+	DEBUG=True,
+	MAIL_SERVER='smtp.gmail.com',
+	MAIL_PORT=465,
+	MAIL_USE_SSL=True,
+	MAIL_USERNAME = 'threesugar123@gmail.com',
+	MAIL_PASSWORD = 'lifestyle28',
+    MAIL_DEFAULT_SENDER = 'threesugar123@gmail.com'
+	)
+
+mail = Mail(app)
 
 
 Bootstrap(app)
@@ -84,6 +98,7 @@ def firebase():
 
 
 
+
 #ADMIN OVERALL
 
 admin.add_view(ModelView(User, db.session))
@@ -94,9 +109,16 @@ admin.add_view(FileAdmin(path, name='Videos'))
 
 
 #HOMEPAGE (DO NOT TOUCH)
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        msg = Message(subject= "Feedback",
+                              recipients=['threesugar123@gmail.com'])
+        msg.html = 'From: {} ({}) <br> <br> Subject: {} <br> <br> Message: {}'.format(request.form['name'], request.form['email'], request.form['subject'] ,request.form['message'])
+        mail.send(msg)
+        return render_template('index.html', success=True, show = True)
+
     return render_template('index.html')
 
 ###
@@ -218,7 +240,7 @@ def upload():
             error = True
             db.session.rollback()
             return render_template('dashvid.html', form=form, error=error) 
-            #maybe link shouldn't have an unique constraint...
+            #link has unique constraint because might run into filename conflict in local env
 
 
     return render_template('dashvid.html', form=form)     

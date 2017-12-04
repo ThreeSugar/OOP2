@@ -353,7 +353,7 @@ def videoz(videoid):
         db.session.add(guestinit)
         db.session.commit()
         guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").first()
-        guestview.views = 0
+        guestview.views = 0 #make .views != null so that the += later on can work.
         db.session.add(guestview)
         db.session.commit()
         
@@ -368,7 +368,7 @@ def videoz(videoid):
         db.session.add(userinit)
         db.session.commit()
         userview = VideoViews.query.filter_by(videoid=vid).filter_by(username=current_user.username).first()
-        userview.views = 0 #make .views != null so that the += later on can work.
+        userview.views = 0 
         db.session.add(userview)
         db.session.commit()
 

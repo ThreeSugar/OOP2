@@ -11,8 +11,8 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
-VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, \
-FireForm
+VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
+Anonymous, FireForm
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
@@ -343,6 +343,55 @@ def videoz(videoid):
         elif saved is not None:
             curr_save = True
 
+
+    #VIEW FUNCTION
+    userview = VideoViews.query.filter_by(videoid=vid).filter_by(username=current_user.username).first()
+    guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").first()
+   
+    if guestview is None and current_user.is_authenticated == False:
+        guestinit = VideoViews(videoid=vid, username = "Guest")
+        db.session.add(guestinit)
+        db.session.commit()
+        guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").first()
+        guestview.views = 0
+        db.session.add(guestview)
+        db.session.commit()
+        
+    if guestview is not None and current_user.is_authenticated == False:
+        guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").first()
+        guestview.views += 1
+        db.session.add(guestview)
+        db.session.commit()
+       
+    if userview is None and current_user.is_authenticated == True:
+        userinit = VideoViews(videoid=vid, username = current_user.username)
+        db.session.add(userinit)
+        db.session.commit()
+        userview = VideoViews.query.filter_by(videoid=vid).filter_by(username=current_user.username).first()
+        userview.views = 0 #make .views != null so that the += later on can work.
+        db.session.add(userview)
+        db.session.commit()
+
+    if userview is not None and current_user.is_authenticated == True: #the order of this statement matters for some reason
+        userview = VideoViews.query.filter_by(videoid=vid).filter_by(username=current_user.username).first()
+        userview.views += 1
+        db.session.add(userview)
+        db.session.commit()
+
+    g = select([VideoViews.username]).where(VideoViews.username == "Guest")
+    usersview = VideoViews.query.filter_by(videoid=vid).filter(~VideoViews.username.in_(g)).all()
+    guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").all()
+
+    uview = 0
+    gview = 0
+
+    for u in usersview:
+        uview += u.views
+
+    for g in guestview:
+        gview += g.views
+
+    tviews = uview + gview
     
     #FILTER RELATED
     
@@ -355,7 +404,7 @@ def videoz(videoid):
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
-                            curr_save = curr_save, vidform=vidform, error=error)
+                            curr_save = curr_save, vidform=vidform, error=error, tviews=tviews)
 
 
 
@@ -495,6 +544,8 @@ def videosearch():
 if __name__ == '__main__':
     login_manager = LoginManager()
     login_manager.init_app(app)
+    login_manager.anonymous_user = Anonymous
+
 
     @login_manager.user_loader
     def load_user(uid):

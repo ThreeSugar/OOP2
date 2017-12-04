@@ -65,6 +65,12 @@ class VideoSaved(db.Model):
     saveddate = db.Column(db.DateTime(timezone=True), server_default=func.now())
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
+class VideoViews(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(100))
+    videoid = db.Column(db.Integer)
+    views = db.Column(db.Integer)
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

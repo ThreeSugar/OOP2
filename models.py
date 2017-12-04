@@ -7,7 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import func
 from werkzeug import generate_password_hash, check_password_hash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user, \
+AnonymousUserMixin
 
 
 db = SQLAlchemy()
@@ -45,6 +46,12 @@ class User(UserMixin, db.Model):
             return unicode(self.uid)  # python 2
         except NameError:
             return str(self.uid)  # python 3
+
+class Anonymous(AnonymousUserMixin):
+    def __init__(self):
+        self.username = "Guest"
+
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
@@ -101,6 +108,13 @@ class VideoSaved(db.Model):
     category = db.Column(db.String(100))
     saveddate = db.Column(db.DateTime(timezone=True), server_default=func.now())
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+class VideoViews(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(100))
+    videoid = db.Column(db.Integer)
+    views = db.Column(db.Integer)
+
 
 class SelectForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])

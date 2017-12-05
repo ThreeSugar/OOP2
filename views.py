@@ -43,3 +43,8 @@ def shop():
 @app.route('/cart')
 def cart():
     return render_template("cart.html")
+	
+@app.route('/test')
+def test_cart():
+     return "test placeholder."
+     

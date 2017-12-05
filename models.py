@@ -10,6 +10,11 @@ class Item(db.Model):
     calories = db.Column(db.Integer)
     category = db.Column(db.String(50))
 
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('Item.id'))
+    quantity = db.Column(db.Integer)
+
 class ItemView(ModelView):
         form_choices = {
             'category': [

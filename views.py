@@ -13,11 +13,11 @@ def item(item_id):
     return render_template('item.html', item=item)
 
 @app.route('/adminadd')
-def additem():
+def adminadd():
     return render_template("adminadd.html")
 
 @app.route('/adminview')
-def additem():
+def adminview():
     return render_template("adminview.html")
 
 @app.route('/testitem', methods=['POST'])

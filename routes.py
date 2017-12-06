@@ -174,6 +174,13 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
+#PROFILE
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 #VIDEO ADMIN (CRUD)
 
 @app.route('/dashboard/video')

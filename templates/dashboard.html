@@ -33,7 +33,7 @@ Lifestyle28 | Dashboard
                                                             <a href="{{url_for('dashboard')}}">View Profile</a>
                                                         </li>
                                                         <li>
-                                                            <a href="#">Edit Profile</a>
+                                                            <a href="{{url_for('editprofile', id=render_user_id() )}}">Edit Profile</a>
                                                         </li>
                                                         <li>
                                                             <a href="#">Blank</a>
@@ -173,12 +173,14 @@ Lifestyle28 | Dashboard
                 </div>
             </div>
             <div class="col-md-10 content">
+                {% block greybar %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         {% block dashtitle %}
                         Dashboard
                         {% endblock %}
                     </div>
+                {% endblock %}
 
                     {% block dashboard %}
 

@@ -115,7 +115,6 @@ class VideoViews(db.Model):
     videoid = db.Column(db.Integer)
     views = db.Column(db.Integer)
 
-
 class SelectForm(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     options = SelectField(u'Categories', choices=[('educational', 'Educational'), ('exercise', 'Exercise'), ('food', 'Food'), ('music', 'Music')])
@@ -129,6 +128,19 @@ class EditForm(FlaskForm):
 class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
+
+#PROFILE
+class Profile(db.Model):
+      id = db.Column(db.Integer, primary_key = True)
+      userid = db.Column(db.Integer, unique=True)
+      desc = db.Column(db.String)
+      interests = db.Column(db.String)
+      location = db.Column(db.String(90))
+
+class EditProfile(FlaskForm):
+    desc = TextAreaField('Description', validators=[InputRequired(), Length(min=4)])
+    interests = TextAreaField('Interests', validators=[InputRequired(), Length(min=4, max=3000)])
+    location = StringField('Location', validators=[InputRequired(), Length(min=4, max=90)])
 
 #FIREBASE FORM
 class FireForm(FlaskForm):

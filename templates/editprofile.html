@@ -1,0 +1,25 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+
+<form style = "padding:15px;" method = "POST">
+        
+        {{form.hidden_tag()}}
+        
+        {{wtf.form_field(form.desc)}}
+        
+        <br>
+        
+        {{wtf.form_field(form.interests)}}
+        
+        <br>
+        
+        {{wtf.form_field(form.location)}}
+        
+        <br>
+        
+        <input style = "width:80px;"class="btn btn-default" type ="submit" value="Edit">
+        
+        </form>
+
+{% endblock %}

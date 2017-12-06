@@ -71,6 +71,13 @@ class VideoViews(db.Model):
     videoid = db.Column(db.Integer)
     views = db.Column(db.Integer)
 
+class Profile(db.Model):
+      id = db.Column(db.Integer, primary_key = True)
+      userid = db.Column(db.Integer, unique=True)
+      desc = db.Column(db.String)
+      interests = db.Column(db.String)
+      location = db.Column(db.String(90))
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

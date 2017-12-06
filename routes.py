@@ -12,7 +12,8 @@ from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm
+Anonymous, FireForm, EditProfile
+
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
@@ -163,23 +164,45 @@ def signup():
 
     return render_template('signup.html', form = form)
 
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('profile.html')
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
 #PROFILE
+@app.context_processor 
+def utility_processor():
+    def render_user_id():  #To insert uid into all templates
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        return uid
+    return dict(render_user_id=render_user_id)
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+    return render_template('profile.html')
 
 @app.route('/profile')
 def profile():
-    return render_template('userprofile.html')
+    pass
+
+@app.route('/profile/edit/<id>')
+def editprofile(id):
+    user = Profile.query.get_or_404(id)
+    form = EditProfile(obj=user, desc=user.desc, interests=user.interests, location=user.location)
+    if form.validate_on_submit():
+        user.desc = form.desc.data
+        user.interests = form.interests.data
+        user.location = form.location.data
+        db.session.commit()
+        return url_for('dashboard')
+        
+    return render_template('editprofile.html', form=form)
+
 
 #VIDEO ADMIN (CRUD)
 

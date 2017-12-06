@@ -5,43 +5,212 @@
 {% endblock %}
 
 {% block content %}
-<div style = "width:100%; padding-bottom:100px;" class="col-lg-6 col-sm-6">
+
+<div class="container-fluid main-container">
+        <div class="col-md-2 sidebar">
+            <div class="row">
+                <!-- uncomment code for absolute positioning tweek see top comment in css -->
+                <div class="absolute-wrapper"> </div>
+
+                <!-- Menu -->
+                <div class="side-menu">
+                    <nav class="navbar navbar-default" role="navigation">
+                        <!-- Main Menu -->
+                        <div class="side-menu-container">
+                            <ul class="nav navbar-nav">
+
+                                  <!-- Dropdown-->
+                                    <li class="panel panel-default" id="dropdown">
+                                        <a data-toggle="collapse" href="#dropdown-lvl0">
+                                            <span class="glyphicon glyphicon-user"></span> Profile
+                                            <span class="caret"></span>
+                                        </a>
+    
+                                        <!-- Dropdown level 0 -->
+                                        <div id="dropdown-lvl0" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul class="nav navbar-nav">
+                                                    <li>
+                                                        <a href="{{url_for('dashboard')}}">View Profile</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Edit Profile</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Blank</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li> 
+
+                                <!-- Dropdown-->
+                                <li class="panel panel-default" id="dropdown">
+                                        <a data-toggle="collapse" href="#dropdown-lvl00">
+                                            <span class="glyphicon glyphicon-envelope"></span> Messages
+                                            <span class="caret"></span>
+                                        </a>
+    
+                                        <!-- Dropdown level 0 -->
+                                        <div id="dropdown-lvl00" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul class="nav navbar-nav">
+                                                    <li>
+                                                        <a href="#">Inbox</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Sent</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li> 
+
+                               <!-- Dropdown-->
+                                <li class="panel panel-default" id="dropdown">
+                                    <a data-toggle="collapse" href="#dropdown-lvl1">
+                                        <span class="glyphicon glyphicon-open"></span> Upload Content
+                                        <span class="caret"></span>
+                                    </a>
+
+                                    <!-- Dropdown level 1 -->
+                                    <div id="dropdown-lvl1" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <ul class="nav navbar-nav">
+                                                <li>
+                                                    <a href="#">Blog</a>
+                                                </li>
+                                                <li>
+                                                    <a id = "video" href="{{url_for('dashboardvid')}}">Video</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Recipe</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li> 
+
+
+                                <li>
+                                    <a data-toggle="collapse" href="#favz">
+                                    <span class="glyphicon glyphicon-heart"></span>Favourites</a>
+                                </li>
+
+                                <!-- Dropdown-->
+                                <li class="panel panel-default" id="dropdown">
+                                    <a data-toggle="collapse" href="#dropdown-lvl2">
+                                        <span class="glyphicon glyphicon-export"></span> My Orders
+                                        <span class="caret"></span>
+                                    </a>
+
+                                    <!-- Dropdown level 1 -->
+                                    <div id="dropdown-lvl2" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <ul class="nav navbar-nav">
+                                                <li>
+                                                    <a href="#">Food</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Shopping Cart</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Bookings</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li> 
+
+                            
+                            <!-- Dropdown-->
+                            <li class="panel panel-default" id="dropdown">
+                                    <a data-toggle="collapse" href="#dropdown-lvl3">
+                                        <span class="glyphicon glyphicon-star"></span> Features
+                                        <span class="caret"></span>
+                                    </a>
+
+                                    <!-- Dropdown level 3 -->
+                                    <div id="dropdown-lvl3" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <ul class="nav navbar-nav">
+                                                <li>
+                                                    <a href="#">Food</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Shopping Cart</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Booking</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Videos</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Blog</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Recipe</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Book Sports Venue</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                            </li>
+                                
+                                
+                            <li>
+                                <a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-off"></span>Logout</a>
+                            </li>
+
+                            </ul>   
+                        </div>
+                        <!-- /.navbar-collapse -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+
+
+<!-- Content -->
+<div style = "margin-top: -20px; width:70%; left:100px; padding-bottom:100px;" class="col-lg-6 col-sm-6">
     <div class="card hovercard">
-        <div style = "height:300px;" class="card-background">
+        <div style = "height:220px;" class="card-background">
             <img class="card-bkimg" alt="" src="http://lorempixel.com/100/100/people/9/">
             <!-- http://lorempixel.com/850/280/people/9/ -->
         </div>
         <div style = "margin-top:50px;" class="useravatar">
             <img alt="" src="http://lorempixel.com/100/100/people/9/">
         </div>
-        <div class="card-info">
-            <span class="card-title">Pamela Anderson</span> <br>
-            <a style = "margin-right:20px; height:35px; width:100px;" class = "btn btn-default">Contact</a>
-            <a style = "height:35px; width:100px;" class = "btn btn-default">Follow</a>
+        <div style = "top:180px;" class="card-info">
+            <span class="card-title">{{current_user.username}}</span><br>
         </div>
     </div>
     <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
         <div class="btn-group" role="group">
             <button type="button" id="stars" class="btn btn-primary" href="#tab1" data-toggle="tab">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                 <div class="hidden-xs">About</div>
             </button>
         </div>
         <div class="btn-group" role="group">
             <button type="button" id="favorites" class="btn btn-default" href="#tab2" data-toggle="tab">
-                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                 <div class="hidden-xs">Uploads</div>
             </button>
         </div>
         <div class="btn-group" role="group">
             <button type="button" id="following" class="btn btn-default" href="#tab3" data-toggle="tab">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                 <div class="hidden-xs">Favorites</div>
             </button>
         </div>
         <div class="btn-group" role="group">
                 <button type="button" id="following" class="btn btn-default" href="#tab4" data-toggle="tab">
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                     <div class="hidden-xs">Following</div>
                 </button>
         </div>
@@ -75,7 +244,6 @@
                 <h3><u>Location</u></h3>
                 <p>Singapore</p>
                 <br>
-                <p>Joined on the 18th September 2015</p>
 
             </div>
             <div class="tab-pane fade in" id="tab2">

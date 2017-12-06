@@ -30,7 +30,7 @@ Lifestyle28 | Dashboard
                                                 <div class="panel-body">
                                                     <ul class="nav navbar-nav">
                                                         <li>
-                                                            <a href="{{url_for('profile')}}">View Profile</a>
+                                                            <a href="{{url_for('dashboard')}}">View Profile</a>
                                                         </li>
                                                         <li>
                                                             <a href="#">Edit Profile</a>
@@ -46,7 +46,7 @@ Lifestyle28 | Dashboard
                                     <!-- Dropdown-->
                                     <li class="panel panel-default" id="dropdown">
                                             <a data-toggle="collapse" href="#dropdown-lvl00">
-                                                <span class="glyphicon glyphicon-user"></span> Messages
+                                                <span class="glyphicon glyphicon-envelope"></span> Messages
                                                 <span class="caret"></span>
                                             </a>
         
@@ -68,7 +68,7 @@ Lifestyle28 | Dashboard
                                    <!-- Dropdown-->
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" href="#dropdown-lvl1">
-                                            <span class="glyphicon glyphicon-user"></span> My Content
+                                            <span class="glyphicon glyphicon-open"></span> Upload Content
                                             <span class="caret"></span>
                                         </a>
     
@@ -92,14 +92,15 @@ Lifestyle28 | Dashboard
 
 
                                     <li>
-                                        <a href="#">
-                                            <span class="glyphicon glyphicon-heart"></span>Favourites</a>
+                                        <a data-toggle="collapse" href="#favz">
+                                        <span class="glyphicon glyphicon-heart"></span>Favourites</a>
+
                                     </li>
     
                                     <!-- Dropdown-->
                                     <li class="panel panel-default" id="dropdown">
                                         <a data-toggle="collapse" href="#dropdown-lvl2">
-                                            <span class="glyphicon glyphicon-user"></span> My Orders
+                                            <span class="glyphicon glyphicon-export"></span> My Orders
                                             <span class="caret"></span>
                                         </a>
     

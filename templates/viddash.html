@@ -22,9 +22,14 @@ Lifestyle28 | Dashboard
 
 {% block dashboard %}
 
-  <a href = "{{url_for('upload')}}"> Upload videos </a>
+<div style = "padding:10px;">
+  <a type = "button" class="btn btn-default" href = "{{url_for('upload')}}"> Upload videos </a>
   <br>
-  <br>
-  <a href = "{{url_for('vidmanage')}}"> Manage videos </a>
+  <a type = "button" class="btn btn-default" href = "{{url_for('vidmanage')}}"> Manage videos </a>
+</div>
 
+{% endblock %}
+
+{% block dashtitle %}
+Video
 {% endblock %}

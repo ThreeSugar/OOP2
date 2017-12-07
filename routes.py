@@ -12,7 +12,7 @@ from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm, EditProfile
+Anonymous, FireForm, EditProfile, Profile
 
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -184,22 +184,35 @@ def utility_processor():
 def dashboard():
     user = User.query.filter_by(username=current_user.username).first()
     uid = user.uid
-    return render_template('profile.html')
+    user_profile = Profile.query.filter_by(userid=uid).first()
+
+    if user_profile is None:
+        profile_init = Profile(userid = uid, desc = 'Write your description here.',
+        interests = 'Write your interests here.', location='Write your location here.')
+        db.session.add(profile_init)
+        db.session.commit()
+
+    user_profile = Profile.query.filter_by(userid=uid).first()
+    
+    return render_template('profile.html', user_profile=user_profile)
 
 @app.route('/profile')
 def profile():
     pass
 
-@app.route('/profile/edit/<id>')
+@app.route('/profile/edit/<id>', methods=['GET', 'POST'])
 def editprofile(id):
-    user = Profile.query.get_or_404(id)
+    user = Profile.query.filter_by(userid=id).first()
     form = EditProfile(obj=user, desc=user.desc, interests=user.interests, location=user.location)
+    uid = user.userid
+    user_profile = Profile.query.filter_by(userid=uid).first()
+    
     if form.validate_on_submit():
         user.desc = form.desc.data
         user.interests = form.interests.data
         user.location = form.location.data
         db.session.commit()
-        return url_for('dashboard')
+        return render_template('profile.html', user_profile=user_profile)
         
     return render_template('editprofile.html', form=form)
 

@@ -53,37 +53,32 @@ Lifestyle28 | Dashboard
                 </button>
         </div>
     </div>
-
     <div class="">
         <div class="tab-content">
             <div class="tab-pane fade in active" id="tab1">
+               
                 <h3><u>Description</u></h3>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Nunc at velit ligula. Donec porta scelerisque dictum. 
-                    Mauris sed hendrerit odio. Nullam consequat metus ut eros vehicula posuere. 
-                    Integer non nunc sed ante iaculis lacinia in quis arcu. Mauris nisl magna, 
-                    placerat non egestas ac, lacinia non lorem. Aenean rhoncus, odio ac volutpat tincidunt, 
-                    lectus justo luctus nulla, a varius purus felis vitae est. Fusce vitae aliquet sem. 
-                    Nulla malesuada urna et tortor aliquet, sit amet blandit enim eleifend. 
+                  {{user_profile.desc}}
                 </p>
 
                 <br>
                 
                 <h3><u>Interests</u></h3>
                 <p>
-                    Eat <br>
-                    Sleep <br>
-                    Play <br>
+                   {{user_profile.interests}}
                 </p>
 
                 <br>
 
                 <h3><u>Location</u></h3>
-                <p>Singapore</p>
+                <p>
+                    {{user_profile.location}}
+                </p>
                 <br>
-
             </div>
+
+
             <div class="tab-pane fade in" id="tab2">
                 <h3><u>Videos</u></h3>
                 <br>

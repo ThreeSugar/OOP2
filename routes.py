@@ -112,7 +112,7 @@ admin.add_view(FileAdmin(path, name='Videos'))
 #HOMEPAGE (DO NOT TOUCH)
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-def index():
+def index(): #did not use wtforms for this because wtforms might accidentally break the layout of the site
     if request.method == 'POST':
         msg = Message(subject= "Feedback",
                               recipients=['threesugar123@gmail.com'])
@@ -173,7 +173,7 @@ def logout():
 #PROFILE
 @app.context_processor 
 def utility_processor():
-    def render_user_id():  #To insert uid into all templates
+    def render_user_id():  #this function is avaliable to all templates, just display it with {{ -yourfunction- }}
         user = User.query.filter_by(username=current_user.username).first()
         uid = user.uid
         return uid
@@ -212,7 +212,7 @@ def editprofile(id):
         user.interests = form.interests.data
         user.location = form.location.data
         db.session.commit()
-        return render_template('profile.html', user_profile=user_profile)
+        return redirect(url_for('dashboard')) 
         
     return render_template('editprofile.html', form=form)
 

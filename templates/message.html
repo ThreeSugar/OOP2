@@ -1,0 +1,46 @@
+{% extends 'dashboard.html' %}
+
+{% block dashtitle %}
+Inbox
+{% endblock %}
+
+{% block dashboard %}
+
+<style>
+    .star{
+        color:gray;
+    }
+
+    .star:hover{
+
+        color:darkgray;
+    }
+
+    .star:active{
+        color:darkgray;
+    }
+
+    .star:visited {
+        color:gray;
+    }
+
+</style>
+
+<table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th width="5%"> From </th>
+            <th width="25%"> Subject </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a class = "star" href = "#"><span style= "padding-right:10px;" class="glyphicon glyphicon-star-empty"></span></a><a href = "#">v.title </a></td>
+            <td> v.description <span class="badge pull-right">12:09 AM</span></td>
+          </tr>
+        </tbody>
+</table>
+
+              
+                    
+{% endblock %}

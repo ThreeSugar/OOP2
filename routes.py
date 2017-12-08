@@ -216,6 +216,12 @@ def editprofile(id):
         
     return render_template('editprofile.html', form=form)
 
+#MESSAGE
+
+@app.route('/inbox')
+def inbox():
+    return render_template('message.html')
+
 
 #VIDEO ADMIN (CRUD)
 

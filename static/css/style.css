@@ -92,13 +92,20 @@ p{
 	margin:0;
 }
 
-/* Header Styles
+/* Header Styles (left top repeat)
 ---------------------------------*/
 
 .header{
 	text-align:center;
-	background:url(../img/pw_maze_black_2X.png) left top repeat;
-	padding:280px 0;
+	
+	background: linear-gradient(
+		rgba(0, 0, 0, 0.5),
+		rgba(0, 0, 0, 0.5)
+	  ), url(../img/kids_running.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	overflow: hidden;
+	padding:180px 0; 
 }
 .logo{
 	width:130px;
@@ -145,7 +152,7 @@ color: #fff;
 
 .link{
 	padding:15px 35px;
-	background:#7cc576;
+	background:#949994;
 	color:#fff !important;
 	font-size:16px;
 	font-weight:400;
@@ -159,14 +166,19 @@ color: #fff;
 	-moz-transition:all 0.3s ease-in-out;
 	-webkit-transition:all 0.3s ease-in-out;
 }
+.link:visited{
+	background:#949994;
+	color:#fff !important;
+}
+
 .link:hover {
 	text-decoration:none;
-	color:#7cc576 !important;
-	background:#fff;
+	color:#ffffff !important;
+	background: #565856;
 }
 
 .link:active, .link:focus {
-	background: #7cc576;
+	background: #949994;
 	text-decoration:none;
 	color:#fff !important;
 }

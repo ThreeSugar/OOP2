@@ -1,0 +1,24 @@
+{% extends 'dashboard.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block dashtitle %}
+Compose Message
+{% endblock %}
+
+{% block dashboard %}
+
+
+<form style = "padding:15px;" method = "POST">
+
+        {{form.hidden_tag()}}
+        {{wtf.form_field(form.to)}} <br>
+        {{wtf.form_field(form.subject)}} <br>
+        {{wtf.form_field(form.message)}} 
+
+        <input style = "width:80px;"class="btn btn-default" type ="submit" value="Send">
+
+</form>
+
+              
+                    
+{% endblock %}

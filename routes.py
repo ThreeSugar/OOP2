@@ -12,7 +12,7 @@ from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm, EditProfile, Profile
+Anonymous, FireForm, EditProfile, Profile, SendMessage
 
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -220,8 +220,16 @@ def editprofile(id):
 
 @app.route('/inbox')
 def inbox():
-    return render_template('message.html')
+    return render_template('inbox.html')
 
+@app.route('/inbox/send', methods=['GET', 'POST'])
+def send():
+    form = SendMessage()
+    return render_template('send.html', form=form)
+
+@app.route('/inbox/view')
+def viewinbox():
+    return render_template('message.html')
 
 #VIDEO ADMIN (CRUD)
 

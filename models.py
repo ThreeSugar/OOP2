@@ -128,6 +128,15 @@ class EditForm(FlaskForm):
 class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
+class SendMessage(FlaskForm):
+    to = StringField('To', validators=[InputRequired(), Length(min=4, max=90)])
+    subject = StringField('Subject')
+    message = TextAreaField('Message')
+
+
+
+
+
 
 #PROFILE
 class Profile(db.Model):

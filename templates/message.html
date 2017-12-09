@@ -6,17 +6,17 @@
 
 <div style = "padding:15px;">
 
-<p><b>From:</b> &nbsp; username</p>
+<p><b>From:</b> &nbsp; {{view_msg.sender}}</p>
 <br>
-<p><b>Subject:</b> &nbsp; username</p>
-
-<br>
-
-<p><b>Message:</b> &nbsp; username</p>
+<p><b>Subject:</b> &nbsp; {{view_msg.subject}}</p>
 
 <br>
 
-<button style = "width:80px;" class="btn btn-default">Return</button> &nbsp; &nbsp;
+<p><b>Message:</b> &nbsp; {{view_msg.message}}</p>
+
+<br>
+
+<a href = "{{url_for('inbox')}}" style = "width:80px;" class="btn btn-default">Return</a> &nbsp; &nbsp;
 <button style = "width:80px;" class="btn btn-default">Reply</button>
 
 </div>

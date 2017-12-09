@@ -235,9 +235,10 @@ def send():
 
     return render_template('send.html', form=form)
 
-@app.route('/inbox/view')
-def viewinbox():
-    return render_template('message.html')
+@app.route('/inbox/view/<id>')
+def viewinbox(id):
+    view_msg = UserMail.query.filter_by(id=id).first()
+    return render_template('message.html', view_msg=view_msg)
 
 #VIDEO ADMIN (CRUD)
 

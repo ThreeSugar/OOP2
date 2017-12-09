@@ -37,7 +37,7 @@ Inbox
           {% for i in inbox %}
           <tr>
             <td><a href = "#"><span style= "padding-right:10px;" class="glyphicon glyphicon-star-empty"></span></a><a href = "#">{{i.sender}}</a></td>
-            <td> <a href = "#">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a></td>
+            <td> <a href = "{{url_for('viewinbox', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a></td>
           </tr>
           {% endfor %}
         </tbody>

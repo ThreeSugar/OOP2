@@ -34,10 +34,12 @@ Inbox
           </tr>
         </thead>
         <tbody>
+          {% for i in inbox %}
           <tr>
-            <td><a href = "#"><span style= "padding-right:10px;" class="glyphicon glyphicon-star-empty"></span></a><a href = "#">v.title </a></td>
-            <td> <a href = "#">  v.description <span class="badge pull-right">12:09 AM</span></a></td>
+            <td><a href = "#"><span style= "padding-right:10px;" class="glyphicon glyphicon-star-empty"></span></a><a href = "#">{{i.sender}}</a></td>
+            <td> <a href = "#">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a></td>
           </tr>
+          {% endfor %}
         </tbody>
 </table>
 

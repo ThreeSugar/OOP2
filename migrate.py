@@ -78,6 +78,14 @@ class Profile(db.Model):
       interests = db.Column(db.String)
       location = db.Column(db.String(90))
 
+class UserMail(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    sender = db.Column(db.String(100))
+    target = db.Column(db.String(100))
+    subject = db.Column(db.String)
+    message = db.Column(db.String)
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

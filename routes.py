@@ -12,7 +12,7 @@ from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm, EditProfile, Profile, SendMessage
+Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail
 
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -72,7 +72,7 @@ firedb = firebase.database()
 #FIREBASE AUTH
 
 auth = firebase.auth()
-user = auth.sign_in_with_email_and_password("john@john.com", "password")
+# user = auth.sign_in_with_email_and_password("john@john.com", "password")
 
 
 #FIREFORM TEST
@@ -220,11 +220,19 @@ def editprofile(id):
 
 @app.route('/inbox')
 def inbox():
-    return render_template('inbox.html')
+    inbox = UserMail.query.filter_by(target=current_user.username).all()
+    return render_template('inbox.html', inbox=inbox)
 
 @app.route('/inbox/send', methods=['GET', 'POST'])
 def send():
     form = SendMessage()
+    if form.validate_on_submit():
+        new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
+        message=form.message.data)
+        db.session.add(new_msg)
+        db.session.commit()
+        return redirect(url_for('inbox'))
+
     return render_template('send.html', form=form)
 
 @app.route('/inbox/view')

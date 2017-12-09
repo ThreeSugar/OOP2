@@ -128,14 +128,21 @@ class EditForm(FlaskForm):
 class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
+
+#INBOX
+
+class UserMail(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    sender = db.Column(db.String(100))
+    target = db.Column(db.String(100))
+    subject = db.Column(db.String)
+    message = db.Column(db.String)
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
 class SendMessage(FlaskForm):
     to = StringField('To', validators=[InputRequired(), Length(min=4, max=90)])
     subject = StringField('Subject')
     message = TextAreaField('Message')
-
-
-
-
 
 
 #PROFILE

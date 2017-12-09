@@ -228,7 +228,7 @@ def send():
     form = SendMessage()
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data)
+        message=form.message.data, seen=False)
         db.session.add(new_msg)
         db.session.commit()
         return redirect(url_for('inbox'))
@@ -241,7 +241,7 @@ def viewinbox(id):
     form = SendMessage(to = view_msg.sender)
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data)
+        message=form.message.data, seen=False)
         db.session.add(new_msg)
         db.session.commit() 
         return redirect(url_for('inbox'))

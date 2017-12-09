@@ -136,12 +136,12 @@ class UserMail(db.Model):
     sender = db.Column(db.String(100))
     target = db.Column(db.String(100))
     subject = db.Column(db.String)
-    message = db.Column(db.String)
+    message = db.Column(db.Text)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 class SendMessage(FlaskForm):
     to = StringField('To', validators=[InputRequired(), Length(min=4, max=90)])
-    subject = StringField('Subject')
+    subject = StringField('Subject', validators=[InputRequired()])
     message = TextAreaField('Message')
 
 

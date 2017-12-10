@@ -10,15 +10,22 @@
 
 <style>
     .vidcontainer{
-        margin-top:15%;
+        margin-top:6%;
         margin-left:32%;
     }
 
     #search {
-        height:30px;
-        width:350px;
-        margin-left:40%;
+        height: 30px;
+        width: 700px;
+        margin-left: 40%;
+        margin-top:-70px;
     }
+
+    .title-small {
+        color:black;
+        font-size:25px;
+    }
+
 
 </style>
 
@@ -31,7 +38,7 @@
             <div class="input-group">
                 {{form.hidden_tag()}}
                 {{form.search(placeholder="Search")}}
-                <button style = "margin-left:1px; margin-top:-1px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
+                <button style="margin-left:-5px; padding-left: 10px; margin-top:-71px; width:70px; height:32px;"  type = "submit"><i class="fa fa-search"></i></button>       
             </div>   
         </div>
 </form>
@@ -43,13 +50,16 @@
     <div class="col-md-6">
             <div class="card mb-4">
                     <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
-            <div class="card-body">
+            <div style = "padding:5px;" class="card-body">
                 <div class="news-title">
-                <h2 class=" title-small"><a href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a>
+                <p class=" title-small"><a href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a></p>
                 </div>
-            <p class="card-text">Posted by: {{s.username }}</p>
-            <p class="card-text">{{s.description }}</p>
-            <p class="card-text"><small class="text-time"><em>{{ s.date }}</em></small></p>
+
+                <div style = "padding-top:5px;">
+                    <p class="card-text">{{s.description }}</p>
+                    <p class="card-text">{{s.username }}</p>
+                </div>
+
             </div>
         </div>
     </div>

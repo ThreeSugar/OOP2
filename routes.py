@@ -14,7 +14,6 @@ from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditFor
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
 Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail
 
-
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -96,8 +95,32 @@ def firebase():
 
     return render_template('fireform.html', form=form, userlist=userlist)
 
+#HELPERS
+@app.context_processor 
+def utility_processor():
+    def render_user_id():  #this function is avaliable to all templates, just display it with {{ -yourfunction- }}
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        return uid
 
+    def check_inbox():
+        read = []
+        inbox = UserMail.query.filter_by(seen=False).all()
+        for i in inbox:
+            read.append(i)
 
+        return len(read)
+
+    def tag_read(id):
+        seen = False
+        inbox = UserMail.query.filter_by(id=id).first()
+        if inbox.seen:
+            seen = True 
+        else:
+            seen = False
+        return seen
+
+    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read)
 
 
 #ADMIN OVERALL
@@ -171,14 +194,6 @@ def logout():
     return redirect(url_for('index'))
 
 #PROFILE
-@app.context_processor 
-def utility_processor():
-    def render_user_id():  #this function is avaliable to all templates, just display it with {{ -yourfunction- }}
-        user = User.query.filter_by(username=current_user.username).first()
-        uid = user.uid
-        return uid
-    return dict(render_user_id=render_user_id)
-
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -223,6 +238,23 @@ def inbox():
     inbox = UserMail.query.filter_by(target=current_user.username).all()
     return render_template('inbox.html', inbox=inbox)
 
+@app.route('/inbox/mark/<id>')
+def mark_read(id):
+        inbox = UserMail.query.filter_by(target=current_user.username).all()
+        inboxes = UserMail.query.filter_by(id=id).first()
+        marker = inboxes.seen
+
+        if marker == True:
+            inboxes.seen = False
+            db.session.commit()
+            return render_template('inbox.html', inbox=inbox, marker=marker)
+
+        elif marker == False:
+            inboxes.seen = True
+            db.session.commit()
+            return render_template('inbox.html', inbox=inbox, marker=marker)
+
+
 @app.route('/inbox/send', methods=['GET', 'POST'])
 def send():
     form = SendMessage()
@@ -238,6 +270,9 @@ def send():
 @app.route('/inbox/view/<id>', methods=['GET', 'POST'])
 def viewinbox(id):
     view_msg = UserMail.query.filter_by(id=id).first()
+    view_msg.seen = True
+    db.session.commit()
+
     form = SendMessage(to = view_msg.sender)
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,

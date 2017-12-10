@@ -36,8 +36,32 @@ Inbox
         <tbody>
           {% for i in inbox %}
           <tr>
-            <td><a href = "#"><span style= "padding-right:10px;" class="glyphicon glyphicon-star-empty"></span></a><a href = "#">{{i.sender}}</a></td>
-            <td><a href = "{{url_for('viewinbox', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a> 
+            <td><a href = "#"></a><a href = "#">{{i.sender}}</a></td>
+            <td><a href = "{{url_for('viewinbox', id=i.id)}}">
+              
+            {% if tag_read(i.id) %}
+
+            {{i.subject}}
+
+            {% else %}
+             
+            <b>{{i.subject}}</b>
+
+            {% endif %}
+              
+              <span class="badge pull-right">{{i.date}}</span></a> 
+                
+              <td width = "3%">
+                <a href = "{{url_for('mark_read', id= i.id)}}">
+                    <i class="fa fa-star"></i> 
+                    {% if tag_read(i.id) %}
+                    Mark as unread
+                    {% else %}
+                    Mark as read
+                    {% endif %}
+                </a>
+              </td>
+
                 <td width = "1%">
                 <a data-toggle="modal" data-target="#myModal{{i.id}}">
                     <i class="fa fa-trash"></i> Delete 

@@ -1,4 +1,10 @@
-{% extends 'vidlayout.html' %} {% block title %} LifeStyle28 | Video {% endblock %} 
+{% extends 'vidlayout.html' %} 
+
+{% block title %} 
+
+LifeStyle28 | Video 
+
+{% endblock %} 
 
 {% block style %}
 <link href="{{url_for('static', filename='css/new-style.css')}}" rel="stylesheet" type="text/css">
@@ -7,20 +13,41 @@
 <style>
     #search {
         height: 30px;
-        width: 350px;
+        width: 700px;
         margin-left: 30%;
     }
 
     .searchy {
-        margin-top: 70px;
+        margin-top: 30px;
+        margin-left:50px;
     }
 
-.innercontent {
-    max-height: 240px;
-    overflow-y: scroll;
-    width:250px;
-    float:left;
-}
+    html, body
+    {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        overflow-x: hidden; 
+    }
+
+   
+
+    .section-01 .title-small {
+        font-size:25px;
+    }
+
+    .viewall {
+        padding-left: 12px;
+    }
+
+    .text-time {
+        color:black;
+        font-size:10px;
+    }
+
+
+
 </style>
 
 {% endblock %}
@@ -30,7 +57,7 @@
     <div class="col-lg-6">
         <div class="input-group searchy">
             {{form.hidden_tag()}} {{form.search(placeholder="Search")}}
-            <button style="margin-left:1px; margin-top:8px; width:42px; height:32px;" type="submit">
+            <button style="margin-left:-5px; margin-top:8px; width:65px; height:32px;" type="submit">
                 <i class="fa fa-search"></i>
             </button>
         </div>
@@ -38,31 +65,8 @@
 </form>
 
 
-<!-- Info Block-02 -->
 <section class="section-01 float-left w-100 py-5">
-    <div class="container-fluid">
-            <div class = "innercontent">
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-                    Scrollbar Test!<br/>
-            </div>
+    <div style = "margin-top:-100px;"class="container-fluid">
         <div class="row px-3">
             <div class="col-md-12">
                 <div class="row">
@@ -77,21 +81,21 @@
                             <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
                             <div class="card-body">
                                 <div class="news-title">
-                                    <h2 class=" title-small">
+                                    <p class="title-small">
                                         <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
-                                    </h2>
+                                    </p>
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <small class="text-time">
-                                        <em>{{a.date}}</em>
-                                    </small>
+                                    <p class="text-time">
+                                        <em>{{a.username}}</em>
+                                    </p>
                                 </p>
                             </div>
                         </div>
                     </div>
                   {% endfor %}
-            
+                  <a class = "viewall">View All</a>
                 </div>
             </div>
         </div>
@@ -99,10 +103,209 @@
 </section>
 
 
-{% endblock %} {% block script %}
+<section class="section-01 float-left w-100 py-5">
+    <div style = "margin-top:-100px;"class="container-fluid">
+        <div class="row px-3">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="heading-large">Recommended</h3>
+                    </div>
+
+                    {% for a in allvid %}
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <p class=" title-small">
+                                        <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
+                                    </p>
+                                </div>
+                                <p class="card-text">{{a.description}}</p>
+                                <p class="card-text">
+                                    <p class="text-time">
+                                       <em>{{a.username}}</em>
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                  <a class = "viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section-01 float-left w-100 py-5">
+    <div style = "margin-top:-100px;"class="container-fluid">
+        <div class="row px-3">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="heading-large">Food</h3>
+                    </div>
+
+                    {% for a in allvid %}
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <p class=" title-small">
+                                        <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
+                                    </p>
+                                </div>
+                                <p class="card-text">{{a.description}}</p>
+                                <p class="card-text">
+                                    <p class="text-time">
+                                        <em>{{a.username}}</em>
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                  <a class = "viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section-01 float-left w-100 py-5">
+    <div style = "margin-top:-100px;"class="container-fluid">
+        <div class="row px-3">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="heading-large">Educational</h3>
+                    </div>
+
+                    {% for a in allvid %}
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <p class=" title-small">
+                                        <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
+                                    </p>
+                                </div>
+                                <p class="card-text">{{a.description}}</p>
+                                <p class="card-text">
+                                    <p class="text-time">
+                                        <em>{{a.username}}</em>
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                  <a class = "viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section-01 float-left w-100 py-5">
+    <div style = "margin-top:-100px;"class="container-fluid">
+        <div class="row px-3">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="heading-large">Sports</h3>
+                    </div>
+
+                    {% for a in allvid %}
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <p class=" title-small">
+                                        <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
+                                    </p>
+                                </div>
+                                <p class="card-text">{{a.description}}</p>
+                                <p class="card-text">
+                                    <p class="text-time">
+                                        <em>{{a.username}}</em>
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                  <a class = "viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section-01 float-left w-100 py-5">
+    <div style = "margin-top:-100px;"class="container-fluid">
+        <div class="row px-3">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="heading-large">Exercise</h3>
+                    </div>
+
+                    {% for a in allvid %}
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+                            <div class="card-body">
+                                <div class="news-title">
+                                    <p class=" title-small">
+                                        <a href="{{url_for('videoz', videoid = a.id)}}">{{a.title}}</a>
+                                    </p>
+                                </div>
+                                <p class="card-text">{{a.description}}</p>
+                                <p class="card-text">
+                                    <p class="text-time">
+                                        <em>{{a.username}}</em>
+                                    </p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                  <a style ="padding-bottom:20px;" class = "viewall">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %} 
+
+{% block script %}
+
 <script src="{{url_for('static', filename='js/popper.js')}}"></script>
-<script src="{{url_for('static', filename='js/core.css')}}"></script>
 <script src="{{url_for('static', filename='js/lightbox-plus-jquery.min.js')}}"></script>
 <script src="{{url_for('static', filename='js/lity.min.js')}}"></script>
 
 {% endblock %}
+
+<script>
+</script>

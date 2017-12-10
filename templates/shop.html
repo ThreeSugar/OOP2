@@ -2,11 +2,16 @@
 {% block title %} Lifestyle28 | Shop {% endblock %}
 
 {% block content %}
-
+<style>
+h1{
+    text-align: center;
+}
+</style>
     <section class="main-section">
 		<!--main-section-start-->
 		<div class="container">
             <h1>Shop</h1>
+            <hr>
             <div class="row" style="">
                 {% for item in items %}
                 <div class="col-md-4 mb-4 mb-md-4">
@@ -23,6 +28,5 @@
             </div>
         </div>
     </section>
-
 
 {% endblock %}

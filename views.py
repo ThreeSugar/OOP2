@@ -1,27 +1,23 @@
 from OOPP import app, db
-from models import Item
+from models import Item, Cart
 from flask import render_template, redirect, url_for, request
 
 @app.route('/')
 def index():
     return render_template("index.html")
 
-@app.route('/item/<int:item_id>')
-def item(item_id):
-    item = Item.query.filter_by(id=item_id).one()
+@app.route('/shop')
+def shop():
+    items = Item.query.all()
 
-    return render_template('item.html', item=item)
+    return render_template("testshop.html", items=items)
 
 @app.route('/adminadd')
 def adminadd():
     return render_template("adminadd.html")
 
-@app.route('/adminview')
-def adminview():
-    return render_template("adminview.html")
-
-@app.route('/testitem', methods=['POST'])
-def testitem():
+@app.route('/addItem', methods=['POST'])
+def addItem():
     name = request.form['name']
     info = request.form['info']
     price = request.form['price']
@@ -34,15 +30,23 @@ def testitem():
 
     return redirect(url_for('shop'))
 
-@app.route('/shop')
-def shop():
-    items = Item.query.all()
+@app.route('/item/<int:item_id>')
+def item(item_id):
+    item = Item.query.filter_by(id=item_id).one()
 
-    return render_template("shop.html", items=items)
+    return render_template('item.html', item=item)
+
+@app.route('/adminview')
+def adminview():
+    return render_template("adminview.html")
 
 @app.route('/cart')
 def cart():
     return render_template("cart.html")
+
+@app.route('/addCart')
+def addCart():
+    pass
 	
 @app.route('/test')
 def test_cart():

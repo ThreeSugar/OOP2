@@ -1,34 +1,39 @@
-{% extends 'vidlayout.html' %} 
-
-{% block title %} LifeStyle28 | Video  {% endblock %} 
+{% extends 'vidlayout.html' %} {% block title %} LifeStyle28 | Video {% endblock %} 
 
 {% block style %}
 <link href="{{url_for('static', filename='css/new-style.css')}}" rel="stylesheet" type="text/css">
-<link href="{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css"> 
+<link href="{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
 
 <style>
-    #search{
-        height:30px;
-        width:350px;
-        margin-left:30%;
+    #search {
+        height: 30px;
+        width: 350px;
+        margin-left: 30%;
     }
 
-    .searchy{
-        margin-top:70px;
+    .searchy {
+        margin-top: 70px;
     }
-    
+
+.innercontent {
+    max-height: 240px;
+    overflow-y: scroll;
+    width:250px;
+    float:left;
+}
 </style>
 
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
-<form method = "POST" action = "{{url_for('videosearch')}}" >
+<form method="POST" action="{{url_for('videosearch')}}">
     <div class="col-lg-6">
         <div class="input-group searchy">
-            {{form.hidden_tag()}}
-            {{form.search(placeholder="Search")}}
-            <button style = "margin-left:1px; margin-top:8px; width:42px; height:32px;" type = "submit"><i class="fa fa-search"></i></button>       
-        </div>   
+            {{form.hidden_tag()}} {{form.search(placeholder="Search")}}
+            <button style="margin-left:1px; margin-top:8px; width:42px; height:32px;" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
     </div>
 </form>
 
@@ -36,8 +41,30 @@
 <!-- Info Block-02 -->
 <section class="section-01 float-left w-100 py-5">
     <div class="container-fluid">
+            <div class = "innercontent">
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+                    Scrollbar Test!<br/>
+            </div>
         <div class="row px-3">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-12">
                         <h3 class="heading-large">Latest</h3>
@@ -45,7 +72,7 @@
 
                     {% for a in allvid %}
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card mb-4">
                             <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
                             <div class="card-body">
@@ -63,196 +90,16 @@
                             </div>
                         </div>
                     </div>
-
-                    {% endfor %}
-
-
+                  {% endfor %}
+            
                 </div>
             </div>
-            <aside class="col-md-4 side-bar">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#food" role="tab">Food</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#educate" role="tab">Educational</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#exercise" role="tab">Exercise</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#music" role="tab">Music</a>
-                    </li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content sidebar-tabing">
-                    <div class="tab-pane active" id="food" role="tabpanel"> 
-
-                        {% for f in food %}
-                        <div class="media">
-                            <a href="#">
-                                <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
-                            </a>
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="{{url_for('videoz', videoid = f.id)}}">{{f.title}}</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                        <span class="time">Posted by: {{f.username}}</span>
-                                </div>
-
-                                <div class="news-auther">
-                                    <span class="time">Date: {{f.date}}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% endfor %}
-
-                    </div>
-
-
-                    <div class="tab-pane" id="educate" role="tabpanel">
-
-                        
-                        {% for e in edu %}
-                            <div class="media">
-                                <a href="#">
-                                    <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
-                                </a>
-                                <div class="media-body">
-                                    <div class="news-title">
-                                        <h2 class="title-small">
-                                            <a href="{{url_for('videoz', videoid = e.id)}}">{{e.title}}</a>
-                                        </h2>
-                                    </div>
-                                    <div class="news-auther">
-                                            <span class="time">Posted by: {{e.username}}</span>
-                                    </div>
-    
-                                    <div class="news-auther">
-                                        <span class="time">Date: {{e.date}}</span>
-                                    </div>
-                                </div>
-                            </div>
-    
-                        {% endfor %}
-
-                    </div>
-
-
-                    <div class="tab-pane" id="exercise" role="tabpanel">
-
-                            {% for e in exercise %}
-                            <div class="media">
-                                <a href="#">
-                                    <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
-                                </a>
-                                <div class="media-body">
-                                    <div class="news-title">
-                                        <h2 class="title-small">
-                                            <a href="{{url_for('videoz', videoid = e.id)}}">{{e.title}}</a>
-                                        </h2>
-                                    </div>
-                                    <div class="news-auther">
-                                            <span class="time">Posted by: {{e.username}}</span>
-                                    </div>
-    
-                                    <div class="news-auther">
-                                        <span class="time">Date: {{e.date}}</span>
-                                    </div>
-                                </div>
-                            </div>
-    
-                        {% endfor %}
-
-                    </div>
-
-                    <div class="tab-pane" id="music" role="tabpanel">
-                                
-                       {% for m in music %}
-                            <div class="media">
-                                <a href="#">
-                                    <img class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
-                                </a>
-                                <div class="media-body">
-                                    <div class="news-title">
-                                        <h2 class="title-small">
-                                            <a href="{{url_for('videoz', videoid = m.id)}}">{{m.title}}</a>
-                                        </h2>
-                                    </div>
-                                    <div class="news-auther">
-                                            <span class="time">Posted by: {{m.username}}</span>
-                                    </div>
-    
-                                    <div class="news-auther">
-                                        <span class="time">Date: {{m.date}}</span>
-                                    </div>
-                                </div>
-                            </div>
-    
-                        {% endfor %}
-
-                    </div>
-                </div>
-                <div class="video-sec">
-                    <h4 class="heading-small">Saved Videos</h4>
-
-                        {% for s in savedvid %}
-  
-    
-                        <div style = "margin-top:50px;" class="media">
-
-                            <a href = "{{url_for('deletevid', videoid = s.videoid)}}">
-                                <button style = "padding:20px;" type="button" class="close" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                </button>
-                            </a>
-
-                            <a href="{{url_for('videoz', videoid = s.videoid)}}">
-                                <img style = "width:120px; height:100px;" class="d-flex mr-3" src="img/sport2.jpg" alt="Generic placeholder image">
-                            </a>
-
-                            <div class="media-body">
-                                <div class="news-title">
-                                    <h2 class="title-small">
-                                        <a href="{{url_for('videoz', videoid = s.videoid)}}">{{s.title}}</a>
-                                    </h2>
-                                </div>
-                                <div class="news-auther">
-                                        <span class="time">Posted by: {{s.username}}</span>
-                                </div>
-    
-                                <div class="news-auther">
-                                    <span class="time">Date: {{s.date}}</span>
-                                </div>
-                            </div>
-                        </div>
-    
-                     {% endfor %}
-                    </div>
-
-                        
-
-                </div>
-                        
-                   
-
-
-
-                </div>
-            </aside>
         </div>
     </div>
 </section>
 
 
-{% endblock %}
-
-{% block script %}
+{% endblock %} {% block script %}
 <script src="{{url_for('static', filename='js/popper.js')}}"></script>
 <script src="{{url_for('static', filename='js/core.css')}}"></script>
 <script src="{{url_for('static', filename='js/lightbox-plus-jquery.min.js')}}"></script>

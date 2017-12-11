@@ -1,7 +1,7 @@
 {% extends 'dashboard.html' %}
 
 {% block dashtitle %}
-Sent
+Flagged
 {% endblock %}
 
 {% block dashboard %}
@@ -9,15 +9,15 @@ Sent
 <table class="table table-striped table-bordered">
         <thead>
           <tr>
-            <th width="5%"> To </th>
+            <th width="5%"> From </th>
             <th width="15%"> Subject </th>
           </tr>
         </thead>
         <tbody>
-          {% for i in sent %}
+          {% for i in flagged %}
           <tr>
-            <td><a href = "#">{{i.target}}</a></td>
-            <td><a href = "{{url_for('viewinbox', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a> 
+            <td><a href = "#">{{i.sender}}</a></td>
+            <td><a href = "{{url_for('flaggedmsg', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a> 
             </td>
           </tr>
           {% endfor %}

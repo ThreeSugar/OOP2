@@ -6,26 +6,6 @@ Inbox
 
 {% block dashboard %}
 
-<style>
-    .star{
-        color:gray;
-    }
-
-    .star:hover{
-
-        color:darkgray;
-    }
-
-    .star:active{
-        color:darkgray;
-    }
-
-    .star:visited {
-        color:gray;
-    }
-
-</style>
-
 <table class="table table-striped table-bordered">
         <thead>
           <tr>
@@ -36,7 +16,7 @@ Inbox
         <tbody>
           {% for i in inbox %}
           <tr>
-            <td><a href = "#"></a><a href = "#">{{i.sender}}</a></td>
+            <td><a href = "#">{{i.sender}}</a></td>
             <td><a href = "{{url_for('viewinbox', id=i.id)}}">
               
             {% if tag_read(i.id) %}
@@ -49,7 +29,18 @@ Inbox
 
             {% endif %}
               
-              <span class="badge pull-right">{{i.date}}</span></a> 
+            <span class="badge pull-right">{{i.date}}</span></a> 
+
+            <td width = "2%">
+              <a href = "{{url_for('mark_flag', id= i.id)}}">
+                  <i class="fa fa-flag"></i>
+                  {% if tag_flag(i.id) %} 
+                  Flagged
+                  {% else %}
+                   Flag
+                  {% endif %}
+              </a>
+            </td>
                 
               <td width = "3%">
                 <a href = "{{url_for('mark_read', id= i.id)}}">

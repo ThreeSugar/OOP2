@@ -52,8 +52,17 @@ Lifestyle28 | Dashboard
                                                 <div class="panel-body">
                                                     <ul class="nav navbar-nav">
                                                         <li>
+                                                            <a href="{{url_for('send')}}">Compose New</a>
+                                                        </li>
+
+                                                        <li>
                                                             <a href="{{url_for('inbox')}}">Inbox({{check_inbox()}})</a>
                                                         </li>
+
+                                                        <li>
+                                                            <a href="{{url_for('viewflagged')}}">Flagged</a>
+                                                        </li>
+
                                                         <li>
                                                             <a href="{{url_for('sentinbox')}}">Sent</a>
                                                         </li>

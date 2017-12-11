@@ -85,7 +85,9 @@ class UserMail(db.Model):
     subject = db.Column(db.String)
     message = db.Column(db.Text)
     seen = db.Column(db.Boolean)
+    flag = db.Column(db.Boolean)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

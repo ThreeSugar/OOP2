@@ -120,7 +120,16 @@ def utility_processor():
             seen = False
         return seen
 
-    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read)
+    def tag_flag(id):
+        flag = False
+        inbox = UserMail.query.filter_by(id=id).first()
+        if inbox.flag:
+            flag = True 
+        else:
+            flag = False
+        return flag
+
+    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag)
 
 
 #ADMIN OVERALL
@@ -247,12 +256,54 @@ def mark_read(id):
         if marker == True:
             inboxes.seen = False
             db.session.commit()
-            return render_template('inbox.html', inbox=inbox, marker=marker)
+            return redirect(url_for('inbox'))
 
         elif marker == False:
             inboxes.seen = True
             db.session.commit()
+            return redirect(url_for('inbox'))
+
+        return redirect(url_for('inbox'))
+
+@app.route('/inbox/flag/<id>')
+def mark_flag(id):
+        inbox = UserMail.query.filter_by(target=current_user.username).all()
+        inboxes = UserMail.query.filter_by(id=id).first()
+        marker = inboxes.flag
+
+        if marker == True:
+            inboxes.flag = False
+            db.session.commit()
             return render_template('inbox.html', inbox=inbox, marker=marker)
+
+        elif marker == False:
+            inboxes.flag = True
+            db.session.commit()
+            return render_template('inbox.html', inbox=inbox, marker=marker)
+
+        return render_template('inbox.html', inbox=inbox, marker=marker)
+
+
+@app.route('/inbox/flag/view')
+def viewflagged():
+    flagged = UserMail.query.filter_by(flag=True).all()
+    return render_template('flagged.html', flagged=flagged)
+
+@app.route('/inbox/flag/view/<id>', methods=['GET', 'POST'])
+def flaggedmsg(id):
+    view_msg = UserMail.query.filter_by(id=id).first()
+    view_msg.seen = True
+    db.session.commit()
+
+    form = SendMessage(to = view_msg.sender)
+    if form.validate_on_submit():
+        new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
+        message=form.message.data, seen=False)
+        db.session.add(new_msg)
+        db.session.commit() 
+        return redirect(url_for('inbox'))
+
+    return render_template('replyflagged.html', view_msg=view_msg, form=form)
 
 
 @app.route('/inbox/send', methods=['GET', 'POST'])
@@ -260,7 +311,7 @@ def send():
     form = SendMessage()
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data, seen=False)
+        message=form.message.data, seen=False, flag=False)
         db.session.add(new_msg)
         db.session.commit()
         return redirect(url_for('inbox'))

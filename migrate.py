@@ -82,21 +82,12 @@ class Profile(db.Model):
 class UserMail(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     target = db.Column(db.String(100))
-    subject = db.Column(db.String)
-    message = db.Column(db.Text)
-    seen = db.Column(db.Boolean)
-    flag = db.Column(db.Boolean)
-    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-
-class UserSentMail(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
     sender = db.Column(db.String(100))
     subject = db.Column(db.String)
     message = db.Column(db.Text)
     seen = db.Column(db.Boolean)
     flag = db.Column(db.Boolean)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
-
 
 
 manager = Manager(app)

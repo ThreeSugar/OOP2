@@ -133,8 +133,16 @@ class VideoSearch(FlaskForm):
 
 class UserMail(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    sender = db.Column(db.String(100))
     target = db.Column(db.String(100))
+    subject = db.Column(db.String)
+    message = db.Column(db.Text)
+    seen = db.Column(db.Boolean)
+    flag = db.Column(db.Boolean)
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+class UserSentMail(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    sender = db.Column(db.String(100))
     subject = db.Column(db.String)
     message = db.Column(db.Text)
     seen = db.Column(db.Boolean)
@@ -151,6 +159,7 @@ class SendMessage(FlaskForm):
 class Profile(db.Model):
       id = db.Column(db.Integer, primary_key = True)
       userid = db.Column(db.Integer, unique=True)
+      username = db.Column(db.String, unique=True)
       desc = db.Column(db.String)
       interests = db.Column(db.String)
       location = db.Column(db.String(90))

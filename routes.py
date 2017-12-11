@@ -12,7 +12,7 @@ from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail
+Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail, UserSentMail
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
@@ -108,7 +108,6 @@ def utility_processor():
         inbox = UserMail.query.filter_by(seen=False).all()
         for i in inbox:
             read.append(i)
-
         return len(read)
 
     def tag_read(id):
@@ -208,10 +207,11 @@ def logout():
 def dashboard():
     user = User.query.filter_by(username=current_user.username).first()
     uid = user.uid
+    username = user.username
     user_profile = Profile.query.filter_by(userid=uid).first()
 
     if user_profile is None:
-        profile_init = Profile(userid = uid, desc = 'Write your description here.',
+        profile_init = Profile(userid = uid, username = username, desc = 'Write your description here.',
         interests = 'Write your interests here.', location='Write your location here.')
         db.session.add(profile_init)
         db.session.commit()
@@ -220,11 +220,13 @@ def dashboard():
     
     return render_template('profile.html', user_profile=user_profile)
 
-@app.route('/profile')
-def profile():
-    pass
+@app.route('/profile/<username>')
+def profile(username):
+    user_profile = Profile.query.filter_by(username=username).first()
+    return render_template('otherprofile.html', user_profile=user_profile)
 
 @app.route('/profile/edit/<id>', methods=['GET', 'POST'])
+@login_required
 def editprofile(id):
     user = Profile.query.filter_by(userid=id).first()
     form = EditProfile(obj=user, desc=user.desc, interests=user.interests, location=user.location)
@@ -243,11 +245,13 @@ def editprofile(id):
 #MESSAGE
 
 @app.route('/inbox')
+@login_required
 def inbox():
     inbox = UserMail.query.filter_by(target=current_user.username).all()
     return render_template('inbox.html', inbox=inbox)
 
 @app.route('/inbox/mark/<id>')
+@login_required
 def mark_read(id):
         inbox = UserMail.query.filter_by(target=current_user.username).all()
         inboxes = UserMail.query.filter_by(id=id).first()
@@ -266,6 +270,7 @@ def mark_read(id):
         return redirect(url_for('inbox'))
 
 @app.route('/inbox/flag/<id>')
+@login_required
 def mark_flag(id):
         inbox = UserMail.query.filter_by(target=current_user.username).all()
         inboxes = UserMail.query.filter_by(id=id).first()
@@ -285,11 +290,13 @@ def mark_flag(id):
 
 
 @app.route('/inbox/flag/view')
+@login_required
 def viewflagged():
     flagged = UserMail.query.filter_by(flag=True).all()
     return render_template('flagged.html', flagged=flagged)
 
 @app.route('/inbox/flag/view/<id>', methods=['GET', 'POST'])
+@login_required
 def flaggedmsg(id):
     view_msg = UserMail.query.filter_by(id=id).first()
     view_msg.seen = True
@@ -297,28 +304,38 @@ def flaggedmsg(id):
 
     form = SendMessage(to = view_msg.sender)
     if form.validate_on_submit():
-        new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
+        new_msg = UserMail(target=form.to.data, subject=form.subject.data,
+        message=form.message.data, seen=False)
+        new_sent_msg = UserSentMail(sender=current_user.username, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
+        db.session.add(new_sent_msg)
+        db.session.commit()
         return redirect(url_for('inbox'))
 
     return render_template('replyflagged.html', view_msg=view_msg, form=form)
 
 
 @app.route('/inbox/send', methods=['GET', 'POST'])
+@login_required
 def send():
     form = SendMessage()
     if form.validate_on_submit():
-        new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data, seen=False, flag=False)
+        new_msg = UserMail(target=form.to.data, subject=form.subject.data,
+        message=form.message.data, seen=False)
+        new_sent_msg = UserSentMail(sender=current_user.username, subject=form.subject.data,
+        message=form.message.data, seen=False)
         db.session.add(new_msg)
+        db.session.commit()
+        db.session.add(new_sent_msg)
         db.session.commit()
         return redirect(url_for('inbox'))
 
     return render_template('send.html', form=form)
 
 @app.route('/inbox/view/<id>', methods=['GET', 'POST'])
+@login_required
 def viewinbox(id):
     view_msg = UserMail.query.filter_by(id=id).first()
     view_msg.seen = True
@@ -335,11 +352,13 @@ def viewinbox(id):
     return render_template('message.html', view_msg=view_msg, form=form)
 
 @app.route('/inbox/sent')
+@login_required
 def sentinbox():
     sent = UserMail.query.filter_by(sender=current_user.username).all()
     return render_template('sentmsg.html', sent=sent)
 
 @app.route('/inbox/delete/<id>')
+@login_required
 def deleteinbox(id):
     view_msg = UserMail.query.filter_by(id=id).first()
     db.session.delete(view_msg)

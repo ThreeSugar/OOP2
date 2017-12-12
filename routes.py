@@ -105,7 +105,7 @@ def utility_processor():
 
     def check_inbox():
         read = []
-        inbox = UserMail.query.filter_by(seen=False).all()
+        inbox = UserMail.query.filter_by(seen=False).filter_by(target=current_user.username).all()
         for i in inbox:
             read.append(i)
         return len(read)

@@ -16,7 +16,7 @@ Flagged
         <tbody>
           {% for i in flagged %}
           <tr>
-            <td><a href = "#">{{i.sender}}</a></td>
+            <td><a href = "{{url_for('profile', username=i.sender)}}">{{i.sender}}</a></td>
             <td><a href = "{{url_for('flaggedmsg', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a> 
             </td>
           </tr>

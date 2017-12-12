@@ -352,7 +352,7 @@ def viewsent(id):
         db.session.commit() 
         return redirect(url_for('inbox'))
 
-    return render_template('message.html', view_msg=view_msg, form=form)
+    return render_template('sendmessage.html', view_msg=view_msg, form=form)
 
 @app.route('/inbox/delete/<id>')
 def deleteinbox(id):

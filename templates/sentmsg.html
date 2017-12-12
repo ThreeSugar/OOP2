@@ -16,8 +16,8 @@ Sent
         <tbody>
           {% for i in sent %}
           <tr>
-            <td><a href = "#">{{i.target}}</a></td>
-            <td><a href = "{{url_for('viewinbox', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a> 
+            <td><a href = "{{url_for('profile', username=i.target)}}">{{i.target}}</a></td>
+            <td><a href = "{{url_for('viewsent', id=i.id)}}">{{i.subject}}<span class="badge pull-right">{{i.date}}</span></a> 
             </td>
           </tr>
           {% endfor %}

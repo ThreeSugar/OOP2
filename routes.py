@@ -288,13 +288,12 @@ def mark_flag(id):
 
 @app.route('/inbox/flag/view')
 def viewflagged():
-    flagged = UserMail.query.filter_by(flag=True).all()
+    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).all()
     return render_template('flagged.html', flagged=flagged)
 
 @app.route('/inbox/flag/view/<id>', methods=['GET', 'POST'])
 def flaggedmsg(id):
     view_msg = UserMail.query.filter_by(id=id).first()
-    view_msg.seen = True
     db.session.commit()
 
     form = SendMessage(to = view_msg.sender)
@@ -340,6 +339,20 @@ def viewinbox(id):
 def sentinbox():
     sent = UserMail.query.filter_by(sender=current_user.username).all()
     return render_template('sentmsg.html', sent=sent)
+
+@app.route('/inbox/sent/view/<id>', methods=['GET', 'POST'])
+def viewsent(id):
+    view_msg = UserMail.query.filter_by(id=id).first()
+
+    form = SendMessage(to = view_msg.sender)
+    if form.validate_on_submit():
+        new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
+        message=form.message.data, seen=False)
+        db.session.add(new_msg)
+        db.session.commit() 
+        return redirect(url_for('inbox'))
+
+    return render_template('message.html', view_msg=view_msg, form=form)
 
 @app.route('/inbox/delete/<id>')
 def deleteinbox(id):

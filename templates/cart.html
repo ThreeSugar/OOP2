@@ -1,27 +1,58 @@
 {% extends "layout.html" %}
-{% block title %} Shop | Cart {% endblock %}
-
+{% block title %} Lifestyle28 | Cart {% endblock %}
 {% block content %}
-
-    <section class="main-section">
-		<!--main-section-start-->
-		<div class="container">
-            <h1>Cart</h1>
-            <div class="row" style="">
-                <table class="table" style="width:100%">
-                  <tr>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                  </tr>
-                  <tr>
-                    <td>Eggs</td>
-                    <td>2</td>
-                    <td>1.80</td>
-                  </tr>
-                </table>
-            </div>
-        </div>
-    </section>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+.main-section{
+	padding:20px 0 110px;
+}
+.cart{
+    width: 100%;
+}
+.cart h3{
+    text-align: center;
+}
+@media only screen and (max-width:650px) {
+    /* For mobile phones: */
+    .menu, .main, .card{
+        width:100%;
+    }
+    .menuitem{
+        margin:0;
+    }
+}
+</style>
+<div class="cart">
+    <h3>CART</h3>
+    <table class="table">
+        <thead class="thead-default">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in cart %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.name }}</td>
+                <td>{{ c.quantity }}</td>
+                <td>{{ c.price }}</td>
+                <td>{{ c.subtotal }}</td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="text-align: right; font-size: 25px; color: black"><a href="{{ url_for('shop') }}" class="btn btn-success" role="button" style="float: left; margin: 0px 50px 0px">Continue Shopping</a>Total: {{ show_cart_price() }}<a href="#" class="btn btn-success" role="button" style="float: right; margin: 0px 50px 0px 10px">Checkout</a></p>
+{#    <p style="padding:0; margin:0">Total: {{ show_cart_price() }}</p>#}
+</div>
 {% endblock %}

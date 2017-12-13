@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %} Shop | Cart {% endblock %}
+
+{% block content %}
+
+    <section class="main-section">
+		<!--main-section-start-->
+		<div class="container">
+            <h1><img src="{{ url_for('static', filename='img/cart.png') }}" style="width: 5%;"> Cart ({{ cart_count() }})</h1>
+            <div class="row" style="">
+                <table class="table" style="width:100%">
+                <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+                {% for c in cart %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td><a href="{{ url_for('item', item_id=c.id) }}">{{ c.name }}</a></td>
+                    <td>{{ c.quantity }}</td>
+{#                    <td><input type="number" value="{{ c.quantity }}" name="quantity"></td>#}
+                    <td>{{ c.price }}</td>
+                    <td>{{ c.subtotal }}</td>
+{#                {{ url_for('routename', id=c.id) }}#}
+                </tr>
+                {% endfor %}
+                </table>
+
+
+            </div>
+            <h3 style="text-align: right">Total: {{ show_cart_price() }}</h3>
+            <button class="btn btn-primary" style="margin: 5px; float: left"><a style="color: white" href="{{ url_for('shop') }}">Continue Shopping</a></button>
+{#            <a href="{{ url_for('cart', item_id=c.id) }}">Update Cart</a>#}
+            <button class="btn btn-primary" style="margin: 5px; float: right">Checkout</button>
+        </div>
+    </section>
+
+{% endblock %}

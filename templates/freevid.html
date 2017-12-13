@@ -46,6 +46,10 @@ LifeStyle28 | Video
         font-size:10px;
     }
 
+    .vidusername:hover {
+        text-decoration: underline;
+    }
+
 
 
 </style>
@@ -87,7 +91,7 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <a href = "{{url_for('profile', username = a.username)}}" class="text-time">
+                                    <a class = "vidusername" href = "{{url_for('profile', username = a.username)}}" class="text-time">
                                         <em>{{a.username}}</em>
                                     </a>
                                 </p>

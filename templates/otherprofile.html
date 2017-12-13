@@ -1,4 +1,5 @@
 {% extends 'dashboard.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}
 Lifestyle28 | Dashboard
@@ -25,7 +26,7 @@ Lifestyle28 | Dashboard
         </div>
         <div style = "top:140px;" class="card-info">
             <span style = "color:black;" class="card-title">{{user_profile.username}}</span><br>
-            <a style = "margin-top:30px; margin-right:20px; height:35px; width:100px;" class = "btn btn-default">Message</a>
+            <a href = "#" data-toggle="modal" data-target="#myModal" style = "margin-top:30px; margin-right:20px; height:35px; width:100px;" class = "btn btn-default">Message</a>
             <a style = "margin-top:30px; height:35px; width:100px;" class = "btn btn-default">Follow</a>
         </div>
     </div>
@@ -107,6 +108,31 @@ Lifestyle28 | Dashboard
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div style = "text-align:center;" class="modal-header">
+              <h5 class="modal-title pull-left" id="exampleModalLabel">Reply</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method = "POST">
+                    {{form.hidden_tag()}}
+                    {{wtf.form_field(form.to)}}
+                    {{wtf.form_field(form.subject)}} 
+                    {{wtf.form_field(form.message)}} 
+                <input style = "width:80px;"class="btn btn-default" type ="submit" value="Send">
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+
 
 </div>
 {% endblock %}

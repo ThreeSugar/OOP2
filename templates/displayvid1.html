@@ -23,6 +23,10 @@
         .sidearea{
             margin-top:7%;
         }
+
+        .vidusername:hover {
+            text-decoration: underline; 
+        }
     
 
 </style>
@@ -63,7 +67,7 @@
     <p style = "margin-top:5px;">{{tviews}} views</p>
 
     <hr>
-    <p>Posted by: {{name}}</p>
+    <p>Posted by: <a class = "vidusername" href = "{{url_for('profile', username=name)}}">{{name}}</a></p>
     <p>Date and Time: {{date}} </p>
     <p>Category: {{cat}} </p>
 

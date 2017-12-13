@@ -221,14 +221,22 @@ def dashboard():
     
     return render_template('profile.html', user_profile=user_profile)
 
-@app.route('/profile/<username>')
+@app.route('/profile/<username>', methods=['GET', 'POST'])
 def profile(username):
     user_profile = Profile.query.filter_by(username=username).first()
     user = User.query.filter_by(username=username).first()
     user_email = user.email
 
+    form = SendMessage(to = username)
+    if form.validate_on_submit():
+        new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
+        message=form.message.data, seen=False)
+        db.session.add(new_msg)
+        db.session.commit() 
+        return redirect(url_for('inbox'))
+
     if current_user.is_authenticated:
-        return render_template('otherprofile.html', user_profile=user_profile, user_email=user_email)
+        return render_template('otherprofile.html', form=form, user_profile=user_profile, user_email=user_email)
 
     else:
         return render_template('userprofile.html', user_profile=user_profile, user_email=user_email)

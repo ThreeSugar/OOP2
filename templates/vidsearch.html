@@ -26,6 +26,11 @@
         font-size:25px;
     }
 
+    .vidusername:hover {
+            text-decoration: underline; 
+        }
+    
+
 
 </style>
 
@@ -57,7 +62,7 @@
 
                 <div style = "padding-top:5px;">
                     <p class="card-text">{{s.description }}</p>
-                    <p class="card-text">{{s.username }}</p>
+                    <a class = "vidusername" href = "{{url_for('profile', username = s.username)}}"class="card-text">{{s.username }}</a>
                 </div>
 
             </div>

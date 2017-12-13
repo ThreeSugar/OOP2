@@ -7,18 +7,18 @@
 {% block content %}
 
 <!-- Content -->
-<div style = "width:70%; left:100px; padding-bottom:100px;" class="col-lg-6 col-sm-6">
+<div style = "width:70%; left:200px; padding-bottom:100px;" class="col-lg-6 col-sm-6">
         <div class="card hovercard">
             <div style = "height:300px;" class="card-background">
-                <img class="card-bkimg" alt="" src="http://lorempixel.com/100/100/people/9/">
+                <img class="card-bkimg" alt="" src="{{url_for('static', filename = 'img/profile.png')}}">
                 <!-- http://lorempixel.com/850/280/people/9/ -->
             </div>
             <div style = "margin-top:50px;" class="useravatar">
-                <img alt="" src="http://lorempixel.com/100/100/people/9/">
+                <img alt="" src="{{url_for('static', filename = 'img/profile.png')}}">
             </div>
             <div class="card-info">
-                <span class="card-title">Pamela Anderson</span> <br>
-                <a style = "margin-right:20px; height:35px; width:100px;" class = "btn btn-default">Contact</a>
+                <span class="card-title">{{user_profile.username}}</span> <br>
+                <a href="mailto:{{user_email}}?Subject=" style = "margin-right:20px; height:35px; width:100px;" class = "btn btn-default">Contact</a>
                 <a style = "height:35px; width:100px;" class = "btn btn-default">Follow</a>
             </div>
         </div>
@@ -53,31 +53,30 @@
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="tab1">
                     <h3><u>Description</u></h3>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                        Nunc at velit ligula. Donec porta scelerisque dictum. 
-                        Mauris sed hendrerit odio. Nullam consequat metus ut eros vehicula posuere. 
-                        Integer non nunc sed ante iaculis lacinia in quis arcu. Mauris nisl magna, 
-                        placerat non egestas ac, lacinia non lorem. Aenean rhoncus, odio ac volutpat tincidunt, 
-                        lectus justo luctus nulla, a varius purus felis vitae est. Fusce vitae aliquet sem. 
-                        Nulla malesuada urna et tortor aliquet, sit amet blandit enim eleifend. 
+                    <p style = "white-space: pre-line;">
+                      {{user_profile.desc}}
                     </p>
     
                     <br>
                     
                     <h3><u>Interests</u></h3>
-                    <p>
-                        Eat <br>
-                        Sleep <br>
-                        Play <br>
+                    <p style = "white-space: pre-line;">
+                       {{user_profile.interests}}
+                    </p>
+    
+                    <br>
+    
+                    <h3><u>Email</u></h3>
+                    <p style = "white-space: pre-line;">
+                        {{user_email}}
                     </p>
     
                     <br>
     
                     <h3><u>Location</u></h3>
-                    <p>Singapore</p>
-                    <br>
-                    <p>Joined on the 18th September 2015</p>
+                    <p style = "white-space: pre-line;">
+                        {{user_profile.location}}
+                    </p>
     
                 </div>
                 <div class="tab-pane fade in" id="tab2">

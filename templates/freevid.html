@@ -87,9 +87,9 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <p class="text-time">
+                                    <a href = "{{url_for('profile', username = a.username)}}" class="text-time">
                                         <em>{{a.username}}</em>
-                                    </p>
+                                    </a>
                                 </p>
                             </div>
                         </div>
@@ -101,6 +101,7 @@ LifeStyle28 | Video
         </div>
     </div>
 </section>
+
 
 
 <section class="section-01 float-left w-100 py-5">

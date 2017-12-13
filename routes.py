@@ -226,7 +226,13 @@ def profile(username):
     user_profile = Profile.query.filter_by(username=username).first()
     user = User.query.filter_by(username=username).first()
     user_email = user.email
-    return render_template('otherprofile.html', user_profile=user_profile, user_email=user_email)
+
+    if current_user.is_authenticated:
+        return render_template('otherprofile.html', user_profile=user_profile, user_email=user_email)
+
+    else:
+        return render_template('userprofile.html', user_profile=user_profile, user_email=user_email)
+
 
 @app.route('/profile/edit/<id>', methods=['GET', 'POST'])
 @login_required
@@ -457,10 +463,8 @@ def beginnervideo():
 def advancedvideo():
     return render_template('advancedvid.html')
 
-@app.route('/video/explore/<username>')
+@app.route('/video/explore')
 def explorevideo():
-    user_profile = Profile.query.filter_by(username=username).first()
-
     form = VideoSearch()
     allvid = Video.query.order_by("date desc").limit(6)
     food = Video.query.filter_by(category = 'food').order_by("date desc").limit(5) #string literal query
@@ -471,16 +475,13 @@ def explorevideo():
     if current_user.is_authenticated: 
         savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
-                                allvid=allvid, form=form, savedvid = savedvid, user_profile=user_profile)
+                                allvid=allvid, form=form, savedvid = savedvid)
 
     else:
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
-                                allvid=allvid, user_profile=user_profile, form=form)
+                                allvid=allvid, form=form)
 
-
-        
-        
-        
+     
                     
 @app.route('/video/<videoid>', methods=['GET', 'POST'])
 def videoz(videoid):

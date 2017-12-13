@@ -127,6 +127,7 @@ def utility_processor():
         else:
             flag = False
         return flag
+    
 
     return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag)
 
@@ -223,7 +224,9 @@ def dashboard():
 @app.route('/profile/<username>')
 def profile(username):
     user_profile = Profile.query.filter_by(username=username).first()
-    return render_template('otherprofile.html', user_profile=user_profile)
+    user = User.query.filter_by(username=username).first()
+    user_email = user.email
+    return render_template('otherprofile.html', user_profile=user_profile, user_email=user_email)
 
 @app.route('/profile/edit/<id>', methods=['GET', 'POST'])
 @login_required
@@ -246,7 +249,7 @@ def editprofile(id):
 
 @app.route('/inbox')
 def inbox():
-    inbox = UserMail.query.filter_by(target=current_user.username).all()
+    inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
     return render_template('inbox.html', inbox=inbox)
 
 @app.route('/inbox/mark/<id>')
@@ -288,7 +291,9 @@ def mark_flag(id):
 
 @app.route('/inbox/flag/view')
 def viewflagged():
-    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).all()
+    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
+    .order_by("date desc").all()
+
     return render_template('flagged.html', flagged=flagged)
 
 @app.route('/inbox/flag/view/<id>', methods=['GET', 'POST'])
@@ -337,7 +342,7 @@ def viewinbox(id):
 
 @app.route('/inbox/sent')
 def sentinbox():
-    sent = UserMail.query.filter_by(sender=current_user.username).all()
+    sent = UserMail.query.filter_by(sender=current_user.username).order_by("date desc").all()
     return render_template('sentmsg.html', sent=sent)
 
 @app.route('/inbox/sent/view/<id>', methods=['GET', 'POST'])
@@ -452,8 +457,10 @@ def beginnervideo():
 def advancedvideo():
     return render_template('advancedvid.html')
 
-@app.route('/video/explore')
+@app.route('/video/explore/<username>')
 def explorevideo():
+    user_profile = Profile.query.filter_by(username=username).first()
+
     form = VideoSearch()
     allvid = Video.query.order_by("date desc").limit(6)
     food = Video.query.filter_by(category = 'food').order_by("date desc").limit(5) #string literal query
@@ -464,11 +471,15 @@ def explorevideo():
     if current_user.is_authenticated: 
         savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
-                                allvid=allvid, form=form, savedvid = savedvid)
+                                allvid=allvid, form=form, savedvid = savedvid, user_profile=user_profile)
 
     else:
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
-                                allvid=allvid, form=form)
+                                allvid=allvid, user_profile=user_profile, form=form)
+
+
+        
+        
         
                     
 @app.route('/video/<videoid>', methods=['GET', 'POST'])

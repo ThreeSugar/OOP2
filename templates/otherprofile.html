@@ -20,11 +20,13 @@ Lifestyle28 | Dashboard
             <img class="card-bkimg" alt="" src="{{url_for('static', filename = 'img/profile.png')}}">
             <!-- http://lorempixel.com/850/280/people/9/ -->
         </div>
-        <div style = "margin-top:50px;" class="useravatar">
+        <div style = "margin-top:10px;" class="useravatar">
             <img alt="" src="{{url_for('static', filename = 'img/profile.png')}}">
         </div>
-        <div style = "top:180px;" class="card-info">
+        <div style = "top:140px;" class="card-info">
             <span style = "color:black;" class="card-title">{{user_profile.username}}</span><br>
+            <a style = "margin-top:30px; margin-right:20px; height:35px; width:100px;" class = "btn btn-default">Contact</a>
+            <a style = "margin-top:30px; height:35px; width:100px;" class = "btn btn-default">Follow</a>
         </div>
     </div>
     <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
@@ -71,11 +73,18 @@ Lifestyle28 | Dashboard
 
                 <br>
 
+                <h3><u>Email</u></h3>
+                <p style = "white-space: pre-line;">
+                    {{user_email}}
+                </p>
+
+                <br>
+
                 <h3><u>Location</u></h3>
                 <p style = "white-space: pre-line;">
                     {{user_profile.location}}
                 </p>
-                <br>
+                   
             </div>
 
 

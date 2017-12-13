@@ -3,6 +3,9 @@ from models import db, User
 import unittest
 from flask_testing import TestCase
 from flask_sqlalchemy import SQLAlchemy
+from io import BytesIO
+
+
 
 
 class MyTest(TestCase):
@@ -29,6 +32,17 @@ class MyTest(TestCase):
         db.session.commit()
         # this works
         assert user in db.session
+
+class TestUpload(MyTest):
+    def test_uploads(self):
+        #request.info
+        #junit
+        data = dict(
+        file=(BytesIO(b'My file contents'), "video.mp4"))
+        response = self.client.post(url_for('upload'), content_type='multipart/form-data', data=data)
+        assert response
+       
+
 
 if __name__ == '__main__':
     unittest.main()

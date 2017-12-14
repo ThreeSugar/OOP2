@@ -12,7 +12,8 @@ from flask_mail import Mail, Message
 
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail
+Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail, BlogPost, \
+EditBlog
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
@@ -135,6 +136,7 @@ def utility_processor():
 #ADMIN OVERALL
 
 admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(BlogPost, db.session))
 path = os.path.join(os.path.dirname(__file__), 'static/assets')
 admin.add_view(FileAdmin(path, name='Videos'))
 
@@ -744,7 +746,40 @@ def videosearch():
         return redirect(url_for('explorevideo'))
 
     
-####
+#######HASSAN
+
+@app.route('/blog')
+def blog():
+    blog_post = BlogPost.query.all()
+    return render_template('hassan/blog.html', blog_post=blog_post)
+
+@app.route('/blog/view')
+def view_blog():
+    return render_template('hassan/viewpost.html')
+
+@app.route('/protected/blog/view')
+def blog_view():
+    all_post = BlogPost.query.all()
+    return render_template('hassan/viewblog.html', all_post=all_post)
+
+@app.route('/protected/blog/edit/<id>', methods=['POST', 'GET'])
+def blog_edit(id):
+    edit_post = BlogPost.query.filter_by(id=id).first()
+    form = EditBlog(author = edit_post.author, description=edit_post.description, content=edit_post.content)
+    if form.validate_on_submit():
+        edit_post.author = form.author.data
+        edit_post.description = form.description.data
+        edit_post.content = form.content.data
+        db.session.commit()
+        return redirect(url_for('blog_view'))
+
+    return render_template('hassan/editblog.html', form=form)
+
+
+
+
+
+
 
 
 ### (DO NOT TOUCH)

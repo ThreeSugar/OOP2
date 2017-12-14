@@ -66,6 +66,33 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
 
+#BLOG
+class BlogPost(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String())
+    author = db.Column(db.String())
+    image = db.Column(db.String())
+    description  = db.Column(db.String())
+    content = db.Column(db.String())
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+    def __init__(self, title = '', author = '', image='', description='', content=''):
+        self.title = title
+        self.author = author
+        self.image = image
+        self.description = description
+        self.content = content
+
+class EditBlog(FlaskForm):
+    author = StringField('Author')
+    description = StringField('Description')
+    content = TextAreaField('Content')
+    
+
+
+
+
+
 #VIDEO 
 
 class Video(db.Model):

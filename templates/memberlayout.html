@@ -11,16 +11,17 @@
 
 	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600' rel='stylesheet' type='text/css'>
-	 {% block style %} 
-	 {% endblock %}
+	
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	
 	<link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet" type="text/css">
 	<link href="{{url_for('static', filename='css/font-awesome.css')}}" rel="stylesheet" type="text/css">
 	<link href= "{{url_for('static', filename='css/responsive.css')}}" rel="stylesheet" type="text/css">
-	<link href= "{{url_for('static', filename='css/animate.css')}}" rel="stylesheet" type="text/css">
-	<link href="{{url_for('static', filename='css/user.css')}}" rel="stylesheet" type="text/css">
-	<link href= "{{url_for('static', filename='css/login.css')}}" rel="stylesheet" type="text/css">
+    <link href= "{{url_for('static', filename='css/animate.css')}}" rel="stylesheet" type="text/css">
+    
+    {% block style %} 
+    {% endblock %}
+	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"

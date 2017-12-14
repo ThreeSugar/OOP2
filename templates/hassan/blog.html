@@ -1,0 +1,144 @@
+{% extends 'memberlayout.html' %}
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+<body>
+
+
+{% block content %}
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+
+                <h1 class="page-header">
+                    LifeStyle28
+                    <small>Health and Wellness Blog</small>
+                    &nbsp;
+                </h1>
+
+
+                <!-- First Blog Post -->
+
+                {% for b in blog_post %}
+                <p style = "font-size:30px; padding:5px;">
+                    <a href="#">{{b.title}}</a>
+                </p>
+                &nbsp;
+                <p style = "margin-left:5px;" class="lead">
+                    by <a href="index.php">{{b.author}}</a>
+                </p>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on {{b.date}}</p>
+                <hr>
+                <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+                <hr>
+                <p>  
+
+                    {{b.description}}
+
+                </p>
+
+                <br>
+
+                <a class="btn btn-primary" href="{{url_for('view_blog')}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+
+                <hr>
+
+                {% endfor %}
+
+                <!-- Second Blog Post -->
+                
+                  <!-- endfor-->
+
+                <hr>
+
+                <!-- Pager -->
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#">&larr; Older</a>
+                    </li>
+                    <li class="next">
+                        <a href="#">Newer &rarr;</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- Blog Sidebar Widgets Column -->
+            <div style = "margin-top:20px;" class="col-md-4">
+
+                <!-- Blog Search Well -->
+                <div class="well">
+                    <h4>Blog Search</h4>
+                    <div class="input-group">
+                        <input type="text" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        </span>
+                    </div>
+                    <!-- /.input-group -->
+                </div>
+
+                <!-- Blog Categories Well -->
+                <div class="well">
+                    <h4>Blog Categories</h4>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Category Name</a>
+                                </li>
+                                <li><a href="#">Category Name</a>
+                                </li>
+                                <li><a href="#">Category Name</a>
+                                </li>
+                                <li><a href="#">Category Name</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.col-lg-6 -->
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled">
+                                <li><a href="#">Category Name</a>
+                                </li>
+                                <li><a href="#">Category Name</a>
+                                </li>
+                                <li><a href="#">Category Name</a>
+                                </li>
+                                <li><a href="#">Category Name</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.col-lg-6 -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+                <!-- Side Widget Well -->
+                <div class="well">
+                    <h4>Side Widget Well</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+{% endblock %}

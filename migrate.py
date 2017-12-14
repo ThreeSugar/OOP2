@@ -89,6 +89,15 @@ class UserMail(db.Model):
     flag = db.Column(db.Boolean)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
+class BlogPost(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String())
+    author = db.Column(db.String())
+    image = db.Column(db.String())
+    description  = db.Column(db.String())
+    content = db.Column(db.String())
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

@@ -2,6 +2,7 @@ from OOPP import app, db
 from models import Item, Cart, Comments
 from flask import render_template, redirect, url_for, request
 from flask_uploads import UploadSet, configure_uploads, IMAGES
+from sqlalchemy.exc import IntegrityError
 
 photos = UploadSet('photos', IMAGES)
 
@@ -35,19 +36,48 @@ def shop():
 
     return render_template("shop.html", items=items)
 
+@app.route('/test/<int:item_id>')
+def test_cart1(item_id):
+    cartid = Cart.query.filter_by(item_id=item_id).first()
+    print(cartid)
+    print(cartid.name)
+
+    return ('success')
+
 @app.route('/shop/<int:item_id>/add')
 def addCart(item_id):
 
-    item1 = Item.query.filter_by(id=item_id).first()
-    quantity = 1
-    subtotal = item1.price
-    cart = Cart(item_id=item_id, name=item1.name, quantity=quantity, price=item1.price, subtotal=subtotal)
-    db.session.add(cart)
-    db.session.commit()
+    try:
+        items = Item.query.filter_by(id=item_id).first()
+        new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
+        db.session.add(new_item)
+        db.session.commit()
 
-    # check = Cart.query.filter(item_id == item_id).all()
+    except IntegrityError:
+        db.session.rollback()
+        items = Item.query.filter_by(id=item_id).first()
+        carts = Cart.query.filter_by(id=item_id).first()
+        carts.quantity += 1
+        carts.subtotal = carts.quantity*carts.price
+        db.session.commit()
+
+
+
+
+    return redirect(url_for('shop'))
+
+    # # item1 = Item.query.filter_by(id=item_id).first()
+    # # quantity = 1
+    # # subtotal = item1.price
+    # # cart = Cart(item_id=item_id, name=item1.name, quantity=quantity, price=item1.price, subtotal=subtotal)
+    # # db.session.add(cart)
+    # # db.session.commit()
+    #
+    # check = Cart.query.filter_by(item_id = item_id).all()
     # cartid = Cart.query.filter_by(item_id=item_id).first()
+    # print(cartid)
     # if check is None:
+    #     cartids = Cart.query.filter_by(item_id=item_id).first()
     #     item1 = Item.query.filter_by(id=item_id).first()
     #     quantity = 1
     #     subtotal = item1.price
@@ -55,12 +85,15 @@ def addCart(item_id):
     #     db.session.add(cart)
     #     db.session.commit()
     # else:
-    #     cartitem = Cart.query.filter_by(name=cartid.name).first()
+    #     cartname = cartid.name
+    #     cartitem = Cart.query.filter_by(name=cartname).first()
     #     cartitem.quantity += 1
     #     cartitem.subtotal = cartitem.price * cartitem.quantity
     #     db.session.commit()
+    #
+    # return redirect(url_for('shop'))
 
-    return redirect(url_for('shop'))
+
 
 @app.route('/cart')
 def cart():
@@ -90,8 +123,10 @@ def addItem():
     info = request.form['info']
     price = request.form['price']
     description = request.form['description']
+    category = request.form['category']
+    calories = request.form['calories']
 
-    item = Item(name=name, info=info, price=price, description=description)
+    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories)
 
     db.session.add(item)
     db.session.commit()
@@ -100,7 +135,7 @@ def addItem():
         img = request.files['image']
         img.filename = str(item.id)+".jpg"
         filename = photos.save(img)
-        return filename
+        return redirect(url_for('adminadd'))
 
     return redirect(url_for('shop'))
 

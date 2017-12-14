@@ -151,11 +151,48 @@
     {% for c in comment %}
         <div class="reviewitem">
             <h3>{{ c.name }}:
-            (<span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>)
+                {% if c.rating == 5 %}
+                    (<span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>)
+                {% endif %}
+                {% if c.rating == 4 %}
+                    (<span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>)
+                {% endif %}
+                {% if c.rating == 3 %}
+                    (<span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>)
+                {% endif %}
+                {% if c.rating == 2 %}
+                    (<span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>)
+                {% endif %}
+                {% if c.rating == 1 %}
+                    (<span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>)
+                {% endif %}
+                {% if c.rating == 0 %}
+                    (<span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>)
+                {% endif %}
             </h3>
             <p>{{ c.comment }}</p>
         </div>

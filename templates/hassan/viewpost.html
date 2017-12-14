@@ -5,17 +5,19 @@
 <div style = "padding-bottom:20px;"class="col-md-8">
 
 <p style = "font-size:30px; margin-left: -15px; padding:20px;">
-    <a href="#">Blog Post Title</a>
+    <a href="#">{{blog.title}}</a>
 </p>
 <p style = "margin-left:5px;" class="lead">
-    by <a href="index.php">Start Bootstrap</a>
+    by <a href="index.php">{{blog.author}}</a>
 </p>
-<p><span class="glyphicon glyphicon-time"></span> Posted on August 28, 2013 at 10:00 PM</p>
+<p><span class="glyphicon glyphicon-time"></span> Posted on {{blog.date}}</p>
 <hr>
 <img class="img-responsive" src="http://placehold.it/900x300" alt="">
 <hr>
-<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore, veritatis, tempora, necessitatibus inventore nisi quam quia repellat ut tempore laborum possimus eum dicta id animi corrupti debitis ipsum officiis rerum.</p>
+<p>{{blog.content}}</p>
 </div>
+
+
 <!-- Blog Sidebar Widgets Column -->
 <div style = "margin-top:20px;" class="col-md-4">
     

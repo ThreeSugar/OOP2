@@ -753,9 +753,10 @@ def blog():
     blog_post = BlogPost.query.all()
     return render_template('hassan/blog.html', blog_post=blog_post)
 
-@app.route('/blog/view')
-def view_blog():
-    return render_template('hassan/viewpost.html')
+@app.route('/blog/view/<id>')
+def view_blog(id):
+    blog = BlogPost.query.filter_by(id=id).first()
+    return render_template('hassan/viewpost.html', blog=blog)
 
 @app.route('/protected/blog/view')
 def blog_view():

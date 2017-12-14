@@ -38,7 +38,7 @@
                 </p>
                 &nbsp;
                 <p style = "margin-left:5px;" class="lead">
-                    by <a href="index.php">{{b.author}}</a>
+                    by <a href="#">{{b.author}}</a>
                 </p>
                 <p><span class="glyphicon glyphicon-time"></span> Posted on {{b.date}}</p>
                 <hr>
@@ -52,7 +52,7 @@
 
                 <br>
 
-                <a class="btn btn-primary" href="{{url_for('view_blog')}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <a class="btn btn-primary" href="{{url_for('view_blog', id = b.id)}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
                 <hr>
 

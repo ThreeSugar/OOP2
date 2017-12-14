@@ -25,10 +25,28 @@
         margin:0;
     }
 }
+.table{
+    width: 80%;
+    margin: auto;
+    margin-bottom: 40px;
+}
+.table input{
+    width: 40px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
+.cart h3{
+    font-size: 25px;
+    margin: 20px;
+}
 </style>
 <div class="cart">
-    <h3>CART</h3>
-    <table class="table">
+    <h3>YOUR CART</h3>
+    <table class="table" width="400">
         <thead class="thead-default">
             <tr>
                 <th>#</th>
@@ -37,22 +55,28 @@
                 <th>Price</th>
                 <th>Subtotal</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for c in cart %}
-            <tr>
-                <td>{{ c.id }}</td>
-                <td>{{ c.name }}</td>
-                <td>{{ c.quantity }}</td>
-                <td>{{ c.price }}</td>
-                <td>{{ c.subtotal }}</td>
-                <td></td>
-            </tr>
+            <form method="POST" action={{ url_for('updateCart', item_id=c.item_id) }}>
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.name }}</td>
+                    <td><input type="number" name="newquantity" value="{{ c.quantity }}"></td>
+    {#                <td>{{ c.quantity }}</td>#}
+                    <td>${{ c.price }}</td>
+                    <td>${{ c.subtotal }}</td>
+                    <td><button type="submit" class="btn btn-success" style="float: right">Update</button></td>
+{#                    <td><a href="{{ url_for('updateCart', item_id=c.item_id) }}" class="btn btn-success" role="button">Update</a></td>#}
+                    <td><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                </tr>
+            </form>
             {% endfor %}
         </tbody>
     </table>
-    <p style="text-align: right; font-size: 25px; color: black"><a href="{{ url_for('shop') }}" class="btn btn-success" role="button" style="float: left; margin: 0px 50px 0px">Continue Shopping</a>Total: {{ show_cart_price() }}<a href="#" class="btn btn-success" role="button" style="float: right; margin: 0px 50px 0px 10px">Checkout</a></p>
+    <p style="text-align: right; font-size: 25px; color: black"><a href="{{ url_for('shop') }}" class="btn btn-success" role="button" style="float: left; margin: 0px 50px 0px">Continue Shopping</a>Total: ${{ show_cart_price() }}<a href="#" class="btn btn-success" role="button" style="float: right; margin: 0px 150px 0px 50px">Checkout</a></p>
 {#    <p style="padding:0; margin:0">Total: {{ show_cart_price() }}</p>#}
 </div>
 {% endblock %}

@@ -24,6 +24,12 @@ def utility_processor():
         for c in cart:
             count += 1
         return count
+    # def filter_shop(category):
+    #     # filter_shop()
+    #     if category == 'meat':
+    #         meat = Item.query.filter(Item.category == category).all()
+    #         return render_template("shop.html", items=meat)
+
     return dict(show_cart_price=show_cart_price, cart_count=cart_count)
 
 @app.route('/')
@@ -33,16 +39,21 @@ def index():
 @app.route('/shop')
 def shop():
     items = Item.query.all()
-
     return render_template("shop.html", items=items)
 
-@app.route('/test/<int:item_id>')
-def test_cart1(item_id):
-    cartid = Cart.query.filter_by(item_id=item_id).first()
-    print(cartid)
-    print(cartid.name)
+@app.route('/shop/filter/<category>')
+def filter(category):
+    filter = Item.query.filter(Item.category == category).all()
+    return render_template("shop.html", items=filter)
 
-    return ('success')
+
+# @app.route('/test/<int:item_id>')
+# def test_cart1(item_id):
+#     cartid = Cart.query.filter_by(item_id=item_id).first()
+#     print(cartid)
+#     print(cartid.name)
+#
+#     return ('success')
 
 @app.route('/shop/<int:item_id>/add')
 def addCart(item_id):
@@ -55,45 +66,28 @@ def addCart(item_id):
 
     except IntegrityError:
         db.session.rollback()
-        items = Item.query.filter_by(id=item_id).first()
-        carts = Cart.query.filter_by(id=item_id).first()
+        carts = Cart.query.filter_by(item_id=item_id).first()
         carts.quantity += 1
-        carts.subtotal = carts.quantity*carts.price
+        carts.subtotal = "{0:.2f}".format(carts.quantity*carts.price)
         db.session.commit()
-
-
-
 
     return redirect(url_for('shop'))
 
-    # # item1 = Item.query.filter_by(id=item_id).first()
-    # # quantity = 1
-    # # subtotal = item1.price
-    # # cart = Cart(item_id=item_id, name=item1.name, quantity=quantity, price=item1.price, subtotal=subtotal)
-    # # db.session.add(cart)
-    # # db.session.commit()
-    #
-    # check = Cart.query.filter_by(item_id = item_id).all()
-    # cartid = Cart.query.filter_by(item_id=item_id).first()
-    # print(cartid)
-    # if check is None:
-    #     cartids = Cart.query.filter_by(item_id=item_id).first()
-    #     item1 = Item.query.filter_by(id=item_id).first()
-    #     quantity = 1
-    #     subtotal = item1.price
-    #     cart = Cart(item_id=item_id, name=item1.name, quantity=quantity, price=item1.price, subtotal=subtotal)
-    #     db.session.add(cart)
-    #     db.session.commit()
-    # else:
-    #     cartname = cartid.name
-    #     cartitem = Cart.query.filter_by(name=cartname).first()
-    #     cartitem.quantity += 1
-    #     cartitem.subtotal = cartitem.price * cartitem.quantity
-    #     db.session.commit()
-    #
-    # return redirect(url_for('shop'))
+@app.route('/shop/<int:item_id>/delete')
+def deleteCart(item_id):
+    items = Cart.query.filter_by(item_id=item_id).first()
+    db.session.delete(items)
+    db.session.commit()
+    return redirect(url_for('cart'))
 
-
+@app.route('/shop/<int:item_id>/update', methods=['POST'])
+def updateCart(item_id):
+    items = Cart.query.filter_by(item_id=item_id).first()
+    quantity = request.form['newquantity']
+    items.quantity = quantity
+    items.subtotal = "{0:.2f}".format(float(items.quantity)*items.price)
+    db.session.commit()
+    return redirect(url_for('cart'))
 
 @app.route('/cart')
 def cart():

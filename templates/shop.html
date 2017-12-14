@@ -112,7 +112,7 @@ p{
 <div style="overflow:auto">
     <div class="menu">
         <a href="{{ url_for('cart') }}"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;"><img src="{{ url_for('static', filename='img/cart.png') }}" style="width: 7%"> Cart (<span>{{ cart_count() }}</span>)</div></a>
-        <a href="#"><div class="menuitem">meat & seafood</div></a>
+        <a href="{{ url_for('filter', category="meat") }}"><div class="menuitem">meat & seafood</div></a>
         <a href="#"><div class="menuitem">fruit & veg</div></a>
         <a href="#"><div class="menuitem">frozen</div></a>
         <a href="#"><div class="menuitem">dairy</div></a>

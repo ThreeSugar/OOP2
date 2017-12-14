@@ -1,6 +1,12 @@
 from OOPP import app, db
 from models import Item, Cart, Comments
 from flask import render_template, redirect, url_for, request
+from flask_uploads import UploadSet, configure_uploads, IMAGES
+
+photos = UploadSet('photos', IMAGES)
+
+app.config['UPLOADED_PHOTOS_DEST'] = '////Users/raymondtay/PycharmProjects/OOPP/static/img/item'
+configure_uploads(app, photos)
 
 @app.context_processor
 def utility_processor():
@@ -85,11 +91,16 @@ def addItem():
     price = request.form['price']
     description = request.form['description']
 
-
     item = Item(name=name, info=info, price=price, description=description)
 
     db.session.add(item)
     db.session.commit()
+
+    if request.method == 'POST' and 'image' in request.files:
+        img = request.files['image']
+        img.filename = str(item.id)+".jpg"
+        filename = photos.save(img)
+        return filename
 
     return redirect(url_for('shop'))
 

@@ -125,7 +125,8 @@ p{
         {% for item in items %}
         <div class="card">
             <div class="cardcontainer">
-                <img src="http://placehold.it/200x250">
+{#                <img src="http://placehold.it/200x250">#}
+                <img src="{{ url_for('static', filename='img/item/' ~ item.id ~ ".jpg") }}">
                 <div class="overlay"></div>
                 <div class="button">
                     <a href="{{ url_for('addCart', item_id=item.id) }}"><img src="{{ url_for('static', filename='img/cart.png') }}"></a>

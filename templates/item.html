@@ -107,7 +107,8 @@
 <div class="container">
     <div class="item">
         <h2>{{ item.name }}</h2>
-        <img src="http://placehold.it/200x250">
+{#        <img src="http://placehold.it/200x250">#}
+        <img src="{{ url_for('static', filename='img/item/' ~ item.id ~ ".jpg") }}">
         <ul style="list-style: none;">
             <li><h4>ID: {{ item.id }}</h4></li>
             <hr>

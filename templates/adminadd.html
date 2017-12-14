@@ -7,7 +7,7 @@
 		<!--main-section-start-->
 		<div class="container">
             <div class="row" style="margin: auto">
-                <form name="additemForm" id="additemForm" method="POST" action="{{ url_for('addItem') }}" style="width: 50%; margin: auto; padding: auto">
+                <form name="additemForm" id="additemForm" method="POST" enctype="multipart/form-data" action="{{ url_for('addItem') }}" style="width: 50%; margin: auto; padding: auto">
                     <h1>Add Item</h1>
                     <div class="form-group">
                         <label for="name">Name:</label>

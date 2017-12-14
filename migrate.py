@@ -99,6 +99,22 @@ class BlogPost(db.Model):
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 
+class RecipePost(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String())
+    author = db.Column(db.String())
+    time = db.Column(db.String())
+    image = db.Column(db.String())
+    description  = db.Column(db.String())
+    difficulty = db.Column(db.String())
+    instruction = db.Column(db.String())
+    category = db.Column(db.String())
+    ingredients = db.Column(db.String())
+    nutri = db.Column(db.String())
+    date = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

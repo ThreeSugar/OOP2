@@ -13,7 +13,7 @@ from flask_mail import Mail, Message
 from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
 VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
 Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail, BlogPost, \
-EditBlog
+EditBlog, RecipePost
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
@@ -746,7 +746,7 @@ def videosearch():
         return redirect(url_for('explorevideo'))
 
     
-#######HASSAN
+####### HASSAN (BLOG) #### 
 
 @app.route('/blog')
 def blog():
@@ -777,10 +777,38 @@ def blog_edit(id):
     return render_template('hassan/editblog.html', form=form)
 
 
+### XIONG JIE (RECIPE) ### 
 
+@app.route('/recipe', methods=['GET', 'POST'])
+def recipe():
+    return render_template('xiongjie/mainrecipe.html')
 
+@app.route('/recipe/view')
+def view_recipe():
+    return render_template('xiongjie/recipe_single.html')
 
+@app.route('/recipe/manage')
+def manage_recipe():
+    all_recipe = RecipePost.query.all()
+    return render_template('xiongjie/managerecipe.html', all_recipe=all_recipe)
 
+@app.route('/recipe/edit/<id>')
+def edit_recipe(id):
+    # managerecipe.html
+    pass
+
+@app.route('/recipe/new', methods=['GET', 'POST'])
+def new_recipe():
+    if request.method == 'POST':
+        recipe = RecipePost(title=request.form['title'], author=current_user.username,  difficulty=request.form['level'], \
+        category=request.form['category'], description = request.form['desc'], \
+        time=request.form['time'], ingredients = request.form['ingredients'],\
+        instruction=request.form['instruction'], nutri=request.form['nutri'])
+        db.session.add(recipe)
+        db.session.commit()
+        return 'success'
+
+    return render_template('xiongjie/newrecipe.html')
 
 
 ### (DO NOT TOUCH)

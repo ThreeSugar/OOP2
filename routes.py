@@ -10,18 +10,19 @@ from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
 
-from models import LoginForm, RegisterForm, User, db, Video, SelectForm, EditForm, \
-VideoComment, VideoSearch, VideoLikes, VideoDislikes, VideoSaved, VideoViews, \
-Anonymous, FireForm, EditProfile, Profile, SendMessage, UserMail, BlogPost, \
-EditBlog, RecipePost
+from hashids import Hashids
+import requests
+
+from models import *
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
 
-import pyrebase
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 
+import pyrebase
 
 app = Flask(__name__)
 admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
@@ -51,17 +52,27 @@ db.init_app(app)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(APP_ROOT, 'static')
 
+photos = UploadSet('photos', IMAGES)
+
+photodest = os.path.join(APP_ROOT, 'static/raymond/img')
+
+app.config['UPLOADED_PHOTOS_DEST'] = photodest
+configure_uploads(app, photos)
 
 
-#FIREBASE
+
+#FIREBASE/CYNTHIA
+
+API_KEY = 'AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
+
+hashid_salt = 'impossible to guess'
+hashids = Hashids(salt=hashid_salt, min_length=4)
 
 config = {
-    "apiKey": "AIzaSyDasXfTEmJNbK5446JZlumx1bmZ4rmxeQE",
-    "authDomain": "lifestyle28-14407.firebaseapp.com",
-    "databaseURL": "https://lifestyle28-14407.firebaseio.com",
-    "projectId": "lifestyle28-14407",
-    "storageBucket": "gs://lifestyle28-14407.appspot.com",
-    "messagingSenderId": "260841418499"
+    "apiKey": "AIzaSyCiUhFnF68ufmbjxHWnPoMaaxGEKlfJPNc",
+    "authDomain": "gym-finder-9e3b6.firebaseapp.com",
+    "databaseURL": "https://gym-finder-9e3b6.firebaseio.com",
+    "storageBucket": "gym-finder-9e3b6.appspot.com"
   }
 
   #this is to register as an admin with full read/write access
@@ -69,32 +80,28 @@ config = {
 firebase = pyrebase.initialize_app(config)
 firedb = firebase.database()  
 
-#FIREBASE AUTH
-
-auth = firebase.auth()
-# user = auth.sign_in_with_email_and_password("john@john.com", "password")
 
 
-#FIREFORM TEST
-@app.route('/firebase', methods=['GET', 'POST'])
-def firebase():
-    form = FireForm()
-    userlist = []
-    if form.validate_on_submit():
-        info = {"place": form.place.data, "email": form.email.data}
-        firedb.child("booking").child("user").push(info, user['idToken'] )
-        userz = firedb.child("booking").child("user").get(user['idToken'])
-        test = firedb.child("booking").child("user").order_by_child("email").equal_to("clever@clever.com").get(user['idToken'])
-        print(test.val())
-        for u in userz.each():
-            userlist.append(u.val())
+# #FIREFORM TEST
+# @app.route('/firebase', methods=['GET', 'POST'])
+# def firebase():
+#     form = FireForm()
+#     userlist = []
+#     if form.validate_on_submit():
+#         info = {"place": form.place.data, "email": form.email.data}
+#         firedb.child("booking").child("user").push(info, user['idToken'] )
+#         userz = firedb.child("booking").child("user").get(user['idToken'])
+#         test = firedb.child("booking").child("user").order_by_child("email").equal_to("clever@clever.com").get(user['idToken'])
+#         print(test.val())
+#         for u in userz.each():
+#             userlist.append(u.val())
 
-        return render_template('fireform.html', form=form, userlist=userlist)
+#         return render_template('fireform.html', form=form, userlist=userlist)
         
-    else:
-         return render_template('fireform.html', form=form, userlist=userlist)
+#     else:
+#          return render_template('fireform.html', form=form, userlist=userlist)
 
-    return render_template('fireform.html', form=form, userlist=userlist)
+#     return render_template('fireform.html', form=form, userlist=userlist)
 
 #HELPERS
 @app.context_processor 
@@ -128,9 +135,25 @@ def utility_processor():
         else:
             flag = False
         return flag
+
+    def show_cart_price():
+        price = 0
+        cart = Cart.query.all()
+        for c in cart:
+            price += c.subtotal
+
+        return "{0:.2f}".format(price)
+
+    def cart_count():
+        count = 0
+        cart = Cart.query.all()
+        for c in cart:
+            count += 1
+        return count
     
 
-    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag)
+    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag,
+                show_cart_price=show_cart_price, cart_count=cart_count)
 
 
 #ADMIN OVERALL
@@ -139,6 +162,10 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(BlogPost, db.session))
 path = os.path.join(os.path.dirname(__file__), 'static/assets')
 admin.add_view(FileAdmin(path, name='Videos'))
+admin.add_view(ItemView(Item, db.session))
+admin.add_view(ModelView(Cart, db.session))
+admin.add_view(ModelView(Comments, db.session))
+
 
 ###
 
@@ -745,6 +772,8 @@ def videosearch():
     else:
         return redirect(url_for('explorevideo'))
 
+##RAYMOND 
+
     
 ####### HASSAN (BLOG) #### 
 
@@ -809,6 +838,175 @@ def new_recipe():
         return 'success'
 
     return render_template('xiongjie/newrecipe.html')
+
+
+#RAYMOND 
+
+@app.route('/shop')
+def shop():
+    items = Item.query.all()
+    return render_template("raymond/shop.html", items=items)
+
+@app.route('/shop/filter/<category>')
+def filter(category):
+    filter = Item.query.filter(Item.category == category).all()
+    return render_template("raymond/shop.html", items=filter)
+
+@app.route('/shop/<int:item_id>/add')
+def addCart(item_id):
+
+    try:
+        items = Item.query.filter_by(id=item_id).first()
+        new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
+        db.session.add(new_item)
+        db.session.commit()
+
+    except IntegrityError:
+        db.session.rollback()
+        carts = Cart.query.filter_by(item_id=item_id).first()
+        carts.quantity += 1
+        carts.subtotal = "{0:.2f}".format(carts.quantity*carts.price)
+        db.session.commit()
+
+    return redirect(url_for('shop'))
+
+@app.route('/shop/<int:item_id>/delete')
+def deleteCart(item_id):
+    items = Cart.query.filter_by(item_id=item_id).first()
+    db.session.delete(items)
+    db.session.commit()
+    return redirect(url_for('cart'))
+
+@app.route('/shop/<int:item_id>/update', methods=['POST'])
+def updateCart(item_id):
+    items = Cart.query.filter_by(item_id=item_id).first()
+    quantity = request.form['newquantity']
+    items.quantity = quantity
+    items.subtotal = "{0:.2f}".format(float(items.quantity)*items.price)
+    db.session.commit()
+    return redirect(url_for('cart'))
+
+@app.route('/cart')
+def cart():
+    cart = Cart.query.all()
+
+    return render_template("raymond/cart.html", cart=cart)
+
+@app.route('/adminadd')
+def adminadd():
+    return render_template("raymond/adminadd.html")
+
+@app.route('/addItem', methods=['POST'])
+def addItem():
+    name = request.form['name']
+    info = request.form['info']
+    price = request.form['price']
+    description = request.form['description']
+    category = request.form['category']
+    calories = request.form['calories']
+
+    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories, totalratings=0)
+
+    db.session.add(item)
+    db.session.commit()
+
+    if request.method == 'POST' and 'image' in request.files:
+        img = request.files['image']
+        img.filename = str(item.id)+".jpg"
+        filename = photos.save(img)
+        return redirect(url_for('adminadd'))
+
+    return redirect(url_for('shop'))
+
+@app.route('/item/<int:item_id>')
+def item(item_id):
+    item = Item.query.filter_by(id=item_id).one()
+
+    comment = Comments.query.filter(Comments.item_id == item_id).all()
+
+    return render_template('raymond/item.html', item=item, comment=comment)
+
+@app.route('/item/<int:item_id>/add', methods=['POST'])
+def addComment(item_id):
+
+    name = request.form['name']
+    rating = request.form['rating']
+    comment = request.form['comment']
+
+    addComment = Comments(item_id=item_id, name=name, rating=rating, comment=comment)
+    db.session.add(addComment)
+
+    item = Item.query.filter_by(id=item_id).first()
+    count = Comments.query.filter_by(item_id=item_id).count()
+
+    item.totalratings = int(item.totalratings)+int(rating)
+    item.rating = int(item.totalratings / count)
+    item.rating_count = count
+
+    db.session.commit()
+
+    return redirect(url_for('item', item_id=item_id))
+
+@app.route('/adminview')
+def adminview():
+    return render_template("raymond/adminview.html")
+
+
+#CYNTHIA
+
+@app.route('/gym')
+def gym_page():
+    return render_template('cynthia/index.html')
+
+@app.route('/gym/find', methods=["POST"])
+def find_gyms():
+    if request.method == 'POST':
+        location = request.form["location"]
+        geo_coding_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+ location + '&key=' + API_KEY
+        geo_coding_response = requests.get(geo_coding_url).json()
+        location_coordinates = geo_coding_response["results"][0]["geometry"]["location"]
+        lng = str(location_coordinates["lng"])
+        lat = str(location_coordinates["lat"])
+        places_search_url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + lat + ',' + lng + '&rankby=distance&type=gym&keyword=gym&key=AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
+        places_response = requests.get(places_search_url).json()
+        return render_template('cynthia/gyms.html', gyms=places_response)
+
+@app.route('/gym/more/<place_id>', methods=["GET", "POST"])
+def gym_info(place_id):
+    if request.method == 'GET':
+        place_api_url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&key=AIzaSyDHHLWzJzlZZFDye9JbxiCu4RXei_bzMbE'
+        place_details_response = requests.get(place_api_url).json()
+        return render_template('cynthia/gym.html', gym=place_details_response)
+    if request.method == 'POST':
+        new_booking_id = None
+        try:
+            bookings = firedb.child("bookings").get().val()
+            booking_id = [entry for entry in bookings][-1]['id']
+            new_booking_id = int(booking_id) + 1
+        except:
+            new_booking_id = 0
+        
+        new_booking_ref = firedb.child("bookings").child(new_booking_id)
+        booking_id_string = hashids.encode(new_booking_id)
+        booking_confirm_url = 'session/confirm/' + booking_id_string
+        booking_details = dict()
+        booking_details['id'] = int(new_booking_id)
+        booking_details['name'] = request.form["name"]
+        booking_details['phone_number'] = request.form["phone"]
+        booking_details['email'] = request.form['email']
+        booking_details['date_time'] = request.form['date_time']
+        booking_details['id_string'] = booking_id_string
+        new_booking_ref.set(booking_details)
+        return redirect(booking_confirm_url)
+
+
+@app.route('/session/confirm/<booking_id>')       
+def display_confirmation(booking_id):
+    real_booking_id = hashids.decode(booking_id)[0]
+    booking_ref = firedb.child('bookings').child(real_booking_id)
+    result = booking_ref.get().val()
+    booking_details = dict(result)
+    return render_template('cynthia/confirm.html', booking_details=booking_details)
 
 
 ### (DO NOT TOUCH)

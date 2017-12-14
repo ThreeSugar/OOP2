@@ -1,0 +1,39 @@
+{% extends 'cynthia/base.html' %}
+{% block title %}
+   Gyms
+{% endblock %} 
+
+
+{% block content %}
+    {% for gym in gyms["results"] %}
+        <ul class="list-group" id="gym-list">
+            <li class="list-group-item">
+                <div class="gym-item {{gym['place_id']}}"> 
+                        <div class="media-left">
+                                <!-- <a href="#">
+                                  <img class="media-object img-rounded" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==" alt="...">
+                                </a> -->
+                              </div>
+                    <h2 class="text-left text-primary"> <a href='/gym/more/{{gym["place_id"]}}'> {{ gym["name"] }} </a></h2>
+                    <h3> {{ gym["vicinity"] }}</h3>
+                    {% if gym["opening_hours"] %} 
+                        {% if gym['opening_hours']['open_now'] %}
+                            <p class="text-success"> CURRENTLY OPEN </p>
+                        {% endif %}
+                    {% endif %}
+                    <a href='/gym/more/{{gym["place_id"]}}' class="btn btn-info"> More Info </a>
+                </div>
+            </li>
+        </ul>
+    {% endfor %}
+            </ul>
+{% endblock %}
+
+<!--
+    line 8-9. will create a list of gym
+    line 13. is the address of the gym
+    line 14-18. if the gym content contain opening hours, if the gym is open = True
+                                                          if the gym is close = Flase
+                so for True, will show the "currently open" text
+    line 19. the link will be different for each of the gym, cus each gym have different place_id
+-->

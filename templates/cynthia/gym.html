@@ -1,0 +1,143 @@
+{% extends 'cynthia/base.html' %} 
+    {% block title %} 
+      Gyms 
+    {% endblock %} 
+  
+  {% block content %}
+<center>
+  {% if gym %}
+  <h2 class="text-center"> {{ gym['result']["name"]}} </h2>
+  <div class="row">
+    <center>
+    <div class="col-lg-12 col-sm-8 wow fadeInUp delay-05s" id="">
+      <h3></h3>
+      <div id="map" style="height: 400px; width:80%;"></div>
+      <script>
+        const latitude = parseFloat("{{gym['result']['geometry']['location']['lat']}}");
+        const longitude = parseFloat("{{gym['result']['geometry']['location']['lng']}}");        
+        function drawMap(lat, lng) {
+          var center = { lat, lng };
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center,
+          });
+          var marker = new google.maps.Marker({
+            position: center,
+            map: map
+          });
+        }
+
+        $(document).ready(() => {
+          drawMap(latitude, longitude);
+        });
+        
+
+
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHHLWzJzlZZFDye9JbxiCu4RXei_bzMbE">
+      </script>
+    </div>
+  </center>
+    </div>
+</center>
+
+<div class="container-fluid">
+		<section class="main-section contact" id="contact">
+
+			<div class="row">
+              <div class="col-lg-6 col-sm-5 wow fadeInUp delay-05s">
+                  <h2> GYM DETAILS </h2>              
+                  
+                  <div class="contact-info-box address clearfix">
+                      <h3><i class=" icon-map-marker"></i>Address:</h3>
+                      <span id="gym-address"> {{ gym['result']['formatted_address'] }}</span>
+                    </div>
+                    <div class="contact-info-box phone clearfix">
+                      <h3><i class="fa-phone"></i>Phone:</h3>
+                      <span id="gym-phone">{{ gym['result']['formatted_phone_number']}}</span>
+                    </div>
+                    {% if gym['result']['website'] %}
+                    <div class="contact-info-box email clearfix">
+                      <h3><i class="fa-globe"></i>Website:</h3>
+                      <span > <a href="{{gym['result']['website']}}" target="_blank"> {{ gym['result']['website'] }} </a></span>
+                    </div>
+                    {% endif %}
+
+                    {% if gym['result']['opening_hours'] %}
+                    <div class="contact-info-box hours clearfix">
+                      <h3><i class="fa-clock-o"></i>Hours:</h3>
+                        <span>
+                          {% for day in gym['result']['opening_hours']['weekday_text'] %}
+                        
+                          <strong>{{ day }}</strong> <br />
+                        {% endfor %}
+                        </span>
+                      </div>
+                    {% endif %}
+
+                    <ul class="social-link">
+                      <!-- <li class="twitter"><a href="#"><i class="fa-twitter"></i></a></li>
+                      <li class="facebook"><a href="#"><i class="fa-facebook"></i></a></li>
+                      <li class="pinterest"><a href="#"><i class="fa-pinterest"></i></a></li>
+                      <li class="gplus"><a href="#"><i class="fa-google-plus"></i></a></li>
+                      <li class="dribbble"><a href="#"><i class="fa-dribbble"></i></a></li>-->
+                    </ul> 
+              </div>
+
+				<div class="col-lg-5 col-sm-5 wow fadeInUp delay-05s">
+					<div class="form">
+              <h2> Book a Session </h2>              
+						<form action="" method="POST" role="form" class="">
+							<div class="form-group">
+								<input type="text" name="name" class="form-control input-text" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+								<div class="validation"></div>
+              </div>
+              <div class="form-group">
+                  <input type="text" class="form-control input-text" name="phone" id="phone" placeholder="Phone Number" data-rule="phone" data-msg="Please enter a valid Phone" />
+                  <div class="validation"></div>
+                </div>
+							<div class="form-group">
+								<input type="email" class="form-control input-text" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+								<div class="validation"></div>
+							</div>
+							<div class="form-group input-group datetime" id="datetime">
+								<input type="text" class="form-control input-text" name="date_time" id="time" placeholder="Appointment Date and Time" />
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                 </div>
+              </div>
+              <script>
+                  $(function () {
+                      $('#datetime').datetimepicker({
+                        format: 'DD-MM-YYYY HH:mm A'
+                      });
+                    });
+                </script>
+							<div class="text-center"><button type="submit" class="input-btn">Schedule</button></div>
+						</form>
+					</div>
+				</div>
+      </div>
+
+		</section>
+  </div>
+  {% endif %}
+{% endblock %}
+
+<!--
+    line 9. get the result of the gym, extract the gym name and Convert it into a text form
+    line 16-17. create a const lat & lng, Save the lat & lng get into it.
+                Convert the string to float (interger, number type)
+    line 18-28. create function drawMap it take in the lat & lng
+                center (lat & lng) pass in the Map
+                Zoom -> is control how wide the zoom gym will be on the map
+    line 24-26. marker -> will mark out the center, which is the gym
+    line 30-31. the pages have to be ready/load first before show the map
+    line 53. the gym detail
+             i will get the address, phone no., website, opening hours. (if the gym have all this items)
+    line 90-105. The FILL IN form, user fill in and then will post it
+    line 103/107. -> line 110-113.
+                     will show the calander to pick the date & time
+    line 43. render.template confirm.HTML
+             it pass the details collected (user details) into the confirm.HTML page
+-->

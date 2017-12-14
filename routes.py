@@ -772,9 +772,7 @@ def videosearch():
     else:
         return redirect(url_for('explorevideo'))
 
-##RAYMOND 
 
-    
 ####### HASSAN (BLOG) #### 
 
 @app.route('/blog')

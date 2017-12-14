@@ -24,12 +24,6 @@ def utility_processor():
         for c in cart:
             count += 1
         return count
-    # def filter_shop(category):
-    #     # filter_shop()
-    #     if category == 'meat':
-    #         meat = Item.query.filter(Item.category == category).all()
-    #         return render_template("shop.html", items=meat)
-
     return dict(show_cart_price=show_cart_price, cart_count=cart_count)
 
 @app.route('/')
@@ -45,15 +39,6 @@ def shop():
 def filter(category):
     filter = Item.query.filter(Item.category == category).all()
     return render_template("shop.html", items=filter)
-
-
-# @app.route('/test/<int:item_id>')
-# def test_cart1(item_id):
-#     cartid = Cart.query.filter_by(item_id=item_id).first()
-#     print(cartid)
-#     print(cartid.name)
-#
-#     return ('success')
 
 @app.route('/shop/<int:item_id>/add')
 def addCart(item_id):
@@ -95,18 +80,6 @@ def cart():
 
     return render_template("cart.html", cart=cart)
 
-# @app.route('/cart/update/<int:item_id>')
-# def update(item_id):
-#     cartid = Cart.query.filter_by(item_id=item_id).first()
-#     i = cartid.quantity
-#
-#
-#     for c in Cart:
-#         cartid = Cart.query.filter_by(item_id=item_id).first()
-#
-#
-#     return render_template("cart.html")
-
 @app.route('/adminadd')
 def adminadd():
     return render_template("adminadd.html")
@@ -120,7 +93,7 @@ def addItem():
     category = request.form['category']
     calories = request.form['calories']
 
-    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories)
+    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories, totalratings=0)
 
     db.session.add(item)
     db.session.commit()
@@ -132,13 +105,6 @@ def addItem():
         return redirect(url_for('adminadd'))
 
     return redirect(url_for('shop'))
-
-# @app.route('/view/<id>')
-# def viewitem(id):
-#      item =Cart.query.filter_by(itemid=id).first()
-#      itemname = item.name
-#      render template(template.html, itemname=item)
-
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
@@ -157,6 +123,14 @@ def addComment(item_id):
 
     addComment = Comments(item_id=item_id, name=name, rating=rating, comment=comment)
     db.session.add(addComment)
+
+    item = Item.query.filter_by(id=item_id).first()
+    count = Comments.query.filter_by(item_id=item_id).count()
+
+    item.totalratings = int(item.totalratings)+int(rating)
+    item.rating = int(item.totalratings / count)
+    item.rating_count = count
+
     db.session.commit()
 
     return redirect(url_for('item', item_id=item_id))

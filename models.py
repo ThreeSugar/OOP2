@@ -9,6 +9,9 @@ class Item(db.Model):
     description = db.Column(db.Text)
     calories = db.Column(db.Integer)
     category = db.Column(db.String(50))
+    totalratings = db.Column(db.Integer)
+    rating = db.Column(db.Integer)
+    rating_count = db.Column(db.Integer)
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)

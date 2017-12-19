@@ -7,8 +7,9 @@ LifeStyle28 | Video
 {% endblock %} 
 
 {% block style %}
-<link href="{{url_for('static', filename='css/new-style.css')}}" rel="stylesheet" type="text/css">
+
 <link href="{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
+<link href="{{url_for('static', filename='css/new-style.css')}}" rel="stylesheet" type="text/css">
 
 <style>
     #search {
@@ -19,7 +20,8 @@ LifeStyle28 | Video
 
     .searchy {
         margin-top: 30px;
-        margin-left:50px;
+        margin-left:15px;
+        width:700px;
     }
 
     html, body
@@ -99,6 +101,7 @@ LifeStyle28 | Video
                         </div>
                     </div>
                   {% endfor %}
+
                   <a class = "viewall">View All</a>
                 </div>
             </div>

@@ -221,8 +221,8 @@
     <hr>
     {% for r in related %}
     <img class="related" src="{{url_for('static', filename = 'img/running.jpeg')}}">
-    <div class = 'container'>
-    <a style = "margin-top:2%;" href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
+    <div style = "margin-left: -5px; margin-top:-2px;" class = 'container'>
+    <a style = "margin-top:1%;" href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
     <p>Posted by: {{r.username}}</p>
     <p>Date: {{r.date}}</p>
     </div>

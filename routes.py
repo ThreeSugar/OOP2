@@ -504,10 +504,10 @@ def advancedvideo():
 def explorevideo():
     form = VideoSearch()
     allvid = Video.query.order_by("date desc").limit(6)
-    food = Video.query.filter_by(category = 'food').order_by("date desc").limit(5) #string literal query
-    exercise = Video.query.filter_by(category = 'exercise').order_by("date desc").limit(5)
-    music = Video.query.filter_by(category = 'music').order_by("date desc").limit(5)
-    edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(5)
+    food = Video.query.filter_by(category = 'food').order_by("date desc").limit(6) #string literal query
+    exercise = Video.query.filter_by(category = 'exercise').order_by("date desc").limit(6)
+    music = Video.query.filter_by(category = 'music').order_by("date desc").limit(6)
+    edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(6)
 
     if current_user.is_authenticated: 
         savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)

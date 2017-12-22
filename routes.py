@@ -773,6 +773,13 @@ def videosearch():
         return redirect(url_for('explorevideo'))
 
 
+#FITNESS GENERATOR
+
+@app.route('/fitness')
+def fitgen():
+    return render_template('genfit.html')
+
+
 ####### HASSAN (BLOG) #### 
 
 @app.route('/blog')

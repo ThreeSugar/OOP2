@@ -315,7 +315,7 @@ def mark_read(id):
 
 @app.route('/inbox/flag/<id>')
 def mark_flag(id):
-        inbox = UserMail.query.filter_by(target=current_user.username).all()
+        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
         inboxes = UserMail.query.filter_by(id=id).first()
         marker = inboxes.flag
 

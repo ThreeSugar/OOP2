@@ -142,6 +142,13 @@ class Comments(db.Model):
     comment = db.Column(db.Text)
 
 
+class FitnessGen(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    genid = db.Column(db.Integer)
+    category = db.Column(db.String)
+    workout = db.Column(db.String)
+
+
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

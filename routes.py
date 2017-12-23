@@ -2,6 +2,7 @@
 #then enter 'python routes.py' on the command line to activate website
 
 import os
+import random
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
@@ -80,29 +81,6 @@ config = {
 firebase = pyrebase.initialize_app(config)
 firedb = firebase.database()  
 
-
-
-# #FIREFORM TEST
-# @app.route('/firebase', methods=['GET', 'POST'])
-# def firebase():
-#     form = FireForm()
-#     userlist = []
-#     if form.validate_on_submit():
-#         info = {"place": form.place.data, "email": form.email.data}
-#         firedb.child("booking").child("user").push(info, user['idToken'] )
-#         userz = firedb.child("booking").child("user").get(user['idToken'])
-#         test = firedb.child("booking").child("user").order_by_child("email").equal_to("clever@clever.com").get(user['idToken'])
-#         print(test.val())
-#         for u in userz.each():
-#             userlist.append(u.val())
-
-#         return render_template('fireform.html', form=form, userlist=userlist)
-        
-#     else:
-#          return render_template('fireform.html', form=form, userlist=userlist)
-
-#     return render_template('fireform.html', form=form, userlist=userlist)
-
 #HELPERS
 @app.context_processor 
 def utility_processor():
@@ -165,6 +143,7 @@ admin.add_view(FileAdmin(path, name='Videos'))
 admin.add_view(ItemView(Item, db.session))
 admin.add_view(ModelView(Cart, db.session))
 admin.add_view(ModelView(Comments, db.session))
+admin.add_view(ModelView(FitnessGen, db.session))
 
 
 ###
@@ -779,9 +758,11 @@ def videosearch():
 def fitgen():
     return render_template('genfit.html')
 
-@app.route('/fitness/results')
-def fitresults():
-    return render_template('resultfit.html')
+@app.route('/fitness/results/<type>')
+def fitresults(type):
+    lucky_no = random.randint(1,4)
+    result = FitnessGen.query.filter_by(category=type).filter_by(genid=lucky_no).first()
+    return render_template('resultfit.html', result=result)
 
 ####### HASSAN (BLOG) #### 
 

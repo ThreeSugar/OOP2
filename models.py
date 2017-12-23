@@ -148,11 +148,6 @@ class ItemView(ModelView):
         }
 
     
-
-
-
-
-
 #VIDEO 
 
 class Video(db.Model):
@@ -248,6 +243,15 @@ class EditProfile(FlaskForm):
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=4)])
     interests = TextAreaField('Interests', validators=[InputRequired(), Length(min=4, max=3000)])
     location = StringField('Location', validators=[InputRequired(), Length(min=4, max=90)])
+
+#FITNESS GENERATOR 
+class FitnessGen(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    genid = db.Column(db.Integer)
+    category = db.Column(db.String)
+    workout = db.Column(db.String)
+    
+
 
 #FIREBASE FORM
 class FireForm(FlaskForm):

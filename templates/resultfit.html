@@ -3,9 +3,14 @@
 {% block style %}
 
 <style> 
+    .btn {
+        height:50px;
+        width:125px;
+    }
+
     .row {
         margin-top:5%;
-        margin-left:45%;
+        margin-left:35%;
         font-size:30px;
         padding-bottom:20px;
     }
@@ -16,10 +21,12 @@
 
     .business-talking {
         background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), 
-        url('../static/img/fitgen.jpg') top center no-repeat;
+        url("{{url_for('static', filename='img/fitgen.jpg')}}") top center no-repeat;
         background-size:cover;
         padding:60px 0 10px;
         text-align:center;
+
+        
 
     }
     
@@ -41,11 +48,15 @@
 <div class = "container">
 <p style="padding:5px; font-size:40px; text-align:center;">Generated workout.</p>
     <div class = "row">
-        <p>Test</p>
-        <br>
-        <p>Test</p>
-        <br>
-        <p>Test</p>
+        <p style = "white-space: pre-line;">{{result.workout}}</p>
+    </div>
+    <div style = "display:inline-block; margin-left:35%;">
+       <a href = "{{url_for('fitgen')}}" class = "btn btn-default"><p style = "margin-top:5%;" >Return</p></a>
+       &nbsp;
+       &nbsp;
+       &nbsp;
+       <button onclick = "location.reload()" class = "btn btn-default">Refresh</button>
+       
     </div>
 </div>
 

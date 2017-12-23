@@ -29,6 +29,10 @@
         text-align:center;
 
     }
+
+    .btitle {
+        margin-top: 12%;
+    }
     
 </style>
 
@@ -49,19 +53,19 @@
 <p style="padding:5px; font-size:40px; text-align:center;">Select desired workout style.</p>
     <div class = "row">
         <div class = "col-sm-6">
-            <button id = "cali" class = "btn btn-default">Calisthenics</button>
+            <a href = "{{url_for('fitresults', type= 'cali')}}" id = "cali" class = "btn btn-default"><p class = "btitle">Calisthenics</p></a>
         </div>
 
         <div class = "col-sm-6">
-                <button id = "weights" class = "btn btn-default">Weight-lifting</button>
+                <a href = "{{url_for('fitresults', type= 'weight')}}" id = "weights" class = "btn btn-default"><p class = "btitle">Weight-lifting</p></a>
         </div>
 
         <div class = "col-sm-6">
-                <button id = "tabata" class = "btn btn-default">Tabata</button>
+                <a href = "{{url_for('fitresults', type= 'tabata')}}" id = "tabata" class = "btn btn-default"><p class = "btitle">Tabata</p></a>
         </div>
 
         <div class = "col-sm-6">
-                <button id = "endurance" class = "btn btn-default">Endurance</button>
+                <a href = "{{url_for('fitresults', type= 'endu')}}" id = "endurance" class = "btn btn-default"><p class = "btitle">Endurance</p></a>
         </div>
     </div>
 </div>
@@ -114,7 +118,7 @@
 
                 trigger: 'hover',
     
-                title: '<h3 class="custom-title"><span class="glyphicon glyphicon-info-sign"></span> Weight-lifting </h3>',
+                title: '<h3 class="custom-title"><span class="glyphicon glyphicon-info-sign"></span> Calisthenics </h3>',
     
                 content: '<p>Exercises done creatively with only your bodyweight. Either done with street equipments such as pull-up bars and parallel bars, or simply with no equipments.</p>',
     

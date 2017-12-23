@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block style %}
+
+<style> 
+    .row {
+        margin-top:5%;
+        margin-left:45%;
+        font-size:30px;
+        padding-bottom:20px;
+    }
+
+    .container{
+        padding-bottom:30px;
+    }
+
+    .business-talking {
+        background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), 
+        url('../static/img/fitgen.jpg') top center no-repeat;
+        background-size:cover;
+        padding:60px 0 10px;
+        text-align:center;
+
+    }
+    
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section style = "margin-top:1px;" class="business-talking">
+		<!--business-talking-start-->
+		<div class="container">
+            <h2 style = "height:20px;">Fitness Workout Generator</h2>
+            <p style = "margin-top: -10px; color:white; font-size:15px; ">Test your fitness with just a click.</p>
+		</div>
+</section>
+
+<div class = "container">
+<p style="padding:5px; font-size:40px; text-align:center;">Generated workout.</p>
+    <div class = "row">
+        <p>Test</p>
+        <br>
+        <p>Test</p>
+        <br>
+        <p>Test</p>
+    </div>
+</div>
+
+{% endblock %}

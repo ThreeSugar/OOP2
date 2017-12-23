@@ -779,6 +779,9 @@ def videosearch():
 def fitgen():
     return render_template('genfit.html')
 
+@app.route('/fitness/results')
+def fitresults():
+    return render_template('resultfit.html')
 
 ####### HASSAN (BLOG) #### 
 

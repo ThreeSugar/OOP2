@@ -3,7 +3,7 @@
 
 import os
 import random
-from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash
+from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import select
@@ -733,11 +733,16 @@ def deletevid(videoid):
 def videocomment(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
+    comment = request.get_json()
+    comment_value = comment['value']
     comments = VideoComment(videoid = videoid.id, username = current_user.username, \
-    comment = request.form['text'])
+    comment = comment_value)
     db.session.add(comments)
     db.session.commit()
-    return redirect(url_for('videoz', videoid = vid))
+
+    insert_comment = VideoComment.query.filter_by(comment = comment_value).first()
+
+    return jsonify({'result' : 'success', 'comment' : insert_comment.comment, 'user': insert_comment.username})
 
 # Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment 
 # has a relationship and should have been joined together via a FK.

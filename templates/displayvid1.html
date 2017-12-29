@@ -96,10 +96,10 @@
             {% endif %}
        
 
-        <a href = "{{url_for('dislikevideo', videoid = vid)}}">
+        <a id = "cdislikes">
             
                  <div style = "margin-top:-70px; float:right; padding:15px;"><span style = "font-size:30px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-                 </span><p style = "font-size:10px;">Dislike: {{ tdislike }}</p></div>
+                 </span><p id = "dislikes" style = "font-size:10px;">Dislike: {{ tdislike }}</p></div>
            
          </a>
 
@@ -107,10 +107,10 @@
             &nbsp;
             &nbsp;
 
-            <a href = "{{url_for('likevideo', videoid = vid)}}">
+            <a id = "clikes">
                 
                   <div style ="margin-top:-70px; float:right; padding:15px;"><span style = "font-size:30px;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-                  </span><p style = "font-size:10px;">Like: {{ tlikes }}</p></div>
+                  </span><p id = "likes" style = "font-size:10px;">Like: {{ tlikes }}</p></div>
                
             </a>
 
@@ -235,6 +235,53 @@
 {% endblock %}
 
 {% block script %}
+
+<script>
+    $(document).ready(function() {
+    $('#clikes').on('click', function() {
+        // var value = "success";
+
+        req = $.ajax({
+        url : "{{url_for('likevideo', videoid = vid)}}",
+        type : 'POST',
+
+        // data: JSON.stringify({value:value}),
+        // contentType: 'application/json;charset=UTF-8',
+        // dataType: "json"
+
+      });
+
+        req.done(function(data) {
+            $('#likes').html("Like: " + data.likes);
+            $('#dislikes').html("Dislike: " + data.dislikes);
+        });
+    });
+
+    $('#cdislikes').on('click', function() {
+        // var value = "success";
+
+        req = $.ajax({
+        url : "{{url_for('dislikevideo', videoid = vid)}}",
+        type : 'POST',
+
+        // data: JSON.stringify({value:value}),
+        // contentType: 'application/json;charset=UTF-8',
+        // dataType: "json"
+
+      });
+
+        req.done(function(data) {
+            $('#likes').html("Like: " + data.likes);
+            $('#dislikes').html("Dislike: " + data.dislikes);
+        });
+    });
+
+
+
+
+
+});
+</script>
 
 
 {% endblock %}

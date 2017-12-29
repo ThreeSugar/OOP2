@@ -3,7 +3,8 @@
 
 import os
 import random
-from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash, jsonify
+from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash, \
+jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import select
@@ -624,7 +625,7 @@ def videoz(videoid):
 
 
 
-@app.route('/video/likes/<videoid>')
+@app.route('/video/likes/<videoid>', methods=['GET', 'POST'])
 def likevideo(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
@@ -652,10 +653,26 @@ def likevideo(videoid):
         db.session.delete(vidlike)
         db.session.commit()
 
-    return redirect(url_for('videoz', videoid = vid))
+    likes = []
+    dislikes = []
+
+    vidlike = VideoLikes.query.filter_by(videoid = vid).filter_by(likes = 1).all()
+
+    viddislike = VideoDislikes.query.filter_by(videoid = vid).filter_by(dislikes = 1).all()
+
+    for v in vidlike:
+        likes.append(v)
+    
+    for d in viddislike:
+        dislikes.append(d)
+
+    tlikes = len(likes)
+    tdislike = len(dislikes)
+
+    return jsonify({'likes' : tlikes, 'dislikes':tdislike})
 
 
-@app.route('/video/dislikes/<videoid>')
+@app.route('/video/dislikes/<videoid>', methods=['GET', 'POST'])
 def dislikevideo(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
@@ -684,7 +701,23 @@ def dislikevideo(videoid):
         db.session.delete(viddislike)
         db.session.commit()
 
-    return redirect(url_for('videoz', videoid = vid))
+    likes = []
+    dislikes = []
+
+    vidlike = VideoLikes.query.filter_by(videoid = vid).filter_by(likes = 1).all()
+
+    viddislike = VideoDislikes.query.filter_by(videoid = vid).filter_by(dislikes = 1).all()
+
+    for v in vidlike:
+        likes.append(v)
+    
+    for d in viddislike:
+        dislikes.append(d)
+
+    tlikes = len(likes)
+    tdislike = len(dislikes)
+
+    return jsonify({'likes' : tlikes, 'dislikes':tdislike})
 
 @app.route('/video/save/<videoid>')
 def savevid(videoid):
@@ -733,16 +766,11 @@ def deletevid(videoid):
 def videocomment(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
-    comment = request.get_json()
-    comment_value = comment['value']
     comments = VideoComment(videoid = videoid.id, username = current_user.username, \
-    comment = comment_value)
+    comment = request.form['text'])
     db.session.add(comments)
     db.session.commit()
-
-    insert_comment = VideoComment.query.filter_by(comment = comment_value).first()
-
-    return jsonify({'result' : 'success', 'comment' : insert_comment.comment, 'user': insert_comment.username})
+    return redirect(url_for('videoz', videoid = vid))
 
 # Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment 
 # has a relationship and should have been joined together via a FK.

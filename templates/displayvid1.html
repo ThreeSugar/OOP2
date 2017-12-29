@@ -96,10 +96,10 @@
             {% endif %}
        
 
-        <a href = "{{url_for('dislikevideo', videoid = vid)}}">
+        <a id = "cdislikes">
             
                  <div style = "margin-top:-70px; float:right; padding:15px;"><span style = "font-size:30px;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
-                 </span><p style = "font-size:10px;">Dislike: {{ tdislike }}</p></div>
+                 </span><p id = "dislikes" style = "font-size:10px;">Dislike: {{ tdislike }}</p></div>
            
          </a>
 
@@ -107,10 +107,10 @@
             &nbsp;
             &nbsp;
 
-            <a href = "{{url_for('likevideo', videoid = vid)}}">
+            <a id = "clikes">
                 
                   <div style ="margin-top:-70px; float:right; padding:15px;"><span style = "font-size:30px;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-                  </span><p style = "font-size:10px;">Like: {{ tlikes }}</p></div>
+                  </span><p id = "likes" style = "font-size:10px;">Like: {{ tlikes }}</p></div>
                
             </a>
 
@@ -180,11 +180,11 @@
     {% if current_user.is_authenticated %}
  
     <div class="form-group">
-            <!-- <form method = 'POST' action = "{{url_for('videocomment', videoid = vid)}}"> -->
+            <form method = 'POST' action = "{{url_for('videocomment', videoid = vid)}}">
             <label for="comment"> Add comment:</label>
-            <textarea id = "commentarea" name = 'text' style = "margin-left:0%;"  class="form-control" rows="5" id="comment"></textarea>
-            <button id = "postvid" type = 'submit' class = 'btn btn-default'>Post</button>
-            <!-- </form> -->
+            <textarea name = 'text' style = "margin-left:0%;"  class="form-control" rows="5" id="comment"></textarea>
+            <button type = 'submit' class = 'btn btn-default'>Post</button>
+            </form>
     </div>  
 
     {% else %}
@@ -202,7 +202,7 @@
     <p>Comments </p>
 
     <br>
-    <ul id = "videocomment">
+    <ul>
         {% for c in comms %}
         <li>
             <p>Posted by: {{c.username}}</p>
@@ -231,40 +231,57 @@
     {% endfor %}
 </div>
 
+
 {% endblock %}
 
 {% block script %}
 
 <script>
     $(document).ready(function() {
+    $('#clikes').on('click', function() {
+        // var value = "success";
 
-    $('#postvid').on('click', function() {
+        req = $.ajax({
+        url : "{{url_for('likevideo', videoid = vid)}}",
+        type : 'POST',
 
-    var value = $('#commentarea').val();
+        // data: JSON.stringify({value:value}),
+        // contentType: 'application/json;charset=UTF-8',
+        // dataType: "json"
 
-    req = $.ajax({
-      url : "{{url_for('videocomment', videoid=vid)}}",
-      type : 'POST',
-      data: JSON.stringify({value:value}),
-      contentType: 'application/json;charset=UTF-8',
-      dataType: "json"
-  });
+      });
 
-  req.done(function(data) {
+        req.done(function(data) {
+            $('#likes').html("Like: " + data.likes);
+            $('#dislikes').html("Dislike: " + data.dislikes);
+        });
+    });
 
-      $('#videocomment').append("<li>"  + "<p>" + "Posted by: " +  data.user + "</p>" + "<p>" + data.comment + "</p>" + "</li>" + "<br>");
+    $('#cdislikes').on('click', function() {
+        // var value = "success";
 
-  });
+        req = $.ajax({
+        url : "{{url_for('dislikevideo', videoid = vid)}}",
+        type : 'POST',
+
+        // data: JSON.stringify({value:value}),
+        // contentType: 'application/json;charset=UTF-8',
+        // dataType: "json"
+
+      });
+
+        req.done(function(data) {
+            $('#likes').html("Like: " + data.likes);
+            $('#dislikes').html("Dislike: " + data.dislikes);
+        });
+    });
+
+
+
+
+
 });
-
-});
-
 </script>
 
+
 {% endblock %}
-
-
-
-
-
-

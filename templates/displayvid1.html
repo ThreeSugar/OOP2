@@ -239,15 +239,10 @@
 <script>
     $(document).ready(function() {
     $('#clikes').on('click', function() {
-        // var value = "success";
-
+       
         req = $.ajax({
         url : "{{url_for('likevideo', videoid = vid)}}",
         type : 'POST',
-
-        // data: JSON.stringify({value:value}),
-        // contentType: 'application/json;charset=UTF-8',
-        // dataType: "json"
 
       });
 
@@ -258,15 +253,10 @@
     });
 
     $('#cdislikes').on('click', function() {
-        // var value = "success";
-
+    
         req = $.ajax({
         url : "{{url_for('dislikevideo', videoid = vid)}}",
         type : 'POST',
-
-        // data: JSON.stringify({value:value}),
-        // contentType: 'application/json;charset=UTF-8',
-        // dataType: "json"
 
       });
 
@@ -307,7 +297,7 @@ $('.clicksave').on('click', function() {
             $('.displaysave').html('Save');
             $('#saveicon').removeClass('fa-check').addClass('fa fa-plus');
         } else {
-            console.log("Don't think this condition will be triggered.")
+            console.log("If you see this message, I wish you best of luck for whatever's coming.")
         }
     });
 });

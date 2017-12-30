@@ -10,7 +10,7 @@
 
 <style>
     .vidcontainer{
-        margin-top:6%;
+        margin-top:8%;
         margin-left:32%;
     }
 
@@ -24,11 +24,23 @@
     .title-small {
         color:black;
         font-size:25px;
+        font-weight: 600;
     }
 
     .vidusername:hover {
             text-decoration: underline; 
         }
+
+    .title-small:hover, .title-small:visited, .title-small:link, a:active {
+          color:black;
+          font-weight: 600;
+   }
+
+   .dropdown-menu {
+      background:transparent;
+      border: 0px;
+      color:grey;
+   }
     
 
 
@@ -51,36 +63,42 @@
 
 <div class = "vidcontainer">
 
-    {% for s in search %}
-    <div class="col-md-6">
-            <div class="card mb-4">
-                    <img class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
-            <div style = "padding:5px;" class="card-body">
-                <div class="news-title">
-                <p class=" title-small"><a href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a></p>
-                </div>
-
-                <div style = "padding-top:5px;">
-                    <p class="card-text">{{s.description }}</p>
-                    <a class = "vidusername" href = "{{url_for('profile', username = s.username)}}"class="card-text">{{s.username }}</a>
-                </div>
-
-            </div>
+    <div class = "dropdown" style = "float:left; margin-top:-75px; margin-left: -35%;">
+       <p data-toggle="dropdown" style = "font-size:18px;"><i class="fa fa-list" aria-hidden="true"></i> FLITER BY</p>
+        <div class="dropdown-menu" aria-labelledby="dLabel">
+            <ul style="list-style: none;">
+               <li><a href = "#"> Username</a></li>
+            </ul>
         </div>
     </div>
+
+    {% for s in search %}
+
+    <div> 
+
+        <div style = "display:inline-block; vertical-align:top;">
+            <img style = "height:150px;"class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+        </div> 
+            
+        <div style = "display:inline-block; margin-top:-18px; padding:10px;">
+            <a class=" title-small" href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a> 
+            <p class="card-text">{{s.description }}</p>
+            <a class = "vidusername" href = "{{url_for('profile', username = s.username)}}"class="card-text">{{s.username }}</a>
+        </div>
+
+    </div>
+
+    <br>
 
     {% else %}
 
     <p style = "font-size:20px;">Your search returned nothing.<br>
-      Click <a href = "{{url_for('explorevideo')}}"><u>here</u></a> to return or make another search.
+         Click <a href = "{{url_for('explorevideo')}}"><u>here</u></a> to return or make another search.
     </p>
 
     {% endfor %}
 
 </div>
-
-</div>
-
 
 
 

@@ -717,7 +717,7 @@ def dislikevideo(videoid):
     tlikes = len(likes)
     tdislike = len(dislikes)
 
-    return jsonify({'likes' : tlikes, 'dislikes':tdislike})
+    return jsonify({'likes' : tlikes, 'dislikes' : tdislike})
 
 @app.route('/video/save/<videoid>', methods=['GET', 'POST'])
 def savevid(videoid):
@@ -787,6 +787,8 @@ def videosearch():
         return render_template('vidsearch.html', search = search, form=form)
     else:
         return redirect(url_for('explorevideo'))
+
+
 
 
 #FITNESS GENERATOR

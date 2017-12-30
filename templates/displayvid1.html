@@ -78,22 +78,24 @@
             {% if curr_save %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
-                <a href = "{{url_for('savevid', videoid = vid)}}">
-                    <span style = "font-size:30px;"><i class="fa-check" aria-hidden="true"></i>                    
-                    </span><p style = "font-size:10px;">Saved</p>
+                <a class = "clicksave">
+                    <span style = "font-size:30px;"><i id = "saveicon" class="fa-check" aria-hidden="true"></i>                    
+                    </span><p class = "displaysave" style = "font-size:10px;">Saved</p>
                 </a>
             </div>
 
             {% else %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
-                <a href = "{{url_for('savevid', videoid = vid)}}">
-                        <span style = "font-size:30px;"><i class="fa fa-plus" aria-hidden="true"></i>                    
-                        </span><p style = "font-size:10px;">Save</p>
+                <a class = "clicksave">
+                        <span style = "font-size:30px;"><i id = "saveicon" class="fa fa-plus" aria-hidden="true"></i>                    
+                        </span><p class = "displaysave" style = "font-size:10px;">Save</p>
                 </a>    
             </div>
             
             {% endif %}
+
+
        
 
         <a id = "cdislikes">
@@ -287,6 +289,26 @@
     req.done(function(data) {
       $('#videocomment').append("<li>"  + "<p>" + "Posted by: " +  data.user + "</p>" + "<p>" + data.comment + "</p>" + "</li>" + "<br>");
       $('#commentarea').val("");
+    });
+});
+
+
+$('.clicksave').on('click', function() {
+    req = $.ajax({
+      url : "{{url_for('savevid', videoid = vid)}}",
+      type : 'POST',
+  });
+
+    req.done(function(data) {
+        if (data.save == "saved") {
+            $('.displaysave').html('Saved');
+            $('#saveicon').removeClass('fa fa-plus').addClass('fa-check');
+        } else if (data.save == "save") {
+            $('.displaysave').html('Save');
+            $('#saveicon').removeClass('fa-check').addClass('fa fa-plus');
+        } else {
+            console.log("Don't think this condition will be triggered.")
+        }
     });
 });
 

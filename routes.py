@@ -719,7 +719,7 @@ def dislikevideo(videoid):
 
     return jsonify({'likes' : tlikes, 'dislikes':tdislike})
 
-@app.route('/video/save/<videoid>')
+@app.route('/video/save/<videoid>', methods=['GET', 'POST'])
 def savevid(videoid):
     videoid = Video.query.filter_by(id = videoid).first()
     vid = videoid.id
@@ -742,15 +742,15 @@ def savevid(videoid):
          curr_save = True
          db.session.add(svid)
          db.session.commit()
-         return redirect(url_for('videoz', videoid = vid))
-
+         return jsonify({'save':'saved'})
+    
     elif saved is not None:
          curr_save = False
          db.session.delete(saved)
          db.session.commit()
-         return redirect(url_for('videoz', videoid = vid))
+         return jsonify({'save':'save'})
         
-    return redirect(url_for('videoz', videoid = vid))
+    
 
 @app.route('/video/delete/<videoid>')
 def deletevid(videoid):

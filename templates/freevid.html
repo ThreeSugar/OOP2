@@ -110,6 +110,7 @@ LifeStyle28 | Video
 </section>
 
 
+{% if current_user.is_authenticated %}
 
 <section class="section-01 float-left w-100 py-5">
     <div style = "margin-top:-100px;"class="container-fluid">
@@ -119,6 +120,8 @@ LifeStyle28 | Video
                     <div class="col-md-12">
                         <h3 class="heading-large">Saved</h3>
                     </div>
+
+                 
 
                     {% for a in savedvid %}
 
@@ -147,6 +150,8 @@ LifeStyle28 | Video
         </div>
     </div>
 </section>
+
+{% endif %}
 
 
 

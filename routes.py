@@ -144,7 +144,7 @@ admin.add_view(FileAdmin(path, name='Videos'))
 admin.add_view(ItemView(Item, db.session))
 admin.add_view(ModelView(Cart, db.session))
 admin.add_view(ModelView(Comments, db.session))
-admin.add_view(ModelView(FitnessGen, db.session))
+admin.add_view(ModelView(FitnessLib, db.session))
 
 
 ###
@@ -468,18 +468,6 @@ def upload():
 
 #VIDEO
 
-@app.route('/video')
-def video():
-    return render_template('videos.html')
-
-@app.route('/video/beginners')
-def beginnervideo():
-    return render_template('beginnervid.html')
-
-@app.route('/video/advanced')
-def advancedvideo():
-    return render_template('advancedvid.html')
-
 @app.route('/video/explore')
 def explorevideo():
     form = VideoSearch()
@@ -797,11 +785,26 @@ def videosearch():
 def fitgen():
     return render_template('genfit.html')
 
-@app.route('/fitness/results/<type>')
+@app.route('/fitness/<type>')
 def fitresults(type):
-    lucky_no = random.randint(1,4)
-    result = FitnessGen.query.filter_by(category=type).filter_by(genid=lucky_no).first()
-    return render_template('resultfit.html', result=result)
+    result = FitnessLib.query.filter_by(category = type).all()
+    return render_template('libvid.html', result=result)
+
+@app.route('/fitness/play', methods=['GET', 'POST'])
+def libtitle():
+    title = request.get_json() # == "{title : value}"
+    title_value = title['title'] # to get value
+    answer = FitnessLib.query.filter_by(title = title_value).first()
+    return jsonify({'link' : answer.vidlink, 'title': answer.title, 'desc':answer.desc})
+
+
+
+
+# @app.route('/fitness/<type>')
+# def fitresults(type):
+#     lucky_no = random.randint(1,4)
+#     result = FitnessGen.query.filter_by(category=type).filter_by(genid=lucky_no).first()
+#     return render_template('resultfit.html', result=result)
 
 ####### HASSAN (BLOG) #### 
 

@@ -250,13 +250,16 @@ class FitnessGen(db.Model):
     genid = db.Column(db.Integer)
     category = db.Column(db.String)
     workout = db.Column(db.String)
-    
+
+#FITNESS LIBRARY
+class FitnessLib(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    category = db.Column(db.String)
+    title = db.Column(db.String)
+    desc = db.Column(db.String)
+    vidlink = db.Column(db.String)
 
 
-#FIREBASE FORM
-class FireForm(FlaskForm):
-    place = StringField('Place', validators=[InputRequired(), ])
-    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid Email'), Length(max=50)])
 
 
 

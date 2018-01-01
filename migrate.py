@@ -148,7 +148,12 @@ class FitnessGen(db.Model):
     category = db.Column(db.String)
     workout = db.Column(db.String)
 
-
+class FitnessLib(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    category = db.Column(db.String)
+    title = db.Column(db.String)
+    desc = db.Column(db.String)
+    vidlink = db.Column(db.String)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

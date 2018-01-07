@@ -782,8 +782,7 @@ def videofilter(option):
     search_json = request.get_json()
     searchy = search_json['value']
     search = Video.query.filter_by(category=option).filter(Video.title.ilike('%' + searchy + '%')).all()
-    print(search)
-    return jsonify({'search': render_template('filtersearch.html', search=search)})
+    return jsonify({'search': render_template('filtersearch.html', search=search)}) 
    
     
     

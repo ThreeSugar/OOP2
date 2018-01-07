@@ -41,7 +41,8 @@
       border: 0px;
       color:grey;
    }
-    
+
+
 
 
 </style>
@@ -68,16 +69,16 @@
         <div class="dropdown-menu filter" aria-labelledby="dLabel">
             <ul style="list-style: none;">
                <li id = "foodz"><a href = "#"> Food </a></li>
-               <li><a href = "#"> Music </a></li>
-               <li><a href = "#"> Educational </a></li>
-               <li><a href = "#"> Exercise </a></li>
+               <li id = "musicz"><a href = "#"> Music </a></li>
+               <li id = "eduz"><a href = "#"> Educational </a></li>
+               <li id = "exercisez"><a href = "#"> Exercise </a></li>
             </ul>
         </div>
     </div>
 
     {% for s in search %}
 
-    <div> 
+    <div class = "searchdiv"> 
 
         <div style = "display:inline-block; vertical-align:top;">
             <img style = "height:150px;"class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
@@ -118,11 +119,73 @@ $(document).ready(function() {
         data: JSON.stringify({value:value}),
         contentType: 'application/json;charset=UTF-8',
         dataType: "json",
-        success: function() {
-            window.location.href = response.redirect;
-        }
       });
-  });
+        req.done(function(data) {
+            $('.searchdiv').empty().remove();
+            $('.fsearch').empty().remove();
+            $('.fsearch div').empty().remove();
+            $('.errsearch').empty().remove();
+            $('.vidcontainer').append(data.search);
+            $('br').remove();
+        });
+    });
+
+    $('#eduz').on('click', function() { 
+        var value = $('#search').val()
+        req = $.ajax({
+        url : "{{url_for('videofilter', option = 'educational')}}",
+        type : 'POST',
+        data: JSON.stringify({value:value}),
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+      });
+        req.done(function(data) {
+            $('.searchdiv').empty().remove();
+            $('.fsearch').empty().remove();
+            $('.fsearch div').empty().remove();
+            $('.errsearch').empty().remove();
+            $('br').remove();
+            $('.vidcontainer').append(data.search);
+        });
+    });
+
+    $('#musicz').on('click', function() { 
+        var value = $('#search').val()
+        req = $.ajax({
+        url : "{{url_for('videofilter', option = 'music')}}",
+        type : 'POST',
+        data: JSON.stringify({value:value}),
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+      });
+        req.done(function(data) {
+            $('.searchdiv').empty().remove();
+            $('.fsearch').empty().remove();
+            $('.fsearch div').empty().remove();
+            $('.errsearch').empty().remove();
+            $('br').remove();
+            $('.vidcontainer').append(data.search);
+        });
+    });
+
+    $('#exercisez').on('click', function() { 
+        var value = $('#search').val()
+        req = $.ajax({
+        url : "{{url_for('videofilter', option = 'exercise')}}",
+        type : 'POST',
+        data: JSON.stringify({value:value}),
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+      });
+        req.done(function(data) {
+            $('.searchdiv').empty().remove();
+            $('.fsearch').empty().remove();
+            $('.fsearch div').empty().remove();
+            $('.errsearch').empty().remove();
+            $('br').remove();
+            $('.vidcontainer').append(data.search);
+        });
+    });
 });
 </script>
 {% endblock %}

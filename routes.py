@@ -776,10 +776,23 @@ def videosearch():
     else:
         return redirect(url_for('explorevideo'))
 
+@app.route('/video/search/<option>', methods=['GET', 'POST'])
+def videofilter(option):
+    form = VideoSearch()
+    search_json = request.get_json()
+    searchy = search_json['value']
+    print(searchy)
+    search = Video.query.filter_by(category=option).filter(Video.title.ilike('%' + searchy + '%')).all()
+    return redirect(url_for('videosearch'))
+   
+    
+    
 
 
 
-#FITNESS GENERATOR
+
+
+#FITNESS LIBRARY
 
 @app.route('/fitness')
 def fitgen():

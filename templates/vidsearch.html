@@ -36,7 +36,7 @@
           font-weight: 600;
    }
 
-   .dropdown-menu {
+   .filter {
       background:transparent;
       border: 0px;
       color:grey;
@@ -65,9 +65,9 @@
 
     <div class = "dropdown" style = "float:left; margin-top:-75px; margin-left: -35%;">
        <p data-toggle="dropdown" style = "font-size:18px;"><i class="fa fa-list" aria-hidden="true"></i> FLITER BY</p>
-        <div class="dropdown-menu" aria-labelledby="dLabel">
+        <div class="dropdown-menu filter" aria-labelledby="dLabel">
             <ul style="list-style: none;">
-               <li><a href = "#"> Food </a></li>
+               <li id = "foodz"><a href = "#"> Food </a></li>
                <li><a href = "#"> Music </a></li>
                <li><a href = "#"> Educational </a></li>
                <li><a href = "#"> Exercise </a></li>
@@ -105,4 +105,24 @@
 
 
 
+{% endblock %}
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#foodz').on('click', function() { 
+        var value = $('#search').val()
+        req = $.ajax({
+        url : "{{url_for('videofilter', option = 'food')}}",
+        type : 'POST',
+        data: JSON.stringify({value:value}),
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+        success: function() {
+            window.location.href = response.redirect;
+        }
+      });
+  });
+});
+</script>
 {% endblock %}

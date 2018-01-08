@@ -275,6 +275,18 @@ def inbox():
     inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
     return render_template('inbox.html', inbox=inbox)
 
+@app.route('/inbox/sort/ascending/<type>')
+def sortasc(type):
+    inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "asc").all()
+    print(inbox)
+    return "success"
+
+@app.route('/inbox/sort/descending/<type>')
+def sortdesc(type):
+    inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "desc").all()
+    print(inbox)
+    return "success"
+
 @app.route('/inbox/mark/<id>')
 def mark_read(id):
         inbox = UserMail.query.filter_by(target=current_user.username).all()
@@ -784,13 +796,6 @@ def videofilter(option):
     search = Video.query.filter_by(category=option).filter(Video.title.ilike('%' + searchy + '%')).all()
     return jsonify({'search': render_template('filtersearch.html', search=search)}) 
    
-    
-    
-
-
-
-
-
 #FITNESS LIBRARY
 
 @app.route('/fitness')
@@ -808,9 +813,6 @@ def libtitle():
     title_value = title['title'] # to get value
     answer = FitnessLib.query.filter_by(title = title_value).first()
     return jsonify({'link' : answer.vidlink, 'title': answer.title, 'desc':answer.desc})
-
-
-
 
 # @app.route('/fitness/<type>')
 # def fitresults(type):

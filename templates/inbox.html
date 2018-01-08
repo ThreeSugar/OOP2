@@ -4,13 +4,22 @@
 Inbox
 {% endblock %}
 
+{% block style %}
+
+<style>
+  .dates:link, .dates:hover, .dates:active, .dates:visited { color: grey; text-decoration: none; }
+</style>
+
+{% endblock %}
+
 {% block dashboard %}
 
 <table class="table table-striped table-bordered">
         <thead>
           <tr>
-            <th width="5%"> From </th>
-            <th width="15%"> Subject </th>
+            <th width="5%"> <a class = "dates" href = "#"> From </a></th>
+            <th width="15%"><a class = "dates" href = "#"> Subject </a></th>
+            <th width="5%"><a class = "dates" href = "#"> Date </a></th>
           </tr>
         </thead>
         <tbody>
@@ -28,8 +37,10 @@ Inbox
             <b>{{i.subject}}</b>
 
             {% endif %}
+
+          </a>
               
-            <span class="badge pull-right">{{i.date}}</span></a> 
+            <td width = "2%">{{i.date}}</td> 
 
             <td width = "2%">
               <a href = "{{url_for('mark_flag', id= i.id)}}">

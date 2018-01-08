@@ -275,17 +275,15 @@ def inbox():
     inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
     return render_template('inbox.html', inbox=inbox)
 
-@app.route('/inbox/sort/ascending/<type>')
+@app.route('/inbox/sort/ascending/<type>', methods=['GET', 'POST'])
 def sortasc(type):
-    inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "asc").all()
-    print(inbox)
-    return "success"
+    inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "asc").all() # a list containing objects
+    return jsonify({'inbox': render_template('filterinbox.html', inbox=inbox)}) 
 
-@app.route('/inbox/sort/descending/<type>')
+@app.route('/inbox/sort/descending/<type>', methods=['GET', 'POST'])
 def sortdesc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "desc").all()
-    print(inbox)
-    return "success"
+    return jsonify({'inbox': render_template('filterinbox.html', inbox=inbox)}) 
 
 @app.route('/inbox/mark/<id>')
 def mark_read(id):

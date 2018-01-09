@@ -273,6 +273,8 @@ def inbox():
     inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
     return render_template('inbox.html', inbox=inbox)
 
+#SORT INBOX
+
 @app.route('/inbox/sort/ascending/<type>', methods=['GET', 'POST'])
 def sortasc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "asc").all() # a list containing objects
@@ -282,6 +284,34 @@ def sortasc(type):
 def sortdesc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "desc").all()
     return jsonify({'inbox': render_template('filterinbox1.html', inbox=inbox)}) 
+
+#SORT FLAGGED
+
+@app.route('/inbox/flag/sort/ascending/<type>', methods=['GET', 'POST'])
+def sortflagasc(type):
+    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
+    .order_by(str(type) + " " + "asc").all()
+    return jsonify({'flagged': render_template('_filterflag.html', flagged=flagged)}) 
+
+@app.route('/inbox/flag/sort/descending/<type>', methods=['GET', 'POST'])
+def sortflagdesc(type):
+   flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
+   .order_by(str(type) + " " + "desc").all()
+   return jsonify({'flagged': render_template('_filterflag1.html', flagged=flagged)}) 
+
+
+#SORT SENT
+
+@app.route('/inbox/send/sort/ascending/<type>', methods=['GET', 'POST'])
+def sortsentasc(type):
+    sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "asc").all()
+    return jsonify({'sent': render_template('_filtersent.html', sent=sent)}) 
+
+@app.route('/inbox/send/sort/descending/<type>', methods=['GET', 'POST'])
+def sortsentdesc(type):
+   sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "desc").all()
+   return jsonify({'sent': render_template('_filtersent1.html', sent=sent)}) 
+
 
 @app.route('/inbox/mark/<id>')
 def mark_read(id):

@@ -1,0 +1,57 @@
+<thead>
+    <tr>
+      <th width="5%"> <a class = "dates" href = "#"> From </a></th>
+      <th width="15%"><a id = "subject" class = "dates" href = "#"> Subject </a></th>
+      <th width="15%"><a id = "date" class = "dates" href = "#"> Date </a></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in flagged %}
+    <tr>
+      <td><a href = "{{url_for('profile', username=i.sender)}}">{{i.sender}}</a></td>
+      <td><a href = "{{url_for('flaggedmsg', id=i.id)}}">{{i.subject}}</a></td>
+      <td width = "2%">{{i.date}}</td> 
+    </tr>
+    {% endfor %}
+</tbody>
+
+{% block script %}
+<script>
+  $(document).ready(function() { 
+  
+    $('#subject').on('click', function() {
+  
+      req = $.ajax({
+      url : "{{url_for('sortflagasc', type = 'subject')}}",
+      type : 'POST',
+    
+      });
+  
+      req.done(function(data) {
+            $('.table').empty();
+            $('.table').append(data.flagged);
+      });
+      
+    });
+  
+  
+    $('#date').on('click', function() {
+  
+      req = $.ajax({
+      url : "{{url_for('sortflagasc', type = 'date')}}",
+      type : 'POST',
+    
+      });
+  
+      req.done(function(data) {
+            $('.table').empty();
+            $('.table').append(data.flagged);
+      });
+      
+    });
+  
+  });
+  
+  </script>
+
+{% endblock %}

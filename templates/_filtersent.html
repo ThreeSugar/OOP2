@@ -1,0 +1,58 @@
+<thead>
+    <tr>
+      <th width="5%"> <a class = "dates" href = "#"> From </a></th>
+      <th width="15%"><a id = "subject" class = "dates" href = "#"> Subject </a></th>
+      <th width="15%"><a id = "date" class = "dates" href = "#"> Date </a></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in sent %}
+    <tr>
+      <td><a href = "{{url_for('profile', username=i.target)}}">{{i.target}}</a></td>
+      <td><a href = "{{url_for('viewsent', id=i.id)}}">{{i.subject}}</a></td>
+      <td>{{i.date}}</td> 
+    </tr>
+    {% endfor %}
+</tbody>
+
+{% block script %}
+
+<script>
+$(document).ready(function() { 
+
+  $('#subject').on('click', function() {
+
+    req = $.ajax({
+    url : "{{url_for('sortsentdesc', type = 'subject')}}",
+    type : 'POST',
+  
+    });
+
+    req.done(function(data) {
+          $('.table').empty();
+          $('.table').append(data.sent);
+    });
+    
+  });
+
+
+  $('#date').on('click', function() {
+
+    req = $.ajax({
+    url : "{{url_for('sortsentdesc', type = 'date')}}",
+    type : 'POST',
+  
+    });
+
+    req.done(function(data) {
+          $('.table').empty();
+          $('.table').append(data.sent);
+    });
+    
+  });
+
+});
+
+</script>
+
+{% endblock %}

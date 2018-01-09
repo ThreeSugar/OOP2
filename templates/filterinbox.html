@@ -87,7 +87,7 @@ $(document).ready(function() {
   $('#subject').on('click', function() {
 
     req = $.ajax({
-    url : "{{url_for('sortasc', type = 'subject')}}",
+    url : "{{url_for('sortdesc', type = 'subject')}}",
     type : 'POST',
   
     });

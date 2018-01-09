@@ -312,6 +312,7 @@ def sortsentdesc(type):
    sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "desc").all()
    return jsonify({'sent': render_template('_filtersent1.html', sent=sent)}) 
 
+#MARK
 
 @app.route('/inbox/mark/<id>')
 def mark_read(id):
@@ -831,12 +832,13 @@ def fitresults(type):
     result = FitnessLib.query.filter_by(category = type).all()
     return render_template('libvid.html', result=result)
 
-@app.route('/fitness/play', methods=['GET', 'POST'])
-def libtitle():
-    title = request.get_json() # == "{title : value}"
-    title_value = title['title'] # to get value
-    answer = FitnessLib.query.filter_by(title = title_value).first()
-    return jsonify({'link' : answer.vidlink, 'title': answer.title, 'desc':answer.desc})
+@app.route('/fitness/play/<title>')
+def libload(title):
+    lib_answer = FitnessLib.query.filter_by(title = title).first()
+    lib_type = lib_answer.category
+    result = FitnessLib.query.filter_by(category = lib_type).all()
+    return render_template('libvidload.html', result=result, lib_answer=lib_answer)
+
 
 # @app.route('/fitness/<type>')
 # def fitresults(type):

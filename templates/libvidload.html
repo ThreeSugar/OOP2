@@ -1,0 +1,60 @@
+{% extends 'vidlayout.html' %} {% block title %} Videos {% endblock %} {% block content %}
+<div class="input-group">
+    <input style="margin-left:10px;" class="form-control" placeholder="Search here">
+    <div class="input-group-addon">
+        <i style="margin-left:10px;" class="fa fa-search"></i>
+    </div>
+</div>
+
+<div class="video">
+
+    <video class='videos' width="700" height="400" controls>
+
+        <source src="{{url_for('static', filename = 'assets/' + lib_answer.vidlink)}}" type="video/mp4">
+        <source src="{{url_for('static', filename = 'assets/' + lib_answer.vidlink)}}" type="video/webm">
+        <source src="{{url_for('static', filename = 'assets/' + lib_answer.vidlink)}}" type="video/opgg">
+
+    </video>
+
+
+    <p class="extitle">{{lib_answer.title}}</p>
+    <br>
+    <div style="padding-bottom:20%; white-space: pre-line;" class='exdesc'>
+        {{lib_answer.desc}}
+    </div>
+</div>
+
+<div style="margin-left:10px;" class="card playlist">
+    <div class="card-header">
+        Library
+    </div>
+    <ul class="list-group list-group-flush">
+        {% for r in result %}
+        <li id="cali{{loop.index}}" class="list-group-item">
+            <a href="{{url_for('libload', title = r.title)}}">{{r.title}}</a>
+        </li>
+        {% endfor %}
+
+    </ul>
+</div>
+
+{% endblock %} 
+
+{% block script %}
+
+<script>
+    $(document).ready(function () {
+
+        // Simple Search
+        $('.form-control').keyup(function () {
+            var valThis = $(this).val().toLowerCase();
+            $('.list-group >li').each(function () {
+                var text = $(this).text().toLowerCase();
+                (text.indexOf(valThis) == 0) ? $(this).show(): $(this).hide(); //if-else shorthand          
+            });
+        });
+
+    });
+</script>
+
+{% endblock %}

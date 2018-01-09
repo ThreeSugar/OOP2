@@ -477,7 +477,6 @@ def upload():
 
 ####
 
-
 #VIDEO
 
 @app.route('/video/explore')
@@ -498,8 +497,7 @@ def explorevideo():
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                                 allvid=allvid, form=form)
 
-     
-                    
+                     
 @app.route('/video/<videoid>', methods=['GET', 'POST'])
 def videoz(videoid):
     form = VideoSearch()

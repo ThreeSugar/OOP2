@@ -103,7 +103,7 @@ $(document).ready(function() {
   $('#date').on('click', function() {
 
     req = $.ajax({
-    url : "{{url_for('sortdesc', type = 'date')}}",
+    url : "{{url_for('sortasc', type = 'date')}}",
     type : 'POST',
   
     });

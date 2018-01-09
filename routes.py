@@ -61,8 +61,6 @@ photodest = os.path.join(APP_ROOT, 'static/raymond/img')
 app.config['UPLOADED_PHOTOS_DEST'] = photodest
 configure_uploads(app, photos)
 
-
-
 #FIREBASE/CYNTHIA
 
 API_KEY = 'AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
@@ -283,7 +281,7 @@ def sortasc(type):
 @app.route('/inbox/sort/descending/<type>', methods=['GET', 'POST'])
 def sortdesc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "desc").all()
-    return jsonify({'inbox': render_template('filterinbox.html', inbox=inbox)}) 
+    return jsonify({'inbox': render_template('filterinbox1.html', inbox=inbox)}) 
 
 @app.route('/inbox/mark/<id>')
 def mark_read(id):

@@ -2,27 +2,28 @@
 #then enter 'python routes.py' on the command line to activate website
 
 import os
-from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash
+from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, func
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
+import datetime
 
 from hashids import Hashids
 import requests
 
 from models import *
 
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user, user_unauthorized
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.contrib.fileadmin import FileAdmin
 
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 
-import pyrebase
+# import pyrebase
 
 app = Flask(__name__)
 admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
@@ -60,26 +61,26 @@ app.config['UPLOADED_PHOTOS_DEST'] = photodest
 configure_uploads(app, photos)
 
 
-
-#FIREBASE/CYNTHIA
-
-API_KEY = 'AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
-
-hashid_salt = 'impossible to guess'
-hashids = Hashids(salt=hashid_salt, min_length=4)
-
-config = {
-    "apiKey": "AIzaSyCiUhFnF68ufmbjxHWnPoMaaxGEKlfJPNc",
-    "authDomain": "gym-finder-9e3b6.firebaseapp.com",
-    "databaseURL": "https://gym-finder-9e3b6.firebaseio.com",
-    "storageBucket": "gym-finder-9e3b6.appspot.com"
-  }
-
-  #this is to register as an admin with full read/write access
-
-firebase = pyrebase.initialize_app(config)
-firedb = firebase.database()  
-
+#
+# #FIREBASE/CYNTHIA
+#
+# API_KEY = 'AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
+#
+# hashid_salt = 'impossible to guess'
+# hashids = Hashids(salt=hashid_salt, min_length=4)
+#
+# config = {
+#     "apiKey": "AIzaSyCiUhFnF68ufmbjxHWnPoMaaxGEKlfJPNc",
+#     "authDomain": "gym-finder-9e3b6.firebaseapp.com",
+#     "databaseURL": "https://gym-finder-9e3b6.firebaseio.com",
+#     "storageBucket": "gym-finder-9e3b6.appspot.com"
+#   }
+#
+#   #this is to register as an admin with full read/write access
+#
+# firebase = pyrebase.initialize_app(config)
+# firedb = firebase.database()
+#
 
 
 # #FIREFORM TEST
@@ -145,15 +146,31 @@ def utility_processor():
         return "{0:.2f}".format(price)
 
     def cart_count():
-        count = 0
-        cart = Cart.query.all()
-        for c in cart:
-            count += 1
+        try:
+            count = 0
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            cart = Cart.query.filter(Cart.user_id==uid).all()
+            for c in cart:
+                count += 1
+        except:
+            count = 0
+            cart = Cart.query.filter(Cart.user_id == None).all()
+            for c in cart:
+                count += 1
         return count
-    
+
+    def cal_bmr():
+        bmr = BMR.query.first()
+        return "{0:.0f}".format(bmr.bmr)
+
+    def cal_cal():
+        bmr = BMR.query.first()
+        return "{0:.0f}".format(bmr.cal)
+
 
     return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag,
-                show_cart_price=show_cart_price, cart_count=cart_count)
+                show_cart_price=show_cart_price, cart_count=cart_count, cal_bmr=cal_bmr, cal_cal=cal_cal)
 
 
 #ADMIN OVERALL
@@ -161,10 +178,13 @@ def utility_processor():
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(BlogPost, db.session))
 path = os.path.join(os.path.dirname(__file__), 'static/assets')
-admin.add_view(FileAdmin(path, name='Videos'))
+# admin.add_view(FileAdmin(path, name='Videos'))
 admin.add_view(ItemView(Item, db.session))
+admin.add_view(ModelView(Recipe, db.session))
 admin.add_view(ModelView(Cart, db.session))
+admin.add_view(ModelView(Orders, db.session))
 admin.add_view(ModelView(Comments, db.session))
+admin.add_view(ModelView(BMR, db.session))
 
 
 ###
@@ -177,7 +197,7 @@ def index(): #did not use wtforms for this because wtforms might accidentally br
     if request.method == 'POST':
         msg = Message(subject= "Feedback",
                               recipients=['threesugar123@gmail.com'])
-        msg.html = 'From: {} ({}) <br> <br> Subject: {} <br> <br> Message: {}'.format(request.form['name'], 
+        msg.html = 'From: {} ({}) <br> <br> Subject: {} <br> <br> Message: {}'.format(request.form['name'],
         request.form['email'], request.form['subject'], request.form['message'])
         mail.send(msg)
         return render_template('index.html', success=True, show = True)
@@ -210,7 +230,7 @@ def signup():
         return redirect(url_for('index'))
 
     if form.validate_on_submit():
-        new_user = User(firstname=form.firstname.data, lastname= form.lastname.data, 
+        new_user = User(firstname=form.firstname.data, lastname= form.lastname.data,
         username=form.username.data, email=form.email.data, password = form.password.data)
 
         try:
@@ -247,7 +267,7 @@ def dashboard():
         db.session.commit()
 
     user_profile = Profile.query.filter_by(userid=uid).first()
-    
+
     return render_template('profile.html', user_profile=user_profile)
 
 @app.route('/profile/<username>', methods=['GET', 'POST'])
@@ -261,7 +281,7 @@ def profile(username):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
         return redirect(url_for('inbox'))
 
     if current_user.is_authenticated:
@@ -278,14 +298,14 @@ def editprofile(id):
     form = EditProfile(obj=user, desc=user.desc, interests=user.interests, location=user.location)
     uid = user.userid
     user_profile = Profile.query.filter_by(userid=uid).first()
-    
+
     if form.validate_on_submit():
         user.desc = form.desc.data
         user.interests = form.interests.data
         user.location = form.location.data
         db.session.commit()
-        return redirect(url_for('dashboard')) 
-        
+        return redirect(url_for('dashboard'))
+
     return render_template('editprofile.html', form=form)
 
 #MESSAGE
@@ -349,7 +369,7 @@ def flaggedmsg(id):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
         return redirect(url_for('inbox'))
 
     return render_template('replyflagged.html', view_msg=view_msg, form=form)
@@ -378,7 +398,7 @@ def viewinbox(id):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
         return redirect(url_for('inbox'))
 
     return render_template('message.html', view_msg=view_msg, form=form)
@@ -397,7 +417,7 @@ def viewsent(id):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
         return redirect(url_for('inbox'))
 
     return render_template('sendmessage.html', view_msg=view_msg, form=form)
@@ -406,7 +426,7 @@ def viewsent(id):
 def deleteinbox(id):
     view_msg = UserMail.query.filter_by(id=id).first()
     db.session.delete(view_msg)
-    db.session.commit() 
+    db.session.commit()
     return redirect(url_for('inbox'))
 
 
@@ -457,8 +477,8 @@ def upload():
     target = os.path.join(APP_ROOT, 'static/assets') #os ensures that the correct path will be rendered regardless of OS.
     print(target)
     print(request.files.getlist('file'))
-    
-    
+
+
     for file in request.files.getlist('file'):
         print(file)
         filename = file.filename
@@ -472,15 +492,15 @@ def upload():
             print('Save it to: ', destination)
             file.save(destination)
             return redirect(url_for('vidmanage'))
-        
-        except IntegrityError: 
+
+        except IntegrityError:
             error = True
             db.session.rollback()
-            return render_template('dashvid.html', form=form, error=error) 
+            return render_template('dashvid.html', form=form, error=error)
             #link has unique constraint because might run into filename conflict in local env
 
 
-    return render_template('dashvid.html', form=form)     
+    return render_template('dashvid.html', form=form)
 
 
 ####
@@ -509,7 +529,7 @@ def explorevideo():
     music = Video.query.filter_by(category = 'music').order_by("date desc").limit(6)
     edu = Video.query.filter_by(category = 'educational').order_by("date desc").limit(6)
 
-    if current_user.is_authenticated: 
+    if current_user.is_authenticated:
         savedvid = VideoSaved.query.filter_by(savedname = current_user.username).order_by("saveddate desc").limit(3)
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                                 allvid=allvid, form=form, savedvid = savedvid)
@@ -518,8 +538,8 @@ def explorevideo():
         return render_template('freevid.html', food=food, exercise=exercise, music=music, edu=edu, \
                                 allvid=allvid, form=form)
 
-     
-                    
+
+
 @app.route('/video/<videoid>', methods=['GET', 'POST'])
 def videoz(videoid):
     form = VideoSearch()
@@ -559,7 +579,7 @@ def videoz(videoid):
 
     for v in vidlike:
         likes.append(v)
-    
+
     for d in viddislike:
         dislikes.append(d)
 
@@ -569,7 +589,7 @@ def videoz(videoid):
     #SAVE FUNCTION
 
     curr_save = False
-    
+
     if current_user.is_authenticated: #to fix a mysterious AnonMixin error that popped out for no reason
         saved = VideoSaved.query.filter_by(videoid = vid).filter_by(savedname = current_user.username).first()
         curr_save = False
@@ -584,7 +604,7 @@ def videoz(videoid):
     #VIEW FUNCTION
     userview = VideoViews.query.filter_by(videoid=vid).filter_by(username=current_user.username).first()
     guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").first()
-   
+
     if guestview is None and current_user.is_authenticated == False:
         guestinit = VideoViews(videoid=vid, username = "Guest")
         db.session.add(guestinit)
@@ -593,19 +613,19 @@ def videoz(videoid):
         guestview.views = 0 #make .views != null so that the += later on can work.
         db.session.add(guestview)
         db.session.commit()
-        
+
     if guestview is not None and current_user.is_authenticated == False:
         guestview = VideoViews.query.filter_by(videoid=vid).filter_by(username="Guest").first()
         guestview.views += 1
         db.session.add(guestview)
         db.session.commit()
-       
+
     if userview is None and current_user.is_authenticated == True:
         userinit = VideoViews(videoid=vid, username = current_user.username)
         db.session.add(userinit)
         db.session.commit()
         userview = VideoViews.query.filter_by(videoid=vid).filter_by(username=current_user.username).first()
-        userview.views = 0 
+        userview.views = 0
         db.session.add(userview)
         db.session.commit()
 
@@ -629,15 +649,15 @@ def videoz(videoid):
         gview += g.views
 
     tviews = uview + gview
-    
+
     #FILTER RELATED
-    
+
     s = select([Video.title]).where(Video.title == videoid.title)
     print(s) #debug purposes
     related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
     # ~Video.title.in_(s) == Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
     # 'NOT IN' omits all query results that contains videoid.title
-    
+
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
@@ -656,7 +676,7 @@ def likevideo(videoid):
     viddislike = VideoDislikes.query.filter_by(videoid = vid).\
     filter_by(username = current_user.username).filter_by(dislikes = 1).first()
 
-    if vidlike is None and viddislike is None:    
+    if vidlike is None and viddislike is None:
         likes = VideoLikes(videoid = vid, username = current_user.username, likes = 1)
         db.session.add(likes)
         db.session.commit()
@@ -669,7 +689,7 @@ def likevideo(videoid):
         db.session.delete(viddislike)
         db.session.commit()
 
-    else:  #user can only like the video once 
+    else:  #user can only like the video once
         db.session.delete(vidlike)
         db.session.commit()
 
@@ -688,7 +708,7 @@ def dislikevideo(videoid):
     filter_by(username = current_user.username).filter_by(likes = 1).first()
 
 
-    if viddislike is None and vidlike is None:    
+    if viddislike is None and vidlike is None:
         dislikes = VideoDislikes(videoid = vid, username = current_user.username, dislikes = 1)
         db.session.add(dislikes)
         db.session.commit()
@@ -701,7 +721,7 @@ def dislikevideo(videoid):
         db.session.delete(vidlike)
         db.session.commit()
 
-    else:  #user can only dislike the video once 
+    else:  #user can only dislike the video once
         db.session.delete(viddislike)
         db.session.commit()
 
@@ -720,7 +740,7 @@ def savevid(videoid):
 
     saved = VideoSaved.query.filter_by(videoid = vid).filter_by(savedname = current_user.username).first()
 
-    svid = VideoSaved(videoid = vid, title = title, link = link, username = name, 
+    svid = VideoSaved(videoid = vid, title = title, link = link, username = name,
         savedname = current_user.username,
         category = cat, description = desc, date = date)
 
@@ -737,7 +757,7 @@ def savevid(videoid):
          db.session.delete(saved)
          db.session.commit()
          return redirect(url_for('videoz', videoid = vid))
-        
+
     return redirect(url_for('videoz', videoid = vid))
 
 @app.route('/video/delete/<videoid>')
@@ -748,7 +768,7 @@ def deletevid(videoid):
     return redirect(url_for('explorevideo'))
 
 
-@app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for 
+@app.route('/video/comment/<videoid>', methods=['GET', 'POST']) #the argument for
 #this route comes from the above video/<videoid> route where {{url_for('videocomment', videoid = vid)}}
 
 def videocomment(videoid):
@@ -760,7 +780,7 @@ def videocomment(videoid):
     db.session.commit()
     return redirect(url_for('videoz', videoid = vid))
 
-# Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment 
+# Not explictly written, but id column (PK) of table Video and videoid column of table VideoComment
 # has a relationship and should have been joined together via a FK.
 
 @app.route('/video/search', methods=['GET', 'POST'])
@@ -773,7 +793,7 @@ def videosearch():
         return redirect(url_for('explorevideo'))
 
 
-####### HASSAN (BLOG) #### 
+####### HASSAN (BLOG) ####
 
 @app.route('/blog')
 def blog():
@@ -804,7 +824,7 @@ def blog_edit(id):
     return render_template('hassan/editblog.html', form=form)
 
 
-### XIONG JIE (RECIPE) ### 
+### XIONG JIE (RECIPE) ###
 
 @app.route('/recipe', methods=['GET', 'POST'])
 def recipe():
@@ -838,44 +858,151 @@ def new_recipe():
     return render_template('xiongjie/newrecipe.html')
 
 
-#RAYMOND 
+#RAYMOND
 
+#ADD ADMIN SALE QUANTITY (SOLD OUT)
+#ADD USER TIME TO DELIVER
+#ADD PAYPAL CHECKOUT
+#ADD RECIPE EDIT INGREDIENT
+
+#SHOP PAGE
 @app.route('/shop')
 def shop():
     items = Item.query.all()
-    return render_template("raymond/shop.html", items=items)
+    cart = Cart.query.all()
+    return render_template("raymond/shop.html", items=items, cart=cart)
 
-@app.route('/shop/filter/<category>')
-def filter(category):
-    filter = Item.query.filter(Item.category == category).all()
-    return render_template("raymond/shop.html", items=filter)
-
-@app.route('/shop/<int:item_id>/add')
-def addCart(item_id):
-
+@app.route('/addCart', methods=['POST'])
+def addCart():
+    item_id = request.form['item_id']
     try:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        items = Item.query.filter_by(id=item_id).first()
+        check = Cart.query.filter_by(item_id=item_id).first()
+        if check is None:
+            new_item = Cart(user_id=uid, item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
+            db.session.add(new_item)
+            db.session.commit()
+        else:
+            carts = Cart.query.filter_by(item_id=item_id).first()
+            carts.quantity += 1
+            carts.subtotal = "{0:.2f}".format(carts.quantity*carts.price)
+            db.session.commit()
+
+    except AttributeError:
         items = Item.query.filter_by(id=item_id).first()
         new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
         db.session.add(new_item)
         db.session.commit()
 
-    except IntegrityError:
-        db.session.rollback()
-        carts = Cart.query.filter_by(item_id=item_id).first()
-        carts.quantity += 1
-        carts.subtotal = "{0:.2f}".format(carts.quantity*carts.price)
-        db.session.commit()
+    def cart_count():
+        try:
+            count = 0
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            cart = Cart.query.filter(Cart.user_id==uid).all()
+            for c in cart:
+                count += 1
+        except:
+            count = 0
+            cart = Cart.query.filter(Cart.user_id == None).all()
+            for c in cart:
+                count += 1
+        return count
 
+    return jsonify({'count' : cart_count()})
+    # return redirect(request.referrer)
+
+@app.route('/filter', methods=['POST'])
+def filter():
+    filter = request.form['filter']
+    if filter is "":
+        items = Item.query.all() #[item1, item2]
+    else:
+        items = Item.query.filter(Item.category == filter).all()
+    return render_template("raymond/shop-view.html", items=items, filter=filter)
+
+@app.route('/search', methods=['POST'])
+def search():
+    filter = request.form['filter']
+    if filter is "":
+        items = Item.query.all()
+    else:
+        items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
+    return render_template("raymond/shop-view.html", items=items)
+
+#BMR
+@app.route('/bmr/calculate', methods=['POST'])
+def bmr_calculate():
+
+    gender = request.form['gender']
+    weight = request.form['weight']
+    height = request.form['height']
+    age = request.form['age']
+    exercise = request.form['exercise']
+
+    bmi = BMR.query.first()
+    bmi.gender = gender
+    bmi.weight = weight
+    bmi.height = height
+    bmi.age = age
+    bmi.exercise = exercise
+
+    bmr = 0
+    rec_cal = 0
+
+    if gender == "0":
+        bmr = (10 * float(weight)) + (6.25 * float(height)) - (5 * float(age)) + 5
+    elif gender == "1":
+        bmr = (10 * float(weight)) + (6.25 * float(height)) - (5 * float(age)) - 161
+
+    if exercise == "1":
+        rec_cal = bmr * 1.2
+    elif exercise == "2":
+        rec_cal = bmr * 1.375
+    elif exercise == "3":
+        rec_cal = bmr * 1.55
+    elif exercise == "4":
+        rec_cal = bmr * 1.725
+    elif exercise == "5":
+        rec_cal = bmr * 1.9
+
+    bmi.bmr = bmr
+    bmi.cal = rec_cal
+
+    db.session.commit()
     return redirect(url_for('shop'))
 
-@app.route('/shop/<int:item_id>/delete')
-def deleteCart(item_id):
-    items = Cart.query.filter_by(item_id=item_id).first()
-    db.session.delete(items)
-    db.session.commit()
-    return redirect(url_for('cart'))
+@app.route('/bmr/reset', methods=['POST'])
+def bmr_reset():
+    bmi = BMR.query.first()
+    bmi.gender = 0
+    bmi.weight = 0
+    bmi.height = 0
+    bmi.age = 0
+    bmi.exercise = 0
+    bmi.bmi = 0
+    bmi.cal = 0
 
-@app.route('/shop/<int:item_id>/update', methods=['POST'])
+    db.session.commit()
+    return redirect(url_for('shop'))
+
+#CART PAGE
+@app.route('/cart')
+def cart():
+    try:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        cart = Cart.query.filter(Cart.user_id==uid).all()
+    except:
+        cart = Cart.query.filter(Cart.user_id==None).all()
+
+    # cart = Cart.query.all()
+
+    return render_template("raymond/cart.html", cart=cart)
+
+@app.route('/cart/<int:item_id>/update', methods=['POST'])
 def updateCart(item_id):
     items = Cart.query.filter_by(item_id=item_id).first()
     quantity = request.form['newquantity']
@@ -884,38 +1011,55 @@ def updateCart(item_id):
     db.session.commit()
     return redirect(url_for('cart'))
 
-@app.route('/cart')
-def cart():
-    cart = Cart.query.all()
-
-    return render_template("raymond/cart.html", cart=cart)
-
-@app.route('/adminadd')
-def adminadd():
-    return render_template("raymond/adminadd.html")
-
-@app.route('/addItem', methods=['POST'])
-def addItem():
-    name = request.form['name']
-    info = request.form['info']
-    price = request.form['price']
-    description = request.form['description']
-    category = request.form['category']
-    calories = request.form['calories']
-
-    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories, totalratings=0)
-
-    db.session.add(item)
+@app.route('/cart/<int:item_id>/delete')
+def deleteCart(item_id):
+    items = Cart.query.filter_by(item_id=item_id).first()
+    db.session.delete(items)
     db.session.commit()
+    return redirect(url_for('cart'))
 
-    if request.method == 'POST' and 'image' in request.files:
-        img = request.files['image']
-        img.filename = str(item.id)+".jpg"
-        filename = photos.save(img)
-        return redirect(url_for('adminadd'))
+@app.route('/checkout')
+def checkout():
+    cart_list = ""
+
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+    cart = Cart.query.filter(Cart.user_id==uid).all()
+    date = datetime.datetime.now()
+    check = Orders.query.all()
+
+    count = 0
+    orders = Orders.query.all()
+    for o in orders:
+        count += 1
+
+    order_count = count + 1
+
+    cart_count = 0
+    cart = Cart.query.all()
+    for c in cart:
+        cart_count += 1
+
+    row = Orders.query.filter(Orders.id == count).first()
+    qty = row.items_quantity
+    count -= qty
+    count += 1
+
+    for c in cart:
+        checkout = Orders(order_id=count, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=cart_count, price=c.price,
+                          subtotal=c.subtotal, date=date, delivered=False)
+        db.session.add(checkout)
+        db.session.commit()
+
+
 
     return redirect(url_for('shop'))
 
+@app.route('/delivery')
+def delivery():
+    return redirect(url_for(''))
+
+#ITEM PAGE
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = Item.query.filter_by(id=item_id).one()
@@ -924,16 +1068,27 @@ def item(item_id):
 
     return render_template('raymond/item.html', item=item, comment=comment)
 
-@app.route('/item/<int:item_id>/add', methods=['POST'])
-def addComment(item_id):
+#RECIPE PAGE
+@app.route('/shop_recipe')
+def shop_recipe():
 
-    name = request.form['name']
+    return render_template('raymond/recipe.html')
+
+@app.route('/item/<int:item_id>/add', methods=['POST'])
+@login_required
+def addComment( item_id):
+
     rating = request.form['rating']
     comment = request.form['comment']
 
-    addComment = Comments(item_id=item_id, name=name, rating=rating, comment=comment)
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+    uname = user.username
+
+    addComment = Comments(user_id=uid, item_id=item_id, name=uname, rating=rating, comment=comment)
     db.session.add(addComment)
 
+    #shopping view
     item = Item.query.filter_by(id=item_id).first()
     count = Comments.query.filter_by(item_id=item_id).count()
 
@@ -945,67 +1100,104 @@ def addComment(item_id):
 
     return redirect(url_for('item', item_id=item_id))
 
-@app.route('/adminview')
-def adminview():
-    return render_template("raymond/adminview.html")
+#ADMIN
+@app.route('/addItem', methods=['POST'])
+def addItem():
+    name = request.form['name']
+    info = request.form['info']
+    price = request.form['price']
+    description = request.form['description']
+    category = request.form['category']
+    calories = request.form['calories']
+    quantity = request.form['quantity']
+
+    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories,
+                quantity=quantity, totalratings=0)
+
+    db.session.add(item)
+    db.session.commit()
+
+    img = request.files['image']
+    img.filename = str(item.id) + ".jpg"
+    filename = photos.save(img)
+
+    items = Item.query.all()
+    # return render_template("raymond/shopadmin.html", items=items)
+    return render_template('raymond/shopadmin-table.html', items=items)
+
+@app.route('/deleteItem', methods=['POST'])
+def deleteItem():
+    item_id = request.form['delete_id']
+    del_item = Item.query.filter_by(id=item_id).first()
+    db.session.delete(del_item)
+    db.session.commit()
+    items = Item.query.all()
+    return render_template('raymond/shopadmin-table.html', items=items)
+
+@app.route('/shopadmin')
+def shopadmin():
+    items = Item.query.all()
+    return render_template("raymond/shopadmin.html", items=items)
 
 
-#CYNTHIA
 
-@app.route('/gym')
-def gym_page():
-    return render_template('cynthia/index.html')
-
-@app.route('/gym/find', methods=["POST"])
-def find_gyms():
-    if request.method == 'POST':
-        location = request.form["location"]
-        geo_coding_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+ location + '&key=' + API_KEY
-        geo_coding_response = requests.get(geo_coding_url).json()
-        location_coordinates = geo_coding_response["results"][0]["geometry"]["location"]
-        lng = str(location_coordinates["lng"])
-        lat = str(location_coordinates["lat"])
-        places_search_url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + lat + ',' + lng + '&rankby=distance&type=gym&keyword=gym&key=AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
-        places_response = requests.get(places_search_url).json()
-        return render_template('cynthia/gyms.html', gyms=places_response)
-
-@app.route('/gym/more/<place_id>', methods=["GET", "POST"])
-def gym_info(place_id):
-    if request.method == 'GET':
-        place_api_url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&key=AIzaSyDHHLWzJzlZZFDye9JbxiCu4RXei_bzMbE'
-        place_details_response = requests.get(place_api_url).json()
-        return render_template('cynthia/gym.html', gym=place_details_response)
-    if request.method == 'POST':
-        new_booking_id = None
-        try:
-            bookings = firedb.child("bookings").get().val()
-            booking_id = [entry for entry in bookings][-1]['id']
-            new_booking_id = int(booking_id) + 1
-        except:
-            new_booking_id = 0
-        
-        new_booking_ref = firedb.child("bookings").child(new_booking_id)
-        booking_id_string = hashids.encode(new_booking_id)
-        booking_confirm_url = 'session/confirm/' + booking_id_string
-        booking_details = dict()
-        booking_details['id'] = int(new_booking_id)
-        booking_details['name'] = request.form["name"]
-        booking_details['phone_number'] = request.form["phone"]
-        booking_details['email'] = request.form['email']
-        booking_details['date_time'] = request.form['date_time']
-        booking_details['id_string'] = booking_id_string
-        new_booking_ref.set(booking_details)
-        return redirect(booking_confirm_url)
-
-
-@app.route('/session/confirm/<booking_id>')       
-def display_confirmation(booking_id):
-    real_booking_id = hashids.decode(booking_id)[0]
-    booking_ref = firedb.child('bookings').child(real_booking_id)
-    result = booking_ref.get().val()
-    booking_details = dict(result)
-    return render_template('cynthia/confirm.html', booking_details=booking_details)
-
+#
+# #CYNTHIA
+#
+# @app.route('/gym')
+# def gym_page():
+#     return render_template('cynthia/index.html')
+#
+# @app.route('/gym/find', methods=["POST"])
+# def find_gyms():
+#     if request.method == 'POST':
+#         location = request.form["location"]
+#         geo_coding_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+ location + '&key=' + API_KEY
+#         geo_coding_response = requests.get(geo_coding_url).json()
+#         location_coordinates = geo_coding_response["results"][0]["geometry"]["location"]
+#         lng = str(location_coordinates["lng"])
+#         lat = str(location_coordinates["lat"])
+#         places_search_url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + lat + ',' + lng + '&rankby=distance&type=gym&keyword=gym&key=AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
+#         places_response = requests.get(places_search_url).json()
+#         return render_template('cynthia/gyms.html', gyms=places_response)
+#
+# @app.route('/gym/more/<place_id>', methods=["GET", "POST"])
+# def gym_info(place_id):
+#     if request.method == 'GET':
+#         place_api_url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&key=AIzaSyDHHLWzJzlZZFDye9JbxiCu4RXei_bzMbE'
+#         place_details_response = requests.get(place_api_url).json()
+#         return render_template('cynthia/gym.html', gym=place_details_response)
+#     if request.method == 'POST':
+#         new_booking_id = None
+#         try:
+#             bookings = firedb.child("bookings").get().val()
+#             booking_id = [entry for entry in bookings][-1]['id']
+#             new_booking_id = int(booking_id) + 1
+#         except:
+#             new_booking_id = 0
+#
+#         new_booking_ref = firedb.child("bookings").child(new_booking_id)
+#         booking_id_string = hashids.encode(new_booking_id)
+#         booking_confirm_url = 'session/confirm/' + booking_id_string
+#         booking_details = dict()
+#         booking_details['id'] = int(new_booking_id)
+#         booking_details['name'] = request.form["name"]
+#         booking_details['phone_number'] = request.form["phone"]
+#         booking_details['email'] = request.form['email']
+#         booking_details['date_time'] = request.form['date_time']
+#         booking_details['id_string'] = booking_id_string
+#         new_booking_ref.set(booking_details)
+#         return redirect(booking_confirm_url)
+#
+#
+# @app.route('/session/confirm/<booking_id>')
+# def display_confirmation(booking_id):
+#     real_booking_id = hashids.decode(booking_id)[0]
+#     booking_ref = firedb.child('bookings').child(real_booking_id)
+#     result = booking_ref.get().val()
+#     booking_details = dict(result)
+#     return render_template('cynthia/confirm.html', booking_details=booking_details)
+#
 
 ### (DO NOT TOUCH)
 
@@ -1013,7 +1205,7 @@ if __name__ == '__main__':
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.anonymous_user = Anonymous
-
+    login_manager.login_view = "login"
 
     @login_manager.user_loader
     def load_user(uid):

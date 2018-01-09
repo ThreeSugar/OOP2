@@ -8,14 +8,15 @@ Videos
 
 {% block content %}
 
-<a style = "width:180px;" class = "btn btn-primary">Return to Selections</a>
-
+<div style="margin-bottom: -40px;">
+    <a href = "{{url_for('fitgen')}}" style="width:180px; margin-left:5px; margin-top: 20px; color:black; " class="btn btn-secondary">Return to Selections</a>
+</div>
 
 
 <div class="input-group">
-    <input style = "margin-left:10px;" class="form-control"
+    <input id = "searchinput" onkeyup="search()" style = "margin-left:10px; margin-top:-5px;" class="form-control"
                 placeholder="Search here">
-    <div class="input-group-addon" ><i style = "margin-left:10px;" class="fa fa-search"></i></div>
+    <div style = "margin-top:-5px;" class="input-group-addon" ><i style = "margin-left:7px;" class="fa fa-search"></i></div>
 </div>
 
 
@@ -23,7 +24,7 @@ Videos
     <div class="card-header">
       Library
     </div>
-    <ul class="list-group list-group-flush">
+    <ul id = "searchlist" class="list-group list-group-flush">
         {% for r in result %}
         <li id = "cali{{loop.index}}" class="list-group-item">
            <a href = "{{url_for('libload', title = r.title)}}">{{r.title}}</a> 
@@ -38,22 +39,24 @@ Videos
 {% block script %}
 
 <script>
-    
+   function search() {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('searchinput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("searchlist");
+    li = ul.getElementsByTagName('li');
 
-$( document ).ready(function() {
-
-  // Simple Search
-  $('.form-control').keyup(function(){
-   var valThis = $(this).val().toLowerCase();
-    $('.list-group > li').each(function(){
-     var text = $(this).text().toLowerCase();
-        (text.indexOf(valThis) == 0) ? $(this).show() : $(this).hide();  //if-else shorthand          
-   });
-  });
-});
-
-
-
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
 </script>
 
 {% endblock %}

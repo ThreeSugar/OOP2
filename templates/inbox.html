@@ -18,8 +18,8 @@ Inbox
         <thead>
           <tr>
             <th width="5%"> <a class = "dates" href = "#"> From </a></th>
-            <th width="15%"><a class = "dates" href = "#"> Subject </a></th>
-            <th width="5%"><a class = "dates" href = "#"> Date </a></th>
+            <th width="15%"><a id = "subject" class = "dates" href = "#"> Subject </a></th>
+            <th width="5%"><a id = "date" class = "dates" href = "#"> Date </a></th>
           </tr>
         </thead>
         <tbody>
@@ -92,16 +92,50 @@ Inbox
                 </div>   
             </div>
         </div>
-
-
-
-
           {% endfor %}
         </tbody>
 </table>
 
+{% endblock %}
+
+{% block script %}
+
+<script>
+$(document).ready(function() { 
+
+  $('#subject').on('click', function() {
+
+    req = $.ajax({
+    url : "{{url_for('sortasc', type = 'subject')}}",
+    type : 'POST',
+  
+    });
+
+    req.done(function(data) {
+          $('.table').empty();
+          $('.table').append(data.inbox);
+    });
+    
+  });
 
 
-              
-                    
+  $('#date').on('click', function() {
+
+    req = $.ajax({
+    url : "{{url_for('sortasc', type = 'date')}}",
+    type : 'POST',
+  
+    });
+
+    req.done(function(data) {
+          $('.table').empty();
+          $('.table').append(data.inbox);
+    });
+    
+  });
+
+});
+
+</script>
+
 {% endblock %}

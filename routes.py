@@ -502,7 +502,17 @@ def upload():
     return render_template('dashvid.html', form=form)     
 
 
-####
+#SAVED VIDEO PLAYLIST
+@app.route('/dashboard/savedvideo')
+def savedvideo():
+    return render_template('savedvideo.html')
+
+@app.route('/dashboard/savedvideo/view')
+def viewsavedvideo():
+    saved = VideoSaved.query.filter_by(savedname = current_user.username).all()
+    return render_template('viewsavedvid.html', saved=saved)
+
+
 
 #VIDEO
 

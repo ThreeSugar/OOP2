@@ -1,0 +1,38 @@
+{% extends 'dashboard.html' %}
+
+{% block dashtitle %}
+Saved Videos
+{% endblock %}
+
+
+{% block dashboard %}
+<div style = "padding:10px;">
+    <a type = "button" class="btn btn-default" href = "#"> View Saved Videos </a>
+    <br>
+    <a id = "playlists" type = "button" class="btn btn-default" href = "#"> View/Edit Playlists </a>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript">
+    
+    $(document).ready(function(){
+
+        $("#playlists").popover({
+
+            trigger: 'hover',
+
+            title: '<h3 class="custom-title"><span class="glyphicon glyphicon-info-sign"> Playlists</span></h3>',
+
+            content: '<p>Organise your saved videos into playlists.</p>',
+
+            html: true
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

@@ -84,73 +84,73 @@
 }
 </style>
 
-<div class="admin-add">
-    <h2>Admin Shop</h2>
+{#<div class="admin-add">#}
+{#    <h2>Admin Orders</h2>#}
 {#    <form name="additemForm" id="additemForm" class="form-style-9" method="POST" enctype="multipart/form-data" action="{{ url_for('addItem') }}">#}
-    <form id="form-items" class="form-style-9" enctype="multipart/form-data">
-        <ul>
-            <li>
-                <input type="text" id="name" class="field-style field-split align-left" placeholder="Name" required/>
-                <input type="text" id="info" class="field-style field-split align-right" placeholder="Info" required/>
-            </li>
-            <li>
-                <input type="number" id="price" class="field-style field-split-2 align-left" placeholder="Price" required/>
-                <input type="number" id="quantity" class="field-style field-split-2 align-left" style="margin-left: 13px" placeholder="Quantity" required/>
-                <input type="number" id="calories" class="field-style field-split align-right" placeholder="Calories" required/>
-            </li>
-            <li>
-                <select id="category" class="field-style field-split align-left category" required>
-                    <option value="Others">Others</option>
-                    <option value="Meat & Seafood">Meat & Seafood</option>
-                    <option value="Fruit & Veg">Fruit & Veg</option>
-                    <option value="Frozen">Frozen</option>
-                    <option value="Dairy">Dairy</option>
-                    <option value="Bakery">Bakery</option>
-                    <option value="Beverages">Beverages</option>
-                </select>
-                <input type="file" id="image" class="field-style field-split align-right" required>
-            </li>
-            <li>
-                <textarea id="description" class="field-style" placeholder="Description" required></textarea>
-            </li>
-            <li>
-                <a class="btn Submit">ADD ITEM</a>
-            </li>
-            <li style="height: 50px">
-                <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>
-                <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>
-                <div id="deleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>
-            </li>
-        </ul>
-    </form>
-</div>
+{#    <form id="form-items" class="form-style-9" enctype="multipart/form-data">#}
+{#        <ul>#}
+{#            <li>#}
+{#                <input type="text" id="name" class="field-style field-split align-left" placeholder="Name" required/>#}
+{#                <input type="text" id="info" class="field-style field-split align-right" placeholder="Info" required/>#}
+{#            </li>#}
+{#            <li>#}
+{#                <input type="number" id="price" class="field-style field-split-2 align-left" placeholder="Price" required/>#}
+{#                <input type="number" id="quantity" class="field-style field-split-2 align-left" style="margin-left: 13px" placeholder="Quantity" required/>#}
+{#                <input type="number" id="calories" class="field-style field-split align-right" placeholder="Calories" required/>#}
+{#            </li>#}
+{#            <li>#}
+{#                <select id="category" class="field-style field-split align-left category" required>#}
+{#                    <option value="Others">Others</option>#}
+{#                    <option value="Meat & Seafood">Meat & Seafood</option>#}
+{#                    <option value="Fruit & Veg">Fruit & Veg</option>#}
+{#                    <option value="Frozen">Frozen</option>#}
+{#                    <option value="Dairy">Dairy</option>#}
+{#                    <option value="Bakery">Bakery</option>#}
+{#                    <option value="Beverages">Beverages</option>#}
+{#                </select>#}
+{#                <input type="file" id="image" class="field-style field-split align-right" required>#}
+{#            </li>#}
+{#            <li>#}
+{#                <textarea id="description" class="field-style" placeholder="Description" required></textarea>#}
+{#            </li>#}
+{#            <li>#}
+{#                <a class="btn Submit">ADD ITEM</a>#}
+{#            </li>#}
+{#            <li style="height: 50px">#}
+{#                <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>#}
+{#                <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>#}
+{#                <div id="deleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>#}
+{#            </li>#}
+{#        </ul>#}
+{#    </form>#}
+{#</div>#}
 <div>
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
                 <th>#</th>
+                <th>Order ID</th>
+                <th>User ID</th>
+                <th>Item ID</th>
                 <th>Name</th>
-                <th>Info</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Calories</th>
                 <th>Quantity</th>
-                <th></th>
+                <th>Price</th>
+                <th>Date</th>
+                <th>Delivered</th>
             </tr>
         </thead>
         <tbody id="admin-items">
-            {% for i in items[::-1] %}
+            {% for o in orders %}
             <tr>
-                <th>{{ i.id }}</th>
-                <td>{{ i.name }}</td>
-                <td>{{ i.info }}</td>
-                <td>{{ i.price }}</td>
-                <td>{{ i.description }}</td>
-                <td>{{ i.category }}</td>
-                <td>{{ i.calories }}</td>
-                <td>{{ i.quantity }}</td>
-                <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                <td>{{ o.id}}</td>
+                <td>{{ o.order_id }}</td>
+                <td>{{ o.user_id }}</td>
+                <td>{{ o.item_id }}</td>
+                <td>{{ o.name }}</td>
+                <td>{{ o.quantity }}</td>
+                <td>{{ o.price }}</td>
+                <td>{{ o.date }}</td>
+                <td>{{ o.delivered }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -875,26 +875,35 @@ def shop():
 @app.route('/addCart', methods=['POST'])
 def addCart():
     item_id = request.form['item_id']
-    try:
-        user = User.query.filter_by(username=current_user.username).first()
-        uid = user.uid
-        items = Item.query.filter_by(id=item_id).first()
-        check = Cart.query.filter_by(item_id=item_id).first()
-        if check is None:
-            new_item = Cart(user_id=uid, item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
-            db.session.add(new_item)
-            db.session.commit()
-        else:
-            carts = Cart.query.filter_by(item_id=item_id).first()
-            carts.quantity += 1
-            carts.subtotal = "{0:.2f}".format(carts.quantity*carts.price)
-            db.session.commit()
 
-    except AttributeError:
-        items = Item.query.filter_by(id=item_id).first()
-        new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+    items = Item.query.filter_by(id=item_id).first()
+    check = Cart.query.filter_by(user_id=uid).all()
+
+    check_item = False
+
+    for c in check:
+        if c.item_id == items.id:
+            c.quantity += 1
+            db.session.commit()
+            check_item = True
+            break
+
+    if check_item == False:
+        new_item = Cart(user_id=uid, item_id=items.id, name=items.name, quantity=1, price=items.price,
+                        subtotal=items.price)
         db.session.add(new_item)
         db.session.commit()
+
+
+
+
+    # except AttributeError:
+    #     items = Item.query.filter_by(id=item_id).first()
+    #     new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
+    #     db.session.add(new_item)
+    #     db.session.commit()
 
     def cart_count():
         try:
@@ -1020,36 +1029,50 @@ def deleteCart(item_id):
 
 @app.route('/checkout')
 def checkout():
-    cart_list = ""
-
     user = User.query.filter_by(username=current_user.username).first()
     uid = user.uid
     cart = Cart.query.filter(Cart.user_id==uid).all()
     date = datetime.datetime.now()
     check = Orders.query.all()
 
-    count = 0
-    orders = Orders.query.all()
-    for o in orders:
-        count += 1
+    if not check:
+        cart_count = 0
+        for c in cart:
+            cart_count += 1
 
-    order_count = count + 1
+        for c in cart:
+            checkout = Orders(order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
+                              items_quantity=cart_count, price=c.price,
+                              subtotal=c.subtotal, date=date, delivered=False)
+            db.session.add(checkout)
+            db.session.delete(c)
+            db.session.commit()
 
-    cart_count = 0
-    cart = Cart.query.all()
-    for c in cart:
-        cart_count += 1
+    else:
+        # total items in orders
+        count = 0
+        orders = Orders.query.all()
+        for o in orders:
+            count += 1
 
-    row = Orders.query.filter(Orders.id == count).first()
-    qty = row.items_quantity
-    count -= qty
-    count += 1
+        order_count = count + 1
 
-    for c in cart:
-        checkout = Orders(order_id=count, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=cart_count, price=c.price,
-                          subtotal=c.subtotal, date=date, delivered=False)
-        db.session.add(checkout)
-        db.session.commit()
+        # total items in cart
+        cart_count = 0
+        for c in cart:
+            cart_count += 1
+
+        # get last entry in orders
+        row = Orders.query.filter(Orders.id == count).first()
+        qty = row.order_id
+        qty += 1
+
+        for c in cart:
+            checkout = Orders(order_id=qty, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=cart_count, price=c.price,
+                              subtotal=c.subtotal, date=date, delivered=False)
+            db.session.add(checkout)
+            db.session.delete(c)
+            db.session.commit()
 
 
 
@@ -1139,7 +1162,10 @@ def shopadmin():
     items = Item.query.all()
     return render_template("raymond/shopadmin.html", items=items)
 
-
+@app.route('/ordersadmin')
+def ordersadmin():
+    orders = Orders.query.all()
+    return render_template("raymond/ordersadmin.html", orders=orders)
 
 #
 # #CYNTHIA
@@ -1212,3 +1238,4 @@ if __name__ == '__main__':
         return User.query.get(int(uid))
 
     app.run(debug=True)
+    app.run(port='80')

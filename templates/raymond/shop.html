@@ -365,7 +365,7 @@ a:hover {
                     <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">
                     <div class="overlay"></div>
                     <div class="button">
-                        <a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><img src="{{ url_for('static', filename='img/cart.png') }}"></a>
+                        {% if item.quantity > 1 %}<a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><img src="{{ url_for('static', filename='img/cart.png') }}"></a>{% endif %}
                     </div>
                 </div>
                 <div class="cardinfo">
@@ -447,8 +447,8 @@ $(document).ready( function() {
             $('#cartcount').text('(' + data.count + ')');
             $('.shake').animate({width: "40px"});
             $('.shake').animate({width: "20px"});
-            $('.notification').animate({bottom:"80px"}, 800);
-            $('.notification').animate({bottom:"-100px"},3000);
+            $('.notification').animate({bottom:"40px"}, 500);
+            $('.notification').delay(500).animate({bottom:"-100px"},500);
         });
     });
     $(document).on('click', '.filterbtn', function() {

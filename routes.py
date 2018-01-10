@@ -1237,5 +1237,5 @@ if __name__ == '__main__':
     def load_user(uid):
         return User.query.get(int(uid))
 
-    app.run(debug=True)
-    # app.run(port='80')
+    # app.run(debug=True)
+    app.run(port='80')

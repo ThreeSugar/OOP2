@@ -512,6 +512,9 @@ def viewsavedvideo():
     saved = VideoSaved.query.filter_by(savedname = current_user.username).all()
     return render_template('viewsavedvid.html', saved=saved)
 
+@app.route('/dashboard/playlist/view')
+def viewplaylist():
+    return render_template('viewplaylist.html')
 
 
 #VIDEO

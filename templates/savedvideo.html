@@ -7,9 +7,9 @@ Saved Videos
 
 {% block dashboard %}
 <div style = "padding:10px;">
-    <a type = "button" class="btn btn-default" href = "#"> View Saved Videos </a>
+    <a type = "button" class="btn btn-default" href = "{{url_for('viewsavedvideo')}}"> View Saved Videos </a>
     <br>
-    <a id = "playlists" type = "button" class="btn btn-default" href = "#"> View/Edit Playlists </a>
+    <a id = "playlists" type = "button" class="btn btn-default" href = "{{url_for('viewplaylist')}}"> View/Edit Playlists </a>
 </div>
 {% endblock %}
 

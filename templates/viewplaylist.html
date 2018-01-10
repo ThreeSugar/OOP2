@@ -1,0 +1,48 @@
+{% extends 'dashboard.html' %} 
+
+{% block dashtitle %} 
+Playlists 
+{% endblock %} 
+
+{% block style %}
+
+<style>
+    .title-small:hover,
+    .title-small:visited,
+    .title-small:link,
+    a:active {
+        color: black;
+        font-weight: 600;
+    }
+
+    .vidusername:hover,
+    .vidusername:visited,
+    .vidusername:link,
+    a:active {
+        color: grey;
+        font-weight: 600;
+    }
+
+    a,
+    a:hover,
+    a:visited,
+    a:active {
+        color: grey;
+        text-decoration: none;
+        /* no underline */
+        cursor: pointer;
+    }
+</style>
+
+{% endblock %} 
+
+{% block dashboard %}
+<a class="pull-right">
+    <p style="font-size:15px;">
+        <i class="fa fa-plus-square" aria-hidden="true"></i> Create New Playlist
+    </p>
+</a>
+
+<p>Hello.</p>
+
+{% endblock %}

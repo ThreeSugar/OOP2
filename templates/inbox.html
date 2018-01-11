@@ -8,6 +8,7 @@ Inbox
 
 <style>
   .dates:link, .dates:hover, .dates:active, .dates:visited { color: grey; text-decoration: none; }
+  a { cursor: pointer; }
 </style>
 
 {% endblock %}
@@ -43,12 +44,11 @@ Inbox
             <td width = "2%">{{i.date}}</td> 
 
             <td width = "2%">
-              <a href = "{{url_for('mark_flag', id= i.id)}}">
-                  <i class="fa fa-flag"></i>
+              <a class = "flagging" name = "{{i.id}}">
                   {% if tag_flag(i.id) %} 
-                  Flagged
+                  <p class = "flagstatus{{i.id}}"><i class="fa fa-flag"></i> Flagged</p>
                   {% else %}
-                   Flag
+                  <p class = "flagstatus{{i.id}}"><i class="fa fa-flag"></i> Flag</p>
                   {% endif %}
               </a>
             </td>
@@ -102,6 +102,33 @@ Inbox
 
 <script>
 $(document).ready(function() { 
+
+  $('.flagging').on('click', function() {
+
+    var flag_id = $(this).attr('name');
+
+    req = $.ajax({
+    url : "{{url_for('mark_flag')}}",
+    type : 'POST',
+    data: JSON.stringify({flag_id:flag_id}),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: "json"
+  
+    });
+
+    req.done(function(data) {
+
+      if(data.noflag == 'noflag') {
+        $('.flagstatus' + data.flag_id).html( '<i class=' + ' "fa fa-flag"></i>' + ' Flag');
+      } else if (data.flag == 'flag') {
+        $('.flagstatus' + data.flag_id).html( '<i class=' + ' "fa fa-flag"></i>' + ' Flagged');
+      } else {
+        console.log('Kindly check for errors above.')
+      }
+         
+    });
+
+  });
 
   $('#subject').on('click', function() {
 

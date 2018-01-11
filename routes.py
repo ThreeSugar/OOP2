@@ -332,23 +332,22 @@ def mark_read(id):
 
         return redirect(url_for('inbox'))
 
-@app.route('/inbox/flag/<id>')
-def mark_flag(id):
-        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
-        inboxes = UserMail.query.filter_by(id=id).first()
+@app.route('/inbox/flag', methods=['GET', 'POST'])
+def mark_flag():
+        flag = request.get_json()
+        flag_id = flag['flag_id']
+        inboxes = UserMail.query.filter_by(id=flag_id).first()
         marker = inboxes.flag
 
         if marker == True:
             inboxes.flag = False
             db.session.commit()
-            return render_template('inbox.html', inbox=inbox, marker=marker)
+            return jsonify({'noflag' : 'noflag', 'flag_id' : inboxes.id})
 
         elif marker == False:
             inboxes.flag = True
             db.session.commit()
-            return render_template('inbox.html', inbox=inbox, marker=marker)
-
-        return render_template('inbox.html', inbox=inbox, marker=marker)
+            return jsonify({'flag' : 'flag', 'flag_id' : inboxes.id})
 
 
 @app.route('/inbox/flag/view')

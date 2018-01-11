@@ -314,23 +314,24 @@ def sortsentdesc(type):
 
 #MARK
 
-@app.route('/inbox/mark/<id>')
-def mark_read(id):
-        inbox = UserMail.query.filter_by(target=current_user.username).all()
-        inboxes = UserMail.query.filter_by(id=id).first()
+@app.route('/inbox/mark', methods=['GET', 'POST'])
+def mark_read():
+        read = request.get_json(force=True)
+        read_id = read['read_id']
+        inboxes = UserMail.query.filter_by(id=read_id).first()
         marker = inboxes.seen
 
         if marker == True:
             inboxes.seen = False
             db.session.commit()
-            return redirect(url_for('inbox'))
+            return jsonify({'noread' : 'noread', 'read_id' : inboxes.id})
 
         elif marker == False:
             inboxes.seen = True
             db.session.commit()
-            return redirect(url_for('inbox'))
+            return jsonify({'read' : 'read', 'read_id' : inboxes.id})
 
-        return redirect(url_for('inbox'))
+        
 
 @app.route('/inbox/flag', methods=['GET', 'POST'])
 def mark_flag():

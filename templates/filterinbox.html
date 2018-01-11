@@ -14,13 +14,14 @@
         
       {% if tag_read(i.id) %}
 
-      {{i.subject}}
+      <p class = "inboxsubject{{i.id}}">{{i.subject}}</p>
 
       {% else %}
-       
-      <b>{{i.subject}}</b>
+      
+      <p class = "inboxsubject{{i.id}}"><b>{{i.subject}}</b></p>
 
       {% endif %}
+  
 
     </a>
         
@@ -36,16 +37,15 @@
         </a>
       </td>
           
-        <td width = "3%">
-          <a href = "{{url_for('mark_read', id= i.id)}}">
-              <i class="fa fa-star"></i> 
-              {% if tag_read(i.id) %}
-              Mark as unread
-              {% else %}
-              Mark as read
-              {% endif %}
-          </a>
-        </td>
+      <td width = "3%">
+        <a class = "reading" name = "{{i.id}}">
+            {% if tag_read(i.id) %}
+            <p class = "readstatus{{i.id}}"><i class="fa fa-star"></i> Mark as Unread</p>
+            {% else %}
+            <p class = "readstatus{{i.id}}"><i class="fa fa-star"></i> Mark as Read</p>
+            {% endif %}
+        </a>
+      </td>
 
           <td width = "1%">
           <a data-toggle="modal" data-target="#myModal{{i.id}}">
@@ -109,6 +109,37 @@ $(document).ready(function() {
     });
 
   });
+
+
+  $('.reading').on('click', function() {
+
+    var read_id = $(this).attr('name');
+
+    req = $.ajax({
+    url : "{{url_for('mark_read')}}",
+    type : 'POST',
+    data: JSON.stringify({read_id:read_id}),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: "json"
+
+    });
+
+    req.done(function(data) {
+
+      if(data.noread == 'noread') {
+        $('.readstatus' + data.read_id).html( '<i class=' + ' "fa fa-star"></i>' + ' Mark as Read' );
+        $('.inboxsubject' + data.read_id).addClass('addbold');
+      } else if (data.read == 'read') {
+        $('.readstatus' + data.read_id).html( '<i class=' + ' "fa fa-star"></i>' + ' Mark as Unread' );
+        $('.inboxsubject' + data.read_id).removeClass('addbold');
+      } else {
+        console.log('Kindly check for errors above.')
+      }
+        
+    });
+
+  });
+
 
   $('#subject').on('click', function() {
 

@@ -566,21 +566,33 @@ def videoz(videoid):
             #flash('Invalid username or password!')
 
     vidsignup = RegisterForm()
+    signup_error = False
     
     if vidsignup.validate_on_submit():
-        new_user = User(firstname=vidsignup.firstname.data, lastname= vidsignup.lastname.data, 
-        username=vidsignup.username.data, email=vidsignup.email.data, password = vidsignup.password.data)
 
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            
-        except IntegrityError: #because of db's unique constraint 
+        registered_user = User.query.filter_by(email=vidsignup.email.data).first()
+
+        if registered_user is not None:
             signup_error = True
-        
-        login_user(new_user)
-        return redirect(url_for('videoz', videoid = vid))
 
+        else:
+            new_user = User(firstname=vidsignup.firstname.data, lastname= vidsignup.lastname.data, 
+            username=vidsignup.username.data, email=vidsignup.email.data, password = vidsignup.password.data)
+
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                login_user(new_user)
+        
+            except IntegrityError: #because of db's unique constraint 
+                error = False
+                signup_error = True
+                                
+            except:
+                error = False
+                signup_error = True
+                
+                
 
     #LIKE/DISLIKE FUNCTION
 
@@ -675,7 +687,7 @@ def videoz(videoid):
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
-                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, tviews=tviews)
+                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, signup_error=signup_error, tviews=tviews)
 
 
 

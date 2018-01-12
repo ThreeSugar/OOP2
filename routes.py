@@ -316,7 +316,7 @@ def sortsentdesc(type):
 
 @app.route('/inbox/mark', methods=['GET', 'POST'])
 def mark_read():
-        read = request.get_json(force=True)
+        read = request.get_json()
         read_id = read['read_id']
         inboxes = UserMail.query.filter_by(id=read_id).first()
         marker = inboxes.seen
@@ -565,6 +565,22 @@ def videoz(videoid):
             error = True
             #flash('Invalid username or password!')
 
+    vidsignup = RegisterForm()
+    
+    if vidsignup.validate_on_submit():
+        new_user = User(firstname=vidsignup.firstname.data, lastname= vidsignup.lastname.data, 
+        username=vidsignup.username.data, email=vidsignup.email.data, password = vidsignup.password.data)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            
+        except IntegrityError: #because of db's unique constraint 
+            signup_error = True
+        
+        login_user(new_user)
+        return redirect(url_for('videoz', videoid = vid))
+
 
     #LIKE/DISLIKE FUNCTION
 
@@ -659,7 +675,7 @@ def videoz(videoid):
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
-                            curr_save = curr_save, vidform=vidform, error=error, tviews=tviews)
+                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, tviews=tviews)
 
 
 
@@ -1012,7 +1028,6 @@ def item(item_id):
 
 @app.route('/item/<int:item_id>/add', methods=['POST'])
 def addComment(item_id):
-
     name = request.form['name']
     rating = request.form['rating']
     comment = request.form['comment']

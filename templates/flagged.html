@@ -8,6 +8,7 @@ Flagged
 
 <style>
   .dates:link, .dates:hover, .dates:active, .dates:visited { color: grey; text-decoration: none; }
+  a { cursor: pointer; }
 </style>
 
 {% endblock %}
@@ -28,6 +29,13 @@ Flagged
             <td><a href = "{{url_for('profile', username=i.sender)}}">{{i.sender}}</a></td>
             <td><a href = "{{url_for('flaggedmsg', id=i.id)}}">{{i.subject}}</a></td>
             <td width = "2%">{{i.date}}</td> 
+
+            <td width = "5%">
+              <a href = "{{url_for('removeflag', id = i.id)}}">
+                  <i class="fa fa-ban"></i> Remove 
+              </a>
+            </td>
+
           </tr>
           {% endfor %}
         </tbody>

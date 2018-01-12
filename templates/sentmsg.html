@@ -8,6 +8,7 @@ Sent
 
 <style>
   .dates:link, .dates:hover, .dates:active, .dates:visited { color: grey; text-decoration: none; }
+  a { cursor: pointer; }
 </style>
 
 {% endblock %}
@@ -28,7 +29,34 @@ Sent
             <td><a href = "{{url_for('profile', username=i.target)}}">{{i.target}}</a></td>
             <td><a href = "{{url_for('viewsent', id=i.id)}}">{{i.subject}}</a></td>
             <td>{{i.date}}</td> 
+
+            <td width = "5%">
+              <a data-toggle="modal" data-target="#myModal{{i.id}}">
+                  <i class="fa fa-trash"></i> Delete 
+              </a>
+            </td>
           </tr>
+
+          <div id="myModal{{i.id}}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+          
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Confirm Delete</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to delete this message?</p>
+                </div>
+                <div class="modal-footer">
+                  <a style = "width:80px; float:right;" type="button" class="btn btn-default" href = "{{url_for('deletesent', id=i.id)}}">Ok</a> 
+                  <button style = "width:80px; float:right; margin-right:10px;" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>   
+            </div>
+          </div>
+
           {% endfor %}
         </tbody>
 </table>

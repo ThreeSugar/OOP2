@@ -162,6 +162,22 @@ class SaveInboxState(db.Model):
     dateasc = db.Column(db.Boolean)
     datedesc = db.Column(db.Boolean)
 
+class SaveSentState(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String)
+    subjectasc = db.Column(db.Boolean)
+    subjectdesc = db.Column(db.Boolean)
+    dateasc = db.Column(db.Boolean)
+    datedesc = db.Column(db.Boolean)
+
+class SaveFlaggedState(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String)
+    subjectasc = db.Column(db.Boolean)
+    subjectdesc = db.Column(db.Boolean)
+    dateasc = db.Column(db.Boolean)
+    datedesc = db.Column(db.Boolean)
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

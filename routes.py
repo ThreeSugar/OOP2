@@ -271,23 +271,27 @@ def editprofile(id):
 @app.route('/inbox')
 def inbox():
     savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
+    inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
+
     if savestate is None:
         savestate_init = SaveInboxState(username=current_user.username, subjectasc = False, subjectdesc = False, \
         dateasc = False, datedesc = True)
         db.session.add(savestate_init)
         db.session.commit()
 
-    if savestate.subjectasc:
-        inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject asc").all()
-    
-    elif savestate.subjectdesc:
-        inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject desc").all()
-    
-    elif savestate.dateasc:
-        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
-    
-    elif savestate.datedesc:
-        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
+    else:
+
+        if savestate.subjectasc:
+            inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject asc").all()
+        
+        elif savestate.subjectdesc:
+            inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject desc").all()
+        
+        elif savestate.dateasc:
+            inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
+        
+        elif savestate.datedesc:
+            inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
 
     return render_template('inbox.html', inbox=inbox)
 
@@ -343,13 +347,49 @@ def sortdesc(type):
 def sortflagasc(type):
     flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
     .order_by(str(type) + " " + "asc").all()
+
+    sort_type = str(type)
+    savestate = SaveFlaggedState.query.filter_by(username=current_user.username).first()
+
+    if sort_type == 'date':
+        savestate.dateasc = True
+        savestate.datedesc = False
+        savestate.subjectasc = False
+        savestate.subjectdesc = False
+        db.session.commit()
+
+    elif sort_type == 'subject':
+        savestate.subjectasc = True
+        savestate.subjectdesc = False
+        savestate.dateasc = False
+        savestate.datedesc = False
+        db.session.commit()
+
     return jsonify({'flagged': render_template('_filterflag.html', flagged=flagged)}) 
 
 @app.route('/inbox/flag/sort/descending/<type>', methods=['GET', 'POST'])
 def sortflagdesc(type):
-   flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
-   .order_by(str(type) + " " + "desc").all()
-   return jsonify({'flagged': render_template('_filterflag1.html', flagged=flagged)}) 
+    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
+    .order_by(str(type) + " " + "desc").all()
+
+    sort_type = str(type)
+    savestate = SaveFlaggedState.query.filter_by(username=current_user.username).first()
+
+    if sort_type == 'date':
+        savestate.dateasc = False
+        savestate.datedesc = True
+        savestate.subjectasc = False
+        savestate.subjectdesc = False
+        db.session.commit()
+
+    elif sort_type == 'subject':
+        savestate.subjectasc = False
+        savestate.subjectdesc = True
+        savestate.dateasc = False
+        savestate.datedesc = False
+        db.session.commit()
+
+    return jsonify({'flagged': render_template('_filterflag1.html', flagged=flagged)}) 
 
 
 #SORT SENT
@@ -357,12 +397,47 @@ def sortflagdesc(type):
 @app.route('/inbox/send/sort/ascending/<type>', methods=['GET', 'POST'])
 def sortsentasc(type):
     sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "asc").all()
+
+    sort_type = str(type)
+    savestate = SaveSentState.query.filter_by(username=current_user.username).first()
+
+    if sort_type == 'date':
+        savestate.dateasc = True
+        savestate.datedesc = False
+        savestate.subjectasc = False
+        savestate.subjectdesc = False
+        db.session.commit()
+
+    elif sort_type == 'subject':
+        savestate.subjectasc = True
+        savestate.subjectdesc = False
+        savestate.dateasc = False
+        savestate.datedesc = False
+        db.session.commit()
+
     return jsonify({'sent': render_template('_filtersent.html', sent=sent)}) 
 
 @app.route('/inbox/send/sort/descending/<type>', methods=['GET', 'POST'])
 def sortsentdesc(type):
-   sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "desc").all()
-   return jsonify({'sent': render_template('_filtersent1.html', sent=sent)}) 
+    sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "desc").all()
+    sort_type = str(type)
+    savestate = SaveSentState.query.filter_by(username=current_user.username).first()
+
+    if sort_type == 'date':
+        savestate.dateasc = False
+        savestate.datedesc = True
+        savestate.subjectasc = False
+        savestate.subjectdesc = False
+        db.session.commit()
+
+    elif sort_type == 'subject':
+        savestate.subjectasc = False
+        savestate.subjectdesc = True
+        savestate.dateasc = False
+        savestate.datedesc = False
+        db.session.commit()
+
+    return jsonify({'sent': render_template('_filtersent1.html', sent=sent)}) 
 
 #MARK
 
@@ -402,11 +477,44 @@ def mark_flag():
             db.session.commit()
             return jsonify({'flag' : 'flag', 'flag_id' : inboxes.id})
 
+@app.route('/inbox/flag/remove/<id>')
+def removeflag(id):
+    selected_msg = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).filter_by(id=id).first()
+    selected_msg.flag = False
+    db.session.commit()
+    return redirect(url_for('viewflagged'))
+
+
 
 @app.route('/inbox/flag/view')
 def viewflagged():
-    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username)\
-    .order_by("date desc").all()
+    savestate = SaveFlaggedState.query.filter_by(username=current_user.username).first()
+    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("date desc").all()
+
+    if savestate is None:
+        savestate_init = SaveFlaggedState(username=current_user.username, subjectasc = False, subjectdesc = False, \
+        dateasc = False, datedesc = True)
+        db.session.add(savestate_init)
+        db.session.commit()
+
+    else:
+
+        if savestate.subjectasc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("subject asc").all()
+        
+        elif savestate.subjectdesc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("subject desc").all()
+        
+        elif savestate.dateasc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("date asc").all()
+        
+        elif savestate.datedesc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("date desc").all()
 
     return render_template('flagged.html', flagged=flagged)
 
@@ -456,7 +564,28 @@ def viewinbox(id):
 
 @app.route('/inbox/sent')
 def sentinbox():
+    savestate = SaveSentState.query.filter_by(username=current_user.username).first()
     sent = UserMail.query.filter_by(sender=current_user.username).order_by("date desc").all()
+
+    if savestate is None:
+        savestate_init = SaveSentState(username=current_user.username, subjectasc = False, subjectdesc = False, \
+        dateasc = False, datedesc = True)
+        db.session.add(savestate_init)
+        db.session.commit()
+    else:
+
+        if savestate.subjectasc:
+            sent = UserMail.query.filter_by(sender=current_user.username).order_by("subject asc").all()
+        
+        elif savestate.subjectdesc:
+            sent = UserMail.query.filter_by(sender=current_user.username).order_by("subject desc").all()
+        
+        elif savestate.dateasc:
+            sent = UserMail.query.filter_by(sender=current_user.username).order_by("date asc").all()
+        
+        elif savestate.datedesc:
+            sent = UserMail.query.filter_by(sender=current_user.username).order_by("date desc").all()
+
     return render_template('sentmsg.html', sent=sent)
 
 @app.route('/inbox/sent/view/<id>', methods=['GET', 'POST'])
@@ -480,6 +609,12 @@ def deleteinbox(id):
     db.session.commit() 
     return redirect(url_for('inbox'))
 
+@app.route('/inbox/sent/delete/<id>')
+def deletesent(id):
+    view_msg = UserMail.query.filter_by(sender=current_user.username).filter_by(id=id).first()
+    db.session.delete(view_msg)
+    db.session.commit() 
+    return redirect(url_for('sentinbox'))
 
 #VIDEO ADMIN (CRUD)
 

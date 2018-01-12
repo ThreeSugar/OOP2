@@ -259,11 +259,15 @@
     <p style="font-size:30px;">Related Videos</p>
     <hr>
     {% for r in related %}
-    <img class="related" src="{{url_for('static', filename = 'img/running.jpeg')}}">
-    <div style = "margin-left: -5px; margin-top:-2px;" class = 'container'>
-    <a style = "margin-top:1%;" href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
-    <p>Posted by: {{r.username}}</p>
-    <p>Date: {{r.date}}</p>
+
+    <div style = "display:inline-block; vertical-align:top;">
+       <img style = "height:150px;" class="related" src="{{url_for('static', filename = 'img/running.jpeg')}}">
+    </div>
+
+    <div style = "display:inline-block; margin-top: 1%;" >
+        <a href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
+        <p>Posted by: {{r.username}}</p>
+        <p>Date: {{r.date}}</p>
     </div>
     {% endfor %}
 </div>

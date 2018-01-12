@@ -270,7 +270,25 @@ def editprofile(id):
 
 @app.route('/inbox')
 def inbox():
-    inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
+    savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
+    if savestate is None:
+        savestate_init = SaveInboxState(username=current_user.username, subjectasc = False, subjectdesc = False, \
+        dateasc = False, datedesc = True)
+        db.session.add(savestate_init)
+        db.session.commit()
+
+    if savestate.subjectasc:
+        inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject asc").all()
+    
+    elif savestate.subjectdesc:
+        inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject desc").all()
+    
+    elif savestate.dateasc:
+        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
+    
+    elif savestate.datedesc:
+        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
+
     return render_template('inbox.html', inbox=inbox)
 
 #SORT INBOX
@@ -278,11 +296,45 @@ def inbox():
 @app.route('/inbox/sort/ascending/<type>', methods=['GET', 'POST'])
 def sortasc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "asc").all() # a list containing objects
+    sort_type = str(type)
+    savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
+
+    if sort_type == 'date':
+        savestate.dateasc = True
+        savestate.datedesc = False
+        savestate.subjectasc = False
+        savestate.subjectdesc = False
+        db.session.commit()
+
+    elif sort_type == 'subject':
+        savestate.subjectasc = True
+        savestate.subjectdesc = False
+        savestate.dateasc = False
+        savestate.datedesc = False
+        db.session.commit()
+    
     return jsonify({'inbox': render_template('filterinbox.html', inbox=inbox)}) 
 
 @app.route('/inbox/sort/descending/<type>', methods=['GET', 'POST'])
 def sortdesc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "desc").all()
+    sort_type = str(type)
+    savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
+
+    if sort_type == 'date':
+        savestate.dateasc = False
+        savestate.datedesc = True
+        savestate.subjectasc = False
+        savestate.subjectdesc = False
+        db.session.commit()
+
+    elif sort_type == 'subject':
+        savestate.subjectasc = False
+        savestate.subjectdesc = True
+        savestate.dateasc = False
+        savestate.datedesc = False
+        db.session.commit()
+
     return jsonify({'inbox': render_template('filterinbox1.html', inbox=inbox)}) 
 
 #SORT FLAGGED

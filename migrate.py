@@ -141,7 +141,6 @@ class Comments(db.Model):
     rating = db.Column(db.Integer)
     comment = db.Column(db.Text)
 
-
 class FitnessGen(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     genid = db.Column(db.Integer)
@@ -154,6 +153,14 @@ class FitnessLib(db.Model):
     title = db.Column(db.String)
     desc = db.Column(db.String)
     vidlink = db.Column(db.String)
+
+class SaveInboxState(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String)
+    subjectasc = db.Column(db.Boolean)
+    subjectdesc = db.Column(db.Boolean)
+    dateasc = db.Column(db.Boolean)
+    datedesc = db.Column(db.Boolean)
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

@@ -221,6 +221,13 @@ class UserMail(db.Model):
     flag = db.Column(db.Boolean)
     date = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
+class SaveInboxState(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String)
+    subjectasc = db.Column(db.Boolean)
+    subjectdesc = db.Column(db.Boolean)
+    dateasc = db.Column(db.Boolean)
+    datedesc = db.Column(db.Boolean)
 
 class SendMessage(FlaskForm):
     to = StringField('To', validators=[InputRequired(), Length(min=4, max=90)])

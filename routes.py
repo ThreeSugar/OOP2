@@ -552,6 +552,7 @@ def videoz(videoid):
     comms = VideoComment.query.filter_by(videoid = vid).all() #videoid and id are two very different columns
 
     error = False
+    signup_error = False
 
     #CUSTOM LOGIN TO REDIRECT BACK TO VIDEO
 
@@ -563,16 +564,16 @@ def videoz(videoid):
                 return redirect(url_for('videoz', videoid = vid))
         else:
             error = True
-            #flash('Invalid username or password!')
+            signup_error = False
 
     vidsignup = RegisterForm()
-    signup_error = False
-    
+   
     if vidsignup.validate_on_submit():
 
         registered_user = User.query.filter_by(email=vidsignup.email.data).first()
 
         if registered_user is not None:
+            error = False
             signup_error = True
 
         else:

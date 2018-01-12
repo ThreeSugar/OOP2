@@ -287,7 +287,7 @@ def inbox():
         inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
     
     elif savestate.datedesc:
-        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
+        inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
 
     return render_template('inbox.html', inbox=inbox)
 

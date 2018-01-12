@@ -173,7 +173,7 @@ def login():
         if user is not None and user.check_password(form.password.data):
                 login_user(user)
                 return redirect(url_for('dashboard'))
-        else:
+        else: 
             flash('Invalid username or password!')
             return render_template('login.html', form=form)
 
@@ -591,9 +591,7 @@ def videoz(videoid):
             except:
                 error = False
                 signup_error = True
-                
-                
-
+            
     #LIKE/DISLIKE FUNCTION
 
     likes = []

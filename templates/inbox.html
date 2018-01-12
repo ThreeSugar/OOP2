@@ -30,7 +30,7 @@ Inbox
             <td><a href = "{{url_for('profile', username = i.sender)}}">{{i.sender}}</a></td>
             <td><a href = "{{url_for('viewinbox', id=i.id)}}">
               
-            {% if tag_read(i.id) %}
+            {% if tag_read(i.id) %} 
 
             <p class = "inboxsubject{{i.id}}">{{i.subject}}</p>
       

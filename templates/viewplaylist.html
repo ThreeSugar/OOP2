@@ -37,11 +37,15 @@ Playlists
 {% endblock %} 
 
 {% block dashboard %}
-<a>
+<a class = "pull-right">
     <p style="font-size:15px;">
         <i class="fa fa-plus-square" aria-hidden="true"></i> Create New Playlist
     </p>
 </a>
+
+<div>
+    <img style = "height:100px; width:150px;" src = "{{url_for('static', filename = 'img/sport2.jpg')}}">
+</div>
 
 <p>Hello.</p>
 

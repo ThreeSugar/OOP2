@@ -31,7 +31,7 @@ Flagged
             <td width = "2%">{{i.date}}</td> 
 
             <td width = "5%">
-              <a href = "{{url_for('removeflag', id = i.id)}}">
+              <a name = "{{i.id}}" class = "removeflag">
                   <i class="fa fa-ban"></i> Remove 
               </a>
             </td>
@@ -78,6 +78,26 @@ $(document).ready(function() {
     });
     
   });
+
+  $('.removeflag').on('click', function() {
+
+    var flag_id = $(this).attr('name');
+
+    req = $.ajax({
+    url : "{{url_for('removeflag')}}",
+    type : 'POST',
+    data: JSON.stringify({flag_id:flag_id}),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: "json"
+
+  });
+
+    req.done(function(data) {
+          $('.table').empty();
+          $('.table').append(data.removeflag);
+  });
+
+});
 
 });
 

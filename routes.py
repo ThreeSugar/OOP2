@@ -477,14 +477,44 @@ def mark_flag():
             db.session.commit()
             return jsonify({'flag' : 'flag', 'flag_id' : inboxes.id})
 
-@app.route('/inbox/flag/remove/<id>')
-def removeflag(id):
-    selected_msg = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).filter_by(id=id).first()
+@app.route('/inbox/flag/remove', methods=['GET', 'POST'])
+def removeflag():
+    flag = request.get_json()
+    flag_id = flag['flag_id']
+    selected_msg = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).filter_by(id=flag_id).first()
     selected_msg.flag = False
     db.session.commit()
-    return redirect(url_for('viewflagged'))
 
+    flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("date desc").all()
 
+    savestate = SaveSentState.query.filter_by(username=current_user.username).first()
+
+    if savestate is None:
+        savestate_init = SaveFlaggedState(username=current_user.username, subjectasc = False, subjectdesc = False, \
+        dateasc = False, datedesc = True)
+        db.session.add(savestate_init)
+        db.session.commit()
+
+    else:
+
+        if savestate.subjectasc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("subject asc").all()
+        
+        elif savestate.subjectdesc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("subject desc").all()
+        
+        elif savestate.dateasc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("date asc").all()
+        
+        elif savestate.datedesc:
+            flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
+            order_by("date desc").all()
+
+    return jsonify({'removeflag' : render_template('_removeflag.html', flagged=flagged)})
 
 @app.route('/inbox/flag/view')
 def viewflagged():

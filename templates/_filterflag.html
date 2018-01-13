@@ -1,65 +1,98 @@
 <thead>
-    <tr>
-      <th width="5%"> <a class = "dates" href = "#"> From </a></th>
-      <th width="15%"><a id = "subject" class = "dates" href = "#"> Subject </a></th>
-      <th width="15%"><a id = "date" class = "dates" href = "#"> Date </a></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for i in flagged %}
-    <tr>
-      <td><a href = "{{url_for('profile', username=i.sender)}}">{{i.sender}}</a></td>
-      <td><a href = "{{url_for('flaggedmsg', id=i.id)}}">{{i.subject}}</a></td>
-      <td width = "2%">{{i.date}}</td> 
+  <tr>
+    <th width="5%">
+      <a class="dates" href="#"> From </a>
+    </th>
+    <th width="15%">
+      <a id="subject" class="dates" href="#"> Subject </a>
+    </th>
+    <th width="15%">
+      <a id="date" class="dates" href="#"> Date </a>
+    </th>
+  </tr>
+</thead>
+<tbody>
+  {% for i in flagged %}
+  <tr>
+    <td>
+      <a href="{{url_for('profile', username=i.sender)}}">{{i.sender}}</a>
+    </td>
+    <td>
+      <a href="{{url_for('flaggedmsg', id=i.id)}}">{{i.subject}}</a>
+    </td>
+    <td width="2%">{{i.date}}</td>
 
-      <td width = "5%">
-          <a href = "{{url_for('removeflag', id = i.id)}}">
-              <i class="fa fa-ban"></i> Remove 
-          </a>
-      </td>
+    <td width="5%">
+      <a name="{{i.id}}" class="removeflag">
+        <i class="fa fa-ban"></i> Remove
+      </a>
+    </td>
 
-    </tr>
-    {% endfor %}
+  </tr>
+  {% endfor %}
 </tbody>
 
 {% block script %}
 <script>
-    $(document).ready(function() { 
-    
-      $('#subject').on('click', function() {
-    
-        req = $.ajax({
-        url : "{{url_for('sortflagdesc', type = 'subject')}}",
-        type : 'POST',
-      
-        });
-    
-        req.done(function(data) {
-              $('.table').empty();
-              $('.table').append(data.flagged);
-        });
-        
+  $(document).ready(function () {
+
+    $('#subject').on('click', function () {
+
+      req = $.ajax({
+        url: "{{url_for('sortflagdesc', type = 'subject')}}",
+        type: 'POST',
+
       });
-    
-    
-      $('#date').on('click', function() {
-    
-        req = $.ajax({
-        url : "{{url_for('sortflagdesc', type = 'date')}}",
-        type : 'POST',
-      
-        });
-    
-        req.done(function(data) {
-              $('.table').empty();
-              $('.table').append(data.flagged);
-        });
-        
+
+      req.done(function (data) {
+        $('.table').empty();
+        $('.table').append(data.flagged);
       });
-    
+
     });
-    
-    </script>
-    
+
+
+    $('#date').on('click', function () {
+
+      req = $.ajax({
+        url: "{{url_for('sortflagdesc', type = 'date')}}",
+        type: 'POST',
+
+      });
+
+      req.done(function (data) {
+        $('.table').empty();
+        $('.table').append(data.flagged);
+      });
+
+    });
+
+    $('.removeflag').on('click', function () {
+
+      var flag_id = $(this).attr('name');
+
+      req = $.ajax({
+        url: "{{url_for('removeflag')}}",
+        type: 'POST',
+        data: JSON.stringify({
+          flag_id: flag_id
+        }),
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json"
+
+      });
+
+      req.done(function (data) {
+        $('.table').empty();
+        $('.table').append(data.removeflag);
+      });
+
+    });
+
+
+
+
+  });
+</script>
+
 {% endblock %}
-    

@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
-{% block title %} Lifestyle28 | ShopAdmin {% endblock %}
+{% block title %} Lifestyle28 | OrdersAdmin {% endblock %}
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 * {
@@ -10,122 +11,85 @@
 .main-section{
 	padding:20px 0 110px;
 }
-.admin-add{
-    width: 90%;
-    {#border: 1px solid rgba(0, 0, 0, 0.2);#}
-    margin: 20px auto;
-    {#padding: 10px;#}
-}
 .table{
-    width: 90%;
+    width: 79%;
     margin: 20px auto;
     margin-bottom: 50px;
+    margin-top: 0px;
 }
-.form-style-9 ul{
-    padding:0;
-    margin:0;
-    list-style:none;
+.orderadmin{
+    width: 90%;
+    margin: 20px auto;
 }
-.form-style-9 ul li{
-    display: block;
+.order-button{
+    width: 80%;
+    outline: 1px solid black;
+    margin: 0 auto;
+    padding: 20px;
     margin-bottom: 10px;
-    min-height: 35px;
 }
-.form-style-9 ul li  .field-style {
+.order-button:hover {
+    cursor:pointer;
+    {#background-color: ghostwhite;#}
+    box-shadow: 0 16px 16px 0 rgba(0,0,0,0.2);
+}
+.orderid{
+    display: inline-block;
+    margin-right: 50px;
+}
+.filtermenu{
+    width: 80%;
+    margin: 10px auto;
+    padding: 20px;
+}
+.menuid{
+    display: inline-block;
+    margin-right: 40px;
+    padding: 10px;
+    {#border: 1px solid black;#}
+    {#border-bottom-style: solid;#}
+    {#border-color: grey;#}
+}
+.menuid:hover{
+    border-bottom-style: solid;
+    border-color: grey;
+    {#box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2);#}
+}
+input[type=text] {
+    margin-right: 40px;
+    width: 130px;
     box-sizing: border-box;
-    padding: 8px;
-    outline: none;
-    border:1px solid rgba(0, 0, 0, 0.2);
-    {#border: 1px solid #B0CFE0;#}
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    padding: 8px 10px 8px 10px;
 }
-.form-style-9 ul li  .field-style:focus{
-    box-shadow: 0 0 5px black;
-}
-.form-style-9 ul li .field-split{
-    width: 49%;
-}
-.form-style-9 ul li .field-split-2{
-    width: 24%;
-}
-.form-style-9 ul li .field-full{
-    width: 100%;
-}
-.form-style-9 ul li input.align-left{
-    float:left;
-}
-.form-style-9 ul li input.align-right{
-    float:right;
-}
-.form-style-9 ul li textarea{
-    width: 100%;
-    height: 100px;
-}
-.Submit{
-    {#width: 100px;#}
-    float: right;
-    width: 100%;
-    margin: 0;
-    color: white;
-    background-color: grey;
-}
-.Submit:hover {
-    color: white;
-    background-color: dimgrey;
-}
-.category{
-    border: 1px solid #ccc;
-    font-size: 14px;
-    height: 40px;
-}
-.Delete{
-    margin: 0;
-    padding: 0;
-    width: 20px;
+.menuid a{
+    color: black;
+    text-decoration-line: none;
 }
 </style>
 
-{#<div class="admin-add">#}
-{#    <h2>Admin Orders</h2>#}
-{#    <form name="additemForm" id="additemForm" class="form-style-9" method="POST" enctype="multipart/form-data" action="{{ url_for('addItem') }}">#}
-{#    <form id="form-items" class="form-style-9" enctype="multipart/form-data">#}
-{#        <ul>#}
-{#            <li>#}
-{#                <input type="text" id="name" class="field-style field-split align-left" placeholder="Name" required/>#}
-{#                <input type="text" id="info" class="field-style field-split align-right" placeholder="Info" required/>#}
-{#            </li>#}
-{#            <li>#}
-{#                <input type="number" id="price" class="field-style field-split-2 align-left" placeholder="Price" required/>#}
-{#                <input type="number" id="quantity" class="field-style field-split-2 align-left" style="margin-left: 13px" placeholder="Quantity" required/>#}
-{#                <input type="number" id="calories" class="field-style field-split align-right" placeholder="Calories" required/>#}
-{#            </li>#}
-{#            <li>#}
-{#                <select id="category" class="field-style field-split align-left category" required>#}
-{#                    <option value="Others">Others</option>#}
-{#                    <option value="Meat & Seafood">Meat & Seafood</option>#}
-{#                    <option value="Fruit & Veg">Fruit & Veg</option>#}
-{#                    <option value="Frozen">Frozen</option>#}
-{#                    <option value="Dairy">Dairy</option>#}
-{#                    <option value="Bakery">Bakery</option>#}
-{#                    <option value="Beverages">Beverages</option>#}
-{#                </select>#}
-{#                <input type="file" id="image" class="field-style field-split align-right" required>#}
-{#            </li>#}
-{#            <li>#}
-{#                <textarea id="description" class="field-style" placeholder="Description" required></textarea>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a class="btn Submit">ADD ITEM</a>#}
-{#            </li>#}
-{#            <li style="height: 50px">#}
-{#                <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>#}
-{#                <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>#}
-{#                <div id="deleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>#}
-{#            </li>#}
-{#        </ul>#}
-{#    </form>#}
-{#</div>#}
+<div class="orderadmin">
+    <h2>Admin Orders</h2>
+</div>
+<div class="filtermenu">
+    <input type="text" name="search" placeholder="USER ID" >
+    <h3 class="menuid"><a href="">Date</a></h3>
+    <h3 class="menuid"><a href="">Delivery Status</a></h3>
+</div>
+{% for i in group %}
 <div>
-    <table class="table table-bordered table-striped table-hover">
+    <div class="order-button">
+        <h3 class="orderid">User ID: {{ i[0].user_id }}</h3>
+        <h3 class="orderid">Order ID: {{ i[0].order_id }}</h3>
+        <h3 class="orderid">Qty: {{ i[0].items_quantity }}</h3>
+        <h3 class="orderid">Date: {{ i[0].date.strftime("%y-%m-%d") }}</h3>
+        <h3 class="orderid">Status: <a href='{{ url_for('deliver', group_id=i[0].order_id) }}'>{{ i[0].delivered }}</a></h3>
+        <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
+    </div>
+    <table class="table table-bordered table-striped table-hover order-info" style="display: none">
         <thead>
             <tr>
                 <th>#</th>
@@ -139,23 +103,27 @@
                 <th>Delivered</th>
             </tr>
         </thead>
+{#        {% for x in group %}#}
         <tbody id="admin-items">
-            {% for o in orders %}
+            {% for z in i %}
             <tr>
-                <td>{{ o.id}}</td>
-                <td>{{ o.order_id }}</td>
-                <td>{{ o.user_id }}</td>
-                <td>{{ o.item_id }}</td>
-                <td>{{ o.name }}</td>
-                <td>{{ o.quantity }}</td>
-                <td>{{ o.price }}</td>
-                <td>{{ o.date }}</td>
-                <td>{{ o.delivered }}</td>
+                <td>{{ z.id}}</td>
+                <td>{{ z.order_id }}</td>
+                <td>{{ z.user_id }}</td>
+                <td>{{ z.item_id }}</td>
+                <td>{{ z.name }}</td>
+                <td>{{ z.quantity }}</td>
+                <td>{{ z.price }}</td>
+                <td>{{ z.date }}</td>
+                <td>{{ z.delivered }}</td>
             </tr>
             {% endfor %}
         </tbody>
+{#        {% endfor %}#}
     </table>
+
 </div>
+{% endfor %}
 <script>
 $(document).ready( function() {
     $(document).on('click', '.Delete', function(){
@@ -218,6 +186,11 @@ $(document).ready( function() {
             $('#successAlert').fadeIn(1000).fadeOut(1000);
         }
 
+    });
+    $(document).ready(function(){
+        $(".order-button").click(function(){
+            $(".order-info").toggle();
+        });
     });
 });
 </script>

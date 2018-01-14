@@ -5,7 +5,7 @@ import os
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql import select, func
+from sqlalchemy.sql import select, func, or_, and_, between
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
@@ -1043,11 +1043,10 @@ def checkout():
         for c in cart:
             checkout = Orders(order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
                               items_quantity=cart_count, price=c.price,
-                              subtotal=c.subtotal, date=date, delivered=False)
+                              subtotal=c.subtotal, date=date, delivered="Not Delivered")
             db.session.add(checkout)
             db.session.delete(c)
             db.session.commit()
-
     else:
         # total items in orders
         count = 0
@@ -1069,18 +1068,12 @@ def checkout():
 
         for c in cart:
             checkout = Orders(order_id=qty, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=cart_count, price=c.price,
-                              subtotal=c.subtotal, date=date, delivered=False)
+                              subtotal=c.subtotal, date=date, delivered="Not Delivered")
             db.session.add(checkout)
             db.session.delete(c)
             db.session.commit()
 
-
-
     return redirect(url_for('shop'))
-
-@app.route('/delivery')
-def delivery():
-    return redirect(url_for(''))
 
 #ITEM PAGE
 @app.route('/item/<int:item_id>')
@@ -1099,7 +1092,7 @@ def shop_recipe():
 
 @app.route('/item/<int:item_id>/add', methods=['POST'])
 @login_required
-def addComment( item_id):
+def addComment(item_id):
 
     rating = request.form['rating']
     comment = request.form['comment']
@@ -1164,8 +1157,53 @@ def shopadmin():
 
 @app.route('/ordersadmin')
 def ordersadmin():
-    orders = Orders.query.all()
-    return render_template("raymond/ordersadmin.html", orders=orders)
+
+    #check if user id is same, then check if order id is same
+
+    #get max userid
+    max_userid = db.session.query(db.func.max(Orders.user_id)).scalar()
+    max_orderid = db.session.query(db.func.max(Orders.order_id)).scalar()
+    max_id = db.session.query(db.func.max(Orders.id)).scalar()
+
+    list = [] #[[4,1],[4,2]]
+    group = [] #[[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+    for i in range(max_orderid+1):
+        o = Orders.query.filter(Orders.order_id == i).first()
+        if o:
+            o_userid = o.user_id
+            o_orderid = o.order_id
+            list.append([o_userid,o_orderid])
+
+    for i in list:
+        q_userid = Orders.query.filter(and_(Orders.user_id==i[0], Orders.order_id==i[1])).all()
+        group.append(q_userid)
+
+    #check if userid not in orders
+    #if not, new orderid = 1
+    #else retrieve latest userid latest entry
+    #select row with orderid
+    #orderid+=1
+
+
+    # return str(group)
+
+    # pass
+    return render_template("raymond/ordersadmin.html", group=group, list=list)
+
+@app.route('/deliver/<group_id>')
+def deliver(group_id):
+    max_orderid = db.session.query(db.func.max(Orders.order_id)).scalar()
+
+    # oid = group_id.order_id
+    query_gid = Orders.query.filter(Orders.order_id==group_id).all()
+    for i in query_gid:
+        i.delivered = 'Ongoing Delivery'
+        db.session.commit()
+
+
+    return render_template("raymond/ordersadmin.html")
+    # return str(group_id)
 
 #
 # #CYNTHIA
@@ -1237,5 +1275,5 @@ if __name__ == '__main__':
     def load_user(uid):
         return User.query.get(int(uid))
 
-    # app.run(debug=True)
-    app.run(port='80')
+    app.run(debug=True)
+    # app.run(port='80')

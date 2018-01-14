@@ -156,7 +156,7 @@ class Orders(db.Model):
     price = db.Column(db.Float)
     subtotal = db.Column(db.Float)
     date = db.Column(db.DateTime)
-    delivered = db.Column(db.Boolean)
+    delivered = db.Column(db.String)
 
 
 class Comments(db.Model):

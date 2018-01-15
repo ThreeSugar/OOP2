@@ -190,6 +190,10 @@ Lifestyle28 | Dashboard
                 </div>
             </div>
             <div class="col-md-10 content">
+
+                    {% block flash %}
+                    {% endblock %}
+
                 {% block greybar %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -198,6 +202,8 @@ Lifestyle28 | Dashboard
                         {% endblock %}
                     </div>
                 {% endblock %}
+
+                
 
                     {% block dashboard %}
 

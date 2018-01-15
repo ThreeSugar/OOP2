@@ -158,7 +158,8 @@ def index(): #did not use wtforms for this because wtforms might accidentally br
         msg.html = 'From: {} ({}) <br> <br> Subject: {} <br> <br> Message: {}'.format(request.form['name'], 
         request.form['email'], request.form['subject'], request.form['message'])
         mail.send(msg)
-        return render_template('index.html', success=True, show = True)
+        flash('Thank you for your feedback!')
+        return redirect(url_for('index'))
 
     return render_template('index.html')
 
@@ -170,12 +171,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user is not None and user.check_password(form.password.data):
+        if user is not None and user.check_password(form.password.data): #SHA256 hashed 50,000 times
                 login_user(user)
                 return redirect(url_for('dashboard'))
         else: 
             flash('Invalid username or password!')
-            return render_template('login.html', form=form)
+            return redirect(url_for('login'))
 
     return render_template('login.html', form=form)
 
@@ -197,7 +198,7 @@ def signup():
 
         except IntegrityError: #because of db's unique constraint
             flash('Email or Username has already been taken!')
-            return render_template('signup.html', form = form)
+            return redirect(url_for('signup'))
 
         return redirect(url_for('login'))
 
@@ -558,7 +559,8 @@ def flaggedmsg(id):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
+        flash("Your message was successfully sent.", 'success')
         return redirect(url_for('inbox'))
 
     return render_template('replyflagged.html', view_msg=view_msg, form=form)
@@ -570,9 +572,16 @@ def send():
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False, flag=False)
-        db.session.add(new_msg)
-        db.session.commit()
-        return redirect(url_for('inbox'))
+        vaild_user = User.query.filter_by(username=form.to.data).first()
+        if vaild_user:
+            db.session.add(new_msg)
+            db.session.commit()
+            flash("Your message was successfully sent.", 'success')
+            return redirect(url_for('inbox'))
+        else:
+            flash("This user does not exist.", 'error')
+            return redirect(url_for('inbox'))
+
 
     return render_template('send.html', form=form)
 
@@ -587,7 +596,8 @@ def viewinbox(id):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
+        flash("Your message was successfully sent.", 'success')
         return redirect(url_for('inbox'))
 
     return render_template('message.html', view_msg=view_msg, form=form)
@@ -627,7 +637,8 @@ def viewsent(id):
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
         message=form.message.data, seen=False)
         db.session.add(new_msg)
-        db.session.commit() 
+        db.session.commit()
+        flash("Your message was successfully sent.", 'success')
         return redirect(url_for('inbox'))
 
     return render_template('sendmessage.html', view_msg=view_msg, form=form)
@@ -670,7 +681,7 @@ def videdit(id):
         video.description = form.desc.data
         video.category = form.options.data
         db.session.commit()
-        #flash('Video successfully edited!')
+        flash('Video successfully edited!')
         return redirect(url_for('vidmanage')) #render template will cause a 'function not iterable error'
 
     return render_template('videdit.html', form = form)
@@ -682,8 +693,7 @@ def viddelete(id):
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
-    delete = True
-    #flash('You have successfully deleted the video.')
+    flash('Video successfully deleted!')
     return redirect(url_for('vidmanage'))
 
 @app.route('/dashboard/video/upload', methods=['GET', 'POST'])

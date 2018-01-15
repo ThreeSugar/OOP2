@@ -23,17 +23,6 @@ Lifestyle28 | Dashboard
 
 {% block dashboard %}
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-{% for message in messages %}
-<div class = "alert alert-warning alert-dismissible">
-    {{message}}
-</div>         
-{% endfor %}
-{% endif %}
-{% endwith %}
-
-
 
 
 <form style = "padding:15px;" method = "POST">

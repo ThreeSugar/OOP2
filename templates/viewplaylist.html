@@ -1,10 +1,4 @@
-{% extends 'dashboard.html' %} 
-
-{% block dashtitle %} 
-Playlists 
-{% endblock %} 
-
-{% block style %}
+{% extends 'dashboard.html' %} {% block dashtitle %} Playlists {% endblock %} {% block style %}
 
 <style>
     .title-small:hover,
@@ -34,19 +28,47 @@ Playlists
     }
 </style>
 
-{% endblock %} 
-
-{% block dashboard %}
-<a class = "pull-right">
+{% endblock %} {% block dashboard %}
+<a class="pull-right">
     <p style="font-size:15px;">
         <i class="fa fa-plus-square" aria-hidden="true"></i> Create New Playlist
     </p>
 </a>
 
-<div>
-    <img style = "height:100px; width:150px;" src = "{{url_for('static', filename = 'img/sport2.jpg')}}">
+<div style = "padding:10px;" class="row" >
+    <div class="col-md-2" style="display:inline-block; ">
+        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+    </div>
+
+    <div class="col-md-2" style="display:inline-block; ">
+        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+    </div>
 </div>
 
-<p>Hello.</p>
+<div style = "padding:10px;" class="row" >
+
+    <div class="col-md-2" style="display:inline-block; ">
+        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+    </div>
+
+
+    <div class="col-md-2" style="display:inline-block;">
+        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+    </div>
+
+</div>
+
+<div style = "padding:10px;" class="row" >
+
+        <div class="col-md-2" style="display:inline-block; ">
+            <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+        </div>
+    
+    
+        
+    
+    </div>
+
+
 
 {% endblock %}

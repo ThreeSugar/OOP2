@@ -27,7 +27,9 @@
         cursor: pointer;
     }
 
-    
+    .row{
+        width:100%;
+    }
 
 
 </style>
@@ -35,45 +37,38 @@
 {% endblock %} 
 
 {% block dashboard %}
-<a style = "color:black; margin-right:10px; margin-top: 5px; width:250px;" class=" pull-right btn btn-default">
+<div class = "container">
+<a style = "color:black; margin-top: 10px; margin-left: 700px; width:250px;" class="btn btn-default">
     <p style="font-size:15px;">
         <i class="fa fa-plus-square" aria-hidden="true"></i> Create New Playlist
     </p>
 </a>
-
-<div style = "padding:10px;" class="row" >
-    <div class="col-md-2" style="display:inline-block; ">
-        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
-    </div>
-
-    <div class="col-md-2" style="display:inline-block; ">
-        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
-    </div>
 </div>
 
-<div style = "padding:10px;" class="row" >
+<div class = "container">
+    <div class = "row">
+            <div class="col-md-6">
+                <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+                <p>title</p>
+            </div>
 
-    <div class="col-md-2" style="display:inline-block; ">
-        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+            <div class="col-md-6">
+                <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+                <p>title</p>
+            </div>
+
+            <div class="col-md-6">
+                <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+                <p>title</p>
+           </div>
+
+
+           <div class="col-md-6">
+                <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+                <p>title</p>
+           </div>
     </div>
-
-
-    <div class="col-md-2" style="display:inline-block;">
-        <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
-    </div>
-
 </div>
-
-<div style = "padding:10px;" class="row" >
-
-        <div class="col-md-2" style="display:inline-block; ">
-            <img style="height:100px; width:150px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
-        </div>
-    
-    
-        
-    
-    </div>
 
 
 

@@ -1117,6 +1117,14 @@ def viewplaylist():
 
     return render_template('viewplaylist.html', form=form, playlist=playlist)
 
+@app.route('/dashboard/playlist/delete/<id>')
+def deleteplaylist(id):
+    selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
+    db.session.delete(selected_playlist)
+    db.session.commit()
+    return redirect(url_for('viewplaylist'))
+
+
 
 # @app.route('/fitness/<type>')
 # def fitresults(type):

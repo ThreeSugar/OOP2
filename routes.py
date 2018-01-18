@@ -729,20 +729,6 @@ def upload():
     return render_template('dashvid.html', form=form)     
 
 
-#SAVED VIDEO PLAYLIST
-@app.route('/dashboard/savedvideo')
-def savedvideo():
-    return render_template('savedvideo.html')
-
-@app.route('/dashboard/savedvideo/view')
-def viewsavedvideo():
-    saved = VideoSaved.query.filter_by(savedname = current_user.username).all()
-    return render_template('viewsavedvid.html', saved=saved)
-
-@app.route('/dashboard/playlist/view')
-def viewplaylist():
-    return render_template('viewplaylist.html')
-
 
 #VIDEO
 
@@ -1105,6 +1091,33 @@ def libload(title):
     lib_type = lib_answer.category
     result = FitnessLib.query.filter_by(category = lib_type).all()
     return render_template('libvidload.html', result=result, lib_answer=lib_answer)
+
+
+#SAVED VIDEO PLAYLIST
+@app.route('/dashboard/savedvideo')
+def savedvideo():
+    return render_template('savedvideo.html')
+
+@app.route('/dashboard/savedvideo/view')
+def viewsavedvideo():
+    saved = VideoSaved.query.filter_by(savedname = current_user.username).all()
+    return render_template('viewsavedvid.html', saved=saved)
+
+@app.route('/dashboard/playlist/view', methods=['GET', 'POST'])
+def viewplaylist():
+    playlist = FitnessPlaylist.query.all()
+
+    form = NewPlaylist()
+    if form.validate_on_submit():
+        new_playlist = FitnessPlaylist(title = form.title.data, desc = form.desc.data)
+        db.session.add(new_playlist)
+        db.session.commit()
+        return redirect(url_for('viewplaylist'))
+
+    # else:
+    #     flash('There was an error in processing your request, please try again.')
+
+    return render_template('viewplaylist.html', form=form, playlist=playlist)
 
 
 # @app.route('/fitness/<type>')

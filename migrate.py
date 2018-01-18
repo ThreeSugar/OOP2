@@ -178,6 +178,11 @@ class SaveFlaggedState(db.Model):
     dateasc = db.Column(db.Boolean)
     datedesc = db.Column(db.Boolean)
 
+class FitnessPlaylist(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String)
+    desc = db.Column(db.String)
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 

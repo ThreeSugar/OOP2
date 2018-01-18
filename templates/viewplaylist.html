@@ -46,7 +46,7 @@
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-danger alert-dismissible" role="alert">
+        <div class="alert alert-success alert-dismissible" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
             {{message}}
         </div>
@@ -102,6 +102,7 @@
 
             <div class="col-md-6">
                 <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <p>{{p.title}}</p>
                 <p>{{p.desc}}</p>
             </div>

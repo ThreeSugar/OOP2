@@ -1112,10 +1112,8 @@ def viewplaylist():
         new_playlist = FitnessPlaylist(title = form.title.data, desc = form.desc.data)
         db.session.add(new_playlist)
         db.session.commit()
+        flash('Playlist successfully created.')
         return redirect(url_for('viewplaylist'))
-
-    # else:
-    #     flash('There was an error in processing your request, please try again.')
 
     return render_template('viewplaylist.html', form=form, playlist=playlist)
 

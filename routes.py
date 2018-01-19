@@ -1128,6 +1128,18 @@ def deleteplaylist(id):
 def playlist_vid():
     return render_template('viewplaylistvid.html')
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    answer = request.get_json()
+    print(answer)
+    answer1 = answer['value']
+    print(answer1)
+    number = 0
+    for i in answer1:
+        print(answer1[number])
+        number += 1
+    return 'success'
+
 
 # @app.route('/fitness/<type>')
 # def fitresults(type):

@@ -31,15 +31,15 @@ Videos
     </div>
     <ul id = "searchlist" class="list-group list-group-flush">
       
-        <li id='item-1' class="list-group-item">
+        <li id='1' class="list-group-item">
            <a href = "#">r.title</a> 
         </li>
         
-        <li id='item-2' class="list-group-item">
+        <li id='2' class="list-group-item">
             <a href = "#">r.title1</a> 
          </li>       
 
-         <li id='item-3' class="list-group-item">
+         <li id='3' class="list-group-item">
             <a href = "#">r.title2</a> 
          </li>       
     </ul>
@@ -60,15 +60,17 @@ $( function(){
     $('#searchlist').sortable({
         axis: 'y',
         update: function (event, ui) {
-            var data = $(this).sortable('toArray');
-            console.log(data);
+            var value = $(this).sortable('toArray' );
+            console.log(value);
     
             // POST to server using $.post or $.ajax
-            // $.ajax({
-            //     data: data,
-            //     type: 'POST',
-            //     url: '/your/url/here'
-            // });
+            $.ajax({
+                type: 'POST',
+                url: "{{url_for('test')}}",
+                data: JSON.stringify({value:value}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+            });
         }
     });
   });

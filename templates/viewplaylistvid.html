@@ -1,0 +1,76 @@
+{% extends 'dashboard.html' %} 
+
+
+{% block style %}
+
+<style>
+
+
+
+   .card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #f7f7f9;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+   }
+
+
+
+</style>
+
+{% endblock %} 
+
+
+
+{% block dashboard %}
+
+<div style="margin-bottom: -40px;">
+    <a href = "#" style="width:180px; margin-left:5px; margin-top: 20px; color:black; " class="btn btn-secondary">Return to Selections</a>
+</div>
+
+
+<div style = "width:250px;" class="input-group">
+    <input id = "searchinput" onkeyup="search()" style = "margin-left:10px; margin-top:-5px;" class="form-control"
+                placeholder="Search here">
+</div>
+
+<div class="card" style="width: 300px; margin-top:20px; margin-left:20px;">
+    <div class="card-header">
+       Featured
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Cras justo odio</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+   function search() {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('searchinput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("searchlist");
+    li = ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+{% endblock %}

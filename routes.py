@@ -1124,6 +1124,9 @@ def deleteplaylist(id):
     db.session.commit()
     return redirect(url_for('viewplaylist'))
 
+@app.route('/dashboard/playlist/viewvideo')
+def playlist_vid():
+    return render_template('viewplaylistvid.html')
 
 
 # @app.route('/fitness/<type>')

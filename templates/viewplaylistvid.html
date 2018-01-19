@@ -1,58 +1,75 @@
-{% extends 'dashboard.html' %} 
+{% extends 'vidlayout.html' %}
 
-
-{% block style %}
-
-<style>
-
-
-
-   .card-header {
-    padding: .75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: #f7f7f9;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-   }
-
-
-
-</style>
-
+{% block title %}
+Videos
 {% endblock %} 
 
 
 
-{% block dashboard %}
+
+{% block content %}
 
 <div style="margin-bottom: -40px;">
     <a href = "#" style="width:180px; margin-left:5px; margin-top: 20px; color:black; " class="btn btn-secondary">Return to Selections</a>
 </div>
 
 
-<div style = "width:250px;" class="input-group">
+<div class="input-group">
     <input id = "searchinput" onkeyup="search()" style = "margin-left:10px; margin-top:-5px;" class="form-control"
                 placeholder="Search here">
+    <div style = "margin-top:-5px;" class="input-group-addon" ><i style = "margin-left:5px;" class="fa fa-search"></i></div>
 </div>
 
-<div class="card" style="width: 300px; margin-top:20px; margin-left:20px;">
+
+<div style = "margin-left:10px;" class="card playlist">
     <div class="card-header">
-       Featured
+      Library
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Vestibulum at eros</li>
+    <ul id = "searchlist" class="list-group list-group-flush">
+      
+        <li id='item-1' class="list-group-item">
+           <a href = "#">r.title</a> 
+        </li>
+        
+        <li id='item-2' class="list-group-item">
+            <a href = "#">r.title1</a> 
+         </li>       
+
+         <li id='item-3' class="list-group-item">
+            <a href = "#">r.title2</a> 
+         </li>       
     </ul>
 </div>
 
 {% endblock %}
 
-
 {% block script %}
 
+<script
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
+
 <script>
+
+$( function(){
+    $('#searchlist').sortable({
+        axis: 'y',
+        update: function (event, ui) {
+            var data = $(this).sortable('toArray');
+            console.log(data);
+    
+            // POST to server using $.post or $.ajax
+            // $.ajax({
+            //     data: data,
+            //     type: 'POST',
+            //     url: '/your/url/here'
+            // });
+        }
+    });
+  });
+
+
    function search() {
     // Declare variables
     var input, filter, ul, li, a, i;

@@ -1126,7 +1126,8 @@ def deleteplaylist(id):
 
 @app.route('/dashboard/playlist/viewvideo')
 def playlist_vid():
-    return render_template('viewplaylistvid.html')
+    savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+    return render_template('viewplaylistvid.html', savedvids=savedvids)
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
@@ -1138,6 +1139,12 @@ def test():
     for i in answer1:
         print(answer1[number])
         number += 1
+    return 'success'
+
+@app.route('/getvalue',  methods=['GET', 'POST'])
+def getvalue():
+    value = request.form.getlist("selectvid")
+    print(value)
     return 'success'
 
 

@@ -1144,7 +1144,7 @@ def playlist_vid(id):
                     db.session.add(save)
                     db.session.commit()
 
-            return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+            return redirect(url_for('playlist_vid', id = play_id))
         
         else:
             for v in value:
@@ -1160,7 +1160,7 @@ def playlist_vid(id):
                     db.session.add(save)
                     db.session.commit()
 
-            return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+            return redirect(url_for('playlist_vid', id = play_id))
            
     return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
 

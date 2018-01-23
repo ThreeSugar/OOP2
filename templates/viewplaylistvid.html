@@ -36,7 +36,7 @@ a:hover {
     </div>
     <ul id = "searchlist" class="list-group list-group-flush">
 
-        {% for p in playlist_vid  %}
+        {% for p in playlist_vids  %}
       
         <li id='{{loop.index}}' class="list-group-item">
            <a href = "#">{{p.title}}</a> 
@@ -59,7 +59,7 @@ a:hover {
         </div>
         <div class="modal-body">
 
-        <form action = "{{url_for('playlist_vid', id = playlist_vid.id)}}" method = "POST">
+        <form action = "{{url_for('playlist_vid', id = play_id)}}" method = "POST">
           <ul style = "margin-left:-40px;">
             {% for s in savedvids  %}
       

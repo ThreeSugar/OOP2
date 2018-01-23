@@ -12,6 +12,7 @@
     a:active {
         color: black;
         font-weight: 600;
+        text-decoration: none;
     }
 
     .vidusername:hover,
@@ -20,6 +21,7 @@
     a:active {
         color: grey;
         font-weight: 600;
+        text-decoration: none;
     }
 
     a,
@@ -107,7 +109,7 @@
                    <span aria-hidden="true">&times;</span>
                 </button>
                 <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
-                <a href = "{{url_for('playlist_vid', id = p.id)}}"><p><b>{{p.title}}</b></p></a>
+                <a href = "{{url_for('playlist_vid', id = p.id)}}"><b>{{p.title}}</b></a>
                 <p>{{p.desc}}</p>
             </div>
 

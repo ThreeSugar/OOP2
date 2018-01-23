@@ -1126,14 +1126,46 @@ def deleteplaylist(id):
 
 @app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])
 def playlist_vid(id):
-    playlist_vid = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+    playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+    selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
+    play_id = selected_playlist.id
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
-    if request.method == 'POST':
+    if request.method == "POST":
         value = request.form.getlist("selectvid")
         print(value)
-        return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vid=playlist_vid)
-    
-    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vid=playlist_vid)
+        counter = 1
+        order_array = []
+        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all()
+        if not s:
+            for v in value:
+                    get_video = Video.query.filter_by(id = int(v)).first()
+                    save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
+                    desc = get_video.description, order_no = counter)
+                    counter +=1
+                    db.session.add(save)
+                    db.session.commit()
+
+            return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+        
+        if s:
+            print(s)
+            for v in value:
+                    get_video = Video.query.filter_by(id = int(v)).first()
+
+                    for saved in s:
+                        order_array.append(saved.order_no)
+
+                    new_order_no = max(order_array)
+                    add_order_no = int(new_order_no)
+
+                    save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
+                    desc = get_video.description, order_no = add_order_no)
+                    add_order_no += 1
+                    db.session.add(save)
+                    db.session.commit()
+                    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+           
+    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
@@ -1149,7 +1181,8 @@ def test():
 
 @app.route('/saveplaylistvids',  methods=['GET', 'POST'])
 def saveplaylist_vids():
-    
+    value = request.form.getlist("selectvid")
+    print(value)
     return 'success'
 
 

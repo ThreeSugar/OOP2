@@ -1134,8 +1134,7 @@ def playlist_vid(id):
         value = request.form.getlist("selectvid")
         print(value)
         counter = 1
-        order_array = []
-        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all()
+        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if playlist is empty
         if not s:
             for v in value:
                     get_video = Video.query.filter_by(id = int(v)).first()
@@ -1147,23 +1146,21 @@ def playlist_vid(id):
 
             return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
         
-        if s:
-            print(s)
+        else:
             for v in value:
+                    playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+                    order_array = []
+                    for play in playlist_id:
+                        order_array.append(int(play.id))
+
                     get_video = Video.query.filter_by(id = int(v)).first()
-
-                    for saved in s:
-                        order_array.append(saved.order_no)
-
-                    new_order_no = max(order_array)
-                    add_order_no = int(new_order_no)
-
+                    new_order_no = len(order_array) + 1
                     save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = add_order_no)
-                    add_order_no += 1
+                    desc = get_video.description, order_no = new_order_no)
                     db.session.add(save)
                     db.session.commit()
-                    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+
+            return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
            
     return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
 

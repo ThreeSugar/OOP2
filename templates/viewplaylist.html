@@ -107,7 +107,7 @@
                    <span aria-hidden="true">&times;</span>
                 </button>
                 <img style = "height:200px; width:300px;" src="{{url_for('static', filename = 'img/sport2.jpg')}}">
-                <p><b>{{p.title}}</b></p>
+                <a href = "{{url_for('playlist_vid', id = p.id)}}"><p><b>{{p.title}}</b></p></a>
                 <p>{{p.desc}}</p>
             </div>
 

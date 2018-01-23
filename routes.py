@@ -1124,10 +1124,16 @@ def deleteplaylist(id):
     db.session.commit()
     return redirect(url_for('viewplaylist'))
 
-@app.route('/dashboard/playlist/viewvideo')
-def playlist_vid():
+@app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])
+def playlist_vid(id):
+    playlist_vid = SavePlaylistVids.query.filter_by(playlist_id=id).all()
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
-    return render_template('viewplaylistvid.html', savedvids=savedvids)
+    if request.method == 'POST':
+        value = request.form.getlist("selectvid")
+        print(value)
+        return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vid=playlist_vid)
+    
+    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vid=playlist_vid)
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
@@ -1141,10 +1147,9 @@ def test():
         number += 1
     return 'success'
 
-@app.route('/getvalue',  methods=['GET', 'POST'])
-def getvalue():
-    value = request.form.getlist("selectvid")
-    print(value)
+@app.route('/saveplaylistvids',  methods=['GET', 'POST'])
+def saveplaylist_vids():
+    
     return 'success'
 
 

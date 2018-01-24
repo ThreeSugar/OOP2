@@ -113,6 +113,7 @@ def utility_processor():
             flag = False
         return flag
 
+
     def show_cart_price():
         price = 0
         cart = Cart.query.all()
@@ -1144,7 +1145,7 @@ def playlist_vid(id):
                     counter +=1
                     db.session.add(save)
                     db.session.commit()
-
+                    
             return redirect(url_for('playlist_vid', id = play_id))
         
         else:
@@ -1183,7 +1184,7 @@ def delete_playlist_vid(id):
 @app.route('/updateorder', methods=['GET', 'POST'])
 def update_order():
     answer = request.get_json()
-    answer_value = answer['value']
+    answer_value = answer['value'] #is array
     number = 0
     counter = 1
     for i in answer_value:

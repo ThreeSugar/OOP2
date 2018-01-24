@@ -1180,16 +1180,18 @@ def delete_playlist_vid(id):
     return redirect(url_for('playlist_vid', id = play_id))
 
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
+@app.route('/updateorder', methods=['GET', 'POST'])
+def update_order():
     answer = request.get_json()
-    print(answer)
-    answer1 = answer['value']
-    print(answer1)
+    answer_value = answer['value']
     number = 0
-    for i in answer1:
-        print(answer1[number])
+    counter = 1
+    for i in answer_value:
+        selected_vid = SavePlaylistVids.query.filter_by(id=answer_value[number]).first()
+        selected_vid.order_no = counter
+        db.session.commit()
         number += 1
+        counter += 1
     return 'success'
 
 # @app.route('/fitness/<type>')

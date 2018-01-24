@@ -106,7 +106,7 @@ $( function(){
             // POST to server using $.post or $.ajax
             $.ajax({
                 type: 'POST',
-                url: "{{url_for('test')}}",
+                url: "{{url_for('update_order')}}",
                 data: JSON.stringify({value:value}),
                 contentType: 'application/json;charset=UTF-8',
                 dataType: "json"

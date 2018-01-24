@@ -1135,7 +1135,7 @@ def playlist_vid(id):
     if request.method == "POST":
         value = request.form.getlist("selectvid")
         counter = 1
-        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty, i don't even know if i even need this
+        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
         if not s:
             for v in value:
                     get_video = Video.query.filter_by(id = int(v)).first()

@@ -40,9 +40,9 @@ a:hover {
       
         <li id='{{loop.index}}' class="list-group-item">
            <a href = "#">{{p.title}}
-                <button type="button" class="close ml-auto" aria-label="Close">
+                <a href = "{{url_for('delete_playlist_vid', id = p.id)}}" type="button" class="close ml-auto" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </a>
             </a> 
         </li>
 
@@ -56,7 +56,7 @@ a:hover {
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Select Videos</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
           <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

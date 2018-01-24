@@ -188,10 +188,11 @@ class FitnessPlaylist(db.Model):
 class SavePlaylistVids(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     playlist_id = db.Column(db.Integer)
+    playlist_vid_id = db.Column(db.Integer)
     video_id = db.Column(db.Integer)
     order_no = db.Column(db.Integer)
     title = db.Column(db.String)
-    desc = db.Column(db.String)   
+    desc = db.Column(db.String)    
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)

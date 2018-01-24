@@ -1141,7 +1141,7 @@ def playlist_vid(id):
             for v in value:
                     get_video = Video.query.filter_by(id = int(v)).first()
                     save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = counter)
+                    desc = get_video.description, order_no = counter, playlist_vid_id = counter)
                     counter +=1
                     db.session.add(save)
                     db.session.commit()
@@ -1158,13 +1158,22 @@ def playlist_vid(id):
                     get_video = Video.query.filter_by(id = int(v)).first()
                     new_order_no = len(order_array) + 1
                     save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = new_order_no)
+                    desc = get_video.description, order_no = new_order_no, playlist_vid_id = new_order_no)
                     db.session.add(save)
                     db.session.commit()
 
             return redirect(url_for('playlist_vid', id = play_id))
            
     return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+
+@app.route('/dashboard/playlist/viewvideo/delete/<id>')
+def delete_playlist_vid(id):
+    selected_vid = SavePlaylistVids.query.filter_by(id=id).first()
+    play_id = selected_vid.playlist_id
+    db.session.delete(selected_vid)
+    db.session.commit()
+    return redirect(url_for('playlist_vid', id = play_id))
+
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():

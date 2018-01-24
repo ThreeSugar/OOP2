@@ -1171,6 +1171,12 @@ def delete_playlist_vid(id):
     play_id = selected_vid.playlist_id
     db.session.delete(selected_vid)
     db.session.commit()
+    all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
+    counter = 1
+    for a in all_vid: #manual recalibration of 'order_no' after deletion
+        a.order_no = counter
+        db.session.commit()
+        counter += 1
     return redirect(url_for('playlist_vid', id = play_id))
 
 

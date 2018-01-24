@@ -1122,6 +1122,8 @@ def deleteplaylist(id):
     selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
     db.session.delete(selected_playlist)
     db.session.commit()
+    db.session.query(SavePlaylistVids).filter_by(playlist_id = id).delete()
+    db.session.commit()
     return redirect(url_for('viewplaylist'))
 
 @app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])

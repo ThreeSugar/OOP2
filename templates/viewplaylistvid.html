@@ -38,7 +38,7 @@ a:hover {
 
         {% for p in playlist_vids  %}
       
-        <li id='{{loop.index}}' class="list-group-item">
+        <li id='{{p.id}}' class="list-group-item">
            <a href = "#">{{p.title}}
                 <a href = "{{url_for('delete_playlist_vid', id = p.id)}}" type="button" class="close ml-auto" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

@@ -1128,13 +1128,12 @@ def deleteplaylist(id):
 
 @app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])
 def playlist_vid(id):
-    playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+    playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).order_by('order_no asc')
     selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
     play_id = selected_playlist.id
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
     if request.method == "POST":
         value = request.form.getlist("selectvid")
-        print(value)
         counter = 1
         s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty, i don't even know if i even need this
         if not s:

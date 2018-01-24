@@ -284,6 +284,7 @@ class FitnessLib(db.Model):
 #FITNESS PLAYLIST
 class FitnessPlaylist(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String)
     title = db.Column(db.String)
     desc = db.Column(db.String)
 
@@ -291,6 +292,7 @@ class FitnessPlaylist(db.Model):
 class NewPlaylist(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=4)])
+
     
 
 class SavePlaylistVids(db.Model):

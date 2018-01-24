@@ -1105,11 +1105,11 @@ def viewsavedvideo():
 
 @app.route('/dashboard/playlist/view', methods=['GET', 'POST'])
 def viewplaylist():
-    playlist = FitnessPlaylist.query.all()
+    playlist = FitnessPlaylist.query.filter_by(username = current_user.username)
 
     form = NewPlaylist()
     if form.validate_on_submit():
-        new_playlist = FitnessPlaylist(title = form.title.data, desc = form.desc.data)
+        new_playlist = FitnessPlaylist(title = form.title.data, desc = form.desc.data, username = current_user.username)
         db.session.add(new_playlist)
         db.session.commit()
         flash('Playlist successfully created.')
@@ -1134,7 +1134,7 @@ def playlist_vid(id):
         value = request.form.getlist("selectvid")
         print(value)
         counter = 1
-        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if playlist is empty
+        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty
         if not s:
             for v in value:
                     get_video = Video.query.filter_by(id = int(v)).first()
@@ -1175,13 +1175,6 @@ def test():
         print(answer1[number])
         number += 1
     return 'success'
-
-@app.route('/saveplaylistvids',  methods=['GET', 'POST'])
-def saveplaylist_vids():
-    value = request.form.getlist("selectvid")
-    print(value)
-    return 'success'
-
 
 # @app.route('/fitness/<type>')
 # def fitresults(type):

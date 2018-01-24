@@ -180,6 +180,7 @@ class SaveFlaggedState(db.Model):
 
 class FitnessPlaylist(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String)
     title = db.Column(db.String)
     desc = db.Column(db.String)
 

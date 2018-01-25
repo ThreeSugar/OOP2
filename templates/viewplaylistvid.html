@@ -127,6 +127,12 @@ $( function(){
     ul = document.getElementById("searchlist");
     li = ul.getElementsByTagName('li');
 
+    if (input.html != null){
+        $('#searchlist').sortable('disable'); 
+    } else if (input.html == null) {
+        $('#searchlist').sortable("enable"); 
+    }
+
     // Loop through all list items, and hide those who don't match the search query
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("a")[0];

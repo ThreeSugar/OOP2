@@ -124,12 +124,13 @@ $( function(){
     var input, filter, ul, li, a, i;
     input = document.getElementById('searchinput');
     filter = input.value.toUpperCase();
+    check_value = input.value
     ul = document.getElementById("searchlist");
     li = ul.getElementsByTagName('li');
 
-    if (input.html != null){
+    if (check_value != ''){
         $('#searchlist').sortable('disable'); 
-    } else if (input.html == null) {
+    } else if (check_value == '') {
         $('#searchlist').sortable("enable"); 
     }
 

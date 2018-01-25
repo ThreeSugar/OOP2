@@ -1166,7 +1166,7 @@ def playlist_vid(id):
            
     return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
 
-@app.route('/dashboard/playlist/viewvideo/delete/<id>')
+@app.route('/dashboard/playlist/viewvideo/delete/<id>') 
 def delete_playlist_vid(id):
     selected_vid = SavePlaylistVids.query.filter_by(id=id).first()
     play_id = selected_vid.playlist_id
@@ -1174,10 +1174,13 @@ def delete_playlist_vid(id):
     db.session.commit()
     all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
     counter = 1
-    for a in all_vid: #manual recalibration of 'order_no' after deletion
-        a.order_no = counter
+    number = 0
+    sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
+    for a in all_vid: #manual recalibration of 'order_no' after deletion 
+        all_vid[number].order_no = counter
         db.session.commit()
         counter += 1
+        number += 1
     return redirect(url_for('playlist_vid', id = play_id))
 
 

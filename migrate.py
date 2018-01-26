@@ -127,17 +127,29 @@ class Item(db.Model):
     rating = db.Column(db.Integer)
     rating_count = db.Column(db.Integer)
 
+#mealkit
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     info = db.Column(db.String(50))
-    calories = db.Column(db.String)
-    ingredients = db.Column(db.Text)
-    price = db.Column(db.Float)
     preperation = db.Column(db.Text)
+    calories = db.Column(db.Integer)
+    ingredients = db.Column(db.Text)
+    total_price = db.Column(db.Float)
     totalratings = db.Column(db.Integer)
     rating = db.Column(db.Integer)
     rating_count = db.Column(db.Integer)
+
+class RecipeIngredients(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer)
+    item_id = db.Column(db.Integer)
+    name = db.Column(db.String(50))
+    price = db.Column(db.Float)
+    info = db.Column (db.String(50))
+    quantity = db.Column(db.Integer)
+    calories = db.Column(db.Integer)
+    change = db.Column(db.Boolean)
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -150,6 +162,7 @@ class Cart(db.Model):
 
 class Orders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    oid = db.Column(db.Integer)
     order_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
     item_id = db.Column(db.Integer)

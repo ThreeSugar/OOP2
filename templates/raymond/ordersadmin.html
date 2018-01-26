@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %} Lifestyle28 | OrdersAdmin {% endblock %}
+{% block title %} Lifestyle28 | Admin Orders {% endblock %}
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,8 @@
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
-.main-section{
-	padding:20px 0 110px;
+.order-section{
+    margin-bottom: 100px;
 }
 .table{
     width: 79%;
@@ -70,7 +70,7 @@ input[type=text] {
     text-decoration-line: none;
 }
 </style>
-
+<div class="order-section">
 <div class="orderadmin">
     <h2>Admin Orders</h2>
 </div>
@@ -80,117 +80,54 @@ input[type=text] {
     <h3 class="menuid"><a href="">Delivery Status</a></h3>
 </div>
 {% for i in group %}
-<div>
-    <div class="order-button">
-        <h3 class="orderid">User ID: {{ i[0].user_id }}</h3>
-        <h3 class="orderid">Order ID: {{ i[0].order_id }}</h3>
-        <h3 class="orderid">Qty: {{ i[0].items_quantity }}</h3>
-        <h3 class="orderid">Date: {{ i[0].date.strftime("%y-%m-%d") }}</h3>
-        <h3 class="orderid">Status: <a href='{{ url_for('deliver', group_id=i[0].order_id) }}'>{{ i[0].delivered }}</a></h3>
-        <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
-    </div>
-    <table class="table table-bordered table-striped table-hover order-info" style="display: none">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Order ID</th>
-                <th>User ID</th>
-                <th>Item ID</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Date</th>
-                <th>Delivered</th>
-            </tr>
-        </thead>
-{#        {% for x in group %}#}
-        <tbody id="admin-items">
-            {% for z in i %}
-            <tr>
-                <td>{{ z.id}}</td>
-                <td>{{ z.order_id }}</td>
-                <td>{{ z.user_id }}</td>
-                <td>{{ z.item_id }}</td>
-                <td>{{ z.name }}</td>
-                <td>{{ z.quantity }}</td>
-                <td>{{ z.price }}</td>
-                <td>{{ z.date }}</td>
-                <td>{{ z.delivered }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-{#        {% endfor %}#}
-    </table>
-
+<div class="order-button" id="order-button{{ i[0].oid }}" table_id="{{ i[0].oid }}">
+    <h3 class="orderid">ID: {{ i[0].oid }}</h3>
+    <h3 class="orderid">User ID: {{ i[0].user_id }}</h3>
+    <h3 class="orderid">Order ID: {{ i[0].order_id }}</h3>
+    <h3 class="orderid">Qty: {{ i[0].items_quantity }}</h3>
+    <h3 class="orderid">Date: {{ i[0].date.strftime("%d-%m-%y") }}</h3>
+    <h3 class="orderid">Status: <a href='{{ url_for('deliver', group_id=i[0].oid) }}'>{{ i[0].delivered }}</a></h3>
+    <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
 </div>
+<table class="table table-bordered table-striped table-hover order-info" id="order-info{{ i[0].oid }}" style="display: none">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Item ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Delivered</th>
+        </tr>
+    </thead>
+    <tbody id="admin-items">
+        {% for z in i %}
+        <tr>
+            <td>{{ z.oid }}</td>
+            <td>{{ z.order_id }}</td>
+            <td>{{ z.user_id }}</td>
+            <td>{{ z.item_id }}</td>
+            <td>{{ z.name }}</td>
+            <td>{{ z.quantity }}</td>
+            <td>{{ z.price }}</td>
+            <td>{{ z.date }}</td>
+            <td>{{ z.delivered }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endfor %}
+</div>
+
 <script>
-$(document).ready( function() {
-    $(document).on('click', '.Delete', function(){
-
-        delete_id = $(this).attr('delete_id');
-
-        req = $.ajax({
-            url: '/deleteItem',
-            type: 'POST',
-            data: {
-                delete_id : delete_id
-            }
-        });
-
-        req.done(function(data){
-            $('#admin-items').fadeOut(200).fadeIn(200);
-            $('#admin-items').html(data);
-        });
-
-        $('#deleteAlert').fadeIn(1000).fadeOut(1000);
-    });
-    $(document).on('click', '.Submit', function(){
-        var name = $('#name').val()
-        var info = $('#info').val()
-        var price = $('#price').val()
-        var description = $('#description').val()
-        var category = $('#category').val()
-        var calories = $('#calories').val()
-        var quantity = $('#quantity').val()
-
-        var file = new FormData();
-        file.append('name', name);
-        file.append('info', info);
-        file.append('price', price);
-        file.append('description', description);
-        file.append('category', category);
-        file.append('calories', calories);
-        file.append('quantity', quantity);
-        file.append('image', $("#image")[0].files[0]);
-
-        if((name && info && price && description && calories && quantity) == '') {
-            $('#errorAlert').fadeIn(1000);
-        }
-
-        else{
-            req = $.ajax({
-                url: '/addItem',
-                type: 'POST',
-                data: file,
-                cache:false,
-                processData:false,
-                contentType:false,
-            });
-
-            req.done(function(data){
-                $('#admin-items').fadeOut(200).fadeIn(200);
-                $('#admin-items').html(data);
-            });
-            $('#errorAlert').fadeOut();
-            $('#successAlert').fadeIn(1000).fadeOut(1000);
-        }
-
-    });
-    $(document).ready(function(){
-        $(".order-button").click(function(){
-            $(".order-info").toggle();
-        });
+$(document).ready(function(){
+    $(".order-button").on('click', function() {
+        var table_id = $(this).attr('table_id');
+        $("#order-info"+table_id).toggle();
+        $('#order-button'+table_id)[0].scrollIntoView(true);
     });
 });
 </script>

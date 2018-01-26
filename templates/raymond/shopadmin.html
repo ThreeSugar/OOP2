@@ -82,10 +82,64 @@
     padding: 0;
     width: 20px;
 }
+.order-button{
+    width: 49%;
+    outline: 1px solid black;
+    margin: 0 auto;
+    padding: 20px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 20px;
+    color: black;
+}
+.order-button:hover {
+    cursor:pointer;
+    box-shadow: 0 16px 16px 0 rgba(0,0,0,0.2);
+}
+.item-search{
+    box-sizing: border-box;
+    padding: 8px;
+    outline: none;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+#filterOptions{
+    margin: 20px 0;
+    padding: 20px;
+    outline:1px solid black;
+}
+#filterOptions li{
+    outline: 1px solid black;
+}
+
+#filterOptions li h3{
+    {#text-align: center;#}
+    display: inline-block;
+    margin: 20px;
+}
+#filterOptions li img{
+    width: 100px;
+}
+.recipeSubmit{
+    {#width: 100px;#}
+    float: right;
+    width: 100%;
+    margin: 0;
+    color: white;
+    background-color: grey;
+}
+.recipeSubmit:hover {
+    color: white;
+    background-color: dimgrey;
+}
 </style>
 
 <div class="admin-add">
     <h2>Admin Shop</h2>
+    <div class="button-div">
+        <div class="order-button" style="float: left;" id="order-button-item">ITEM</div>
+        <div class="order-button" style="float: right;" id="order-button-recipe">RECIPE</div>
+    </div>
 {#    <form name="additemForm" id="additemForm" class="form-style-9" method="POST" enctype="multipart/form-data" action="{{ url_for('addItem') }}">#}
     <form id="form-items" class="form-style-9" enctype="multipart/form-data">
         <ul>
@@ -123,9 +177,72 @@
             </li>
         </ul>
     </form>
+    <form id="form-recipes" style="display: none" class="form-style-9" action='{{ url_for('addRecipe') }}' method="post" enctype="multipart/form-data">
+        <ul>
+            <li>
+                <input type="text" id="rname" class="field-style field-split align-left" placeholder="Name" required/>
+                <input type="text" id="rinfo" class="field-style field-split align-right" placeholder="Info" required/>
+            </li>
+            <li>
+                <textarea id="ringredients" class="field-style" placeholder="Ingredients" required></textarea>
+                <textarea id="rpreperation" class="field-style" placeholder="Preperation" required></textarea>
+            </li>
+            <li>
+                <input class="item-search" id="rsearch" type="search" placeholder="Search items.." onkeyup="searchFunction()">
+                <ul id="filterOptions">
+                    {% for i in items %}
+                    <a class="filterOptionBtn" filter_id="{{ i.id }}" recipe_id="{{ new_id }}">
+                        <li>
+                            <h3>ID: {{ i.id }}</h3>
+                            <img src="{{ url_for('static', filename='raymond/img/' ~ i.id ~ ".jpg") }}">
+                            <h3>Name: {{ i.name }}</h3>
+                            <h3>Info: {{ i.info }}</h3>
+                            <h3>Price: {{ i.price }}</h3>
+                            <h3>Category: {{ i.category }}</h3>
+                        </li>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li>
+                <table style="width: 100%" class="table table-bordered" id="recipeitems-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item ID: </th>
+                            <th>Name: </th>
+                            <th>Calories: </th>
+                            <th>Change: </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    {% for i in recipe_items %}
+                    <tbody>
+                        <tr>
+                            <td>{{ i.id }}</td>
+                            <td>{{ i.item_id }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.calories }}</td>
+                            <td>{{ i.change }}</td>
+                            <td>Delete</td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </li>
+            <li>
+                <a class="btn recipeSubmit">ADD RECIPE</a>
+            </li>
+            <li style="height: 50px">
+                <div id="rsuccessAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>
+                <div id="rerrorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>
+                <div id="rdeleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>
+            </li>
+        </ul>
+    </form>
 </div>
 <div>
-    <table class="table table-bordered table-striped table-hover">
+    <table class="table table-bordered table-striped table-hover item-table">
         <thead>
             <tr>
                 <th>#</th>
@@ -136,7 +253,7 @@
                 <th>Category</th>
                 <th>Calories</th>
                 <th>Quantity</th>
-{#                <th><a href="image"></a></th>#}
+                <th><a href="image"></a></th>
                 <th></th>
             </tr>
         </thead>
@@ -157,8 +274,88 @@
         </tbody>
     </table>
 </div>
+<div class="recipe-table" style="display: none;">
+    <table class="table table-bordered table-striped table-hover">
+    <h2>Recipes</h2>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Info</th>
+                <th>Calories</th>
+                <th>Ingredients</th>
+                <th>Price</th>
+                <th>Preperation</th>
+                <th><a href="image"></a></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="admin-recipes">
+            {% for i in recipes[::-1] %}
+            <tr>
+                <th>{{ i.id }}</th>
+                <td>{{ i.name }}</td>
+                <td>{{ i.info }}</td>
+                <td>{{ i.calories }}</td>
+                <td>{{ i.ingredients }}</td>
+                <td>{{ i.price }}</td>
+                <td>{{ i.preperation }}</td>
+                <td>img.png</td>
+                <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 <script>
+function searchFunction(){
+    $('#filterOptions').show()
+
+    filter = $('#rsearch').val();
+
+    req = $.ajax({
+        url: '/addRecipeSearch',
+        type: 'POST',
+        data: {
+            filter : filter
+        }
+    });
+
+    req.done(function(data){
+        $('#filterOptions').html(data);
+        if (filter === ""){
+            $('#filterOptions').hide()
+        }
+    });
+}
 $(document).ready( function() {
+
+    filter = $('#rsearch').val();
+    if (filter === ""){
+        $('#filterOptions').hide()
+    }
+
+    $(document).on('click', '.filterOptionBtn', function(){
+
+        filter_id = $(this).attr('filter_id');
+        recipe_id = $(this).attr('recipe_id')
+
+        req = $.ajax({
+            url: '/addRecipeItem',
+            type: 'POST',
+            data: {
+                filter_id : filter_id,
+                recipe_id: recipe_id
+            }
+        });
+
+        req.done(function(data) {
+            $('#recipeitems-table').html(data);
+        });
+
+    });
+
     $(document).on('click', '.Delete', function(){
 
         delete_id = $(this).attr('delete_id');
@@ -218,6 +415,56 @@ $(document).ready( function() {
             $('#errorAlert').fadeOut();
             $('#successAlert').fadeIn(1000).fadeOut(1000);
         }
+
+    });
+    $(document).on('click', '.recipeSubmit', function(){
+        var name = $('#rname').val()
+        var info = $('#rinfo').val()
+        var ingredients = $('#ringredients').val()
+        var preperation = $('#rpreperation').val()
+
+        var file = new FormData();
+        file.append('name', name);
+        file.append('info', info);
+        file.append('ingredients', ingredients);
+        file.append('preperation', preperation);
+        {#file.append('image', $("#image")[0].files[0]);#}
+
+        if((name && info && ingredients && preperation) == '') {
+            $('#rerrorAlert').fadeIn(1000);
+        }
+
+        else{
+            req = $.ajax({
+                url: '/addRecipe',
+                type: 'POST',
+                data: file,
+                cache:false,
+                processData:false,
+                contentType:false,
+            });
+
+            req.done(function(data){
+                $('#admin-recipes').fadeOut(200).fadeIn(200);
+                $('#admin-recipes').html(data);
+                $('#form-recipes')[0].reset();
+            });
+            $('#rerrorAlert').fadeOut();
+            $('#rsuccessAlert').fadeIn(1000).fadeOut(1000);
+        }
+
+    });
+    $(document).on('click', '#order-button-item', function(){
+        $('#form-recipes').hide();
+        $('.item-table').show()
+        $('#form-items').show();
+        $('.recipe-table').hide();
+    });
+    $(document).on('click', '#order-button-recipe', function(){
+        $('#form-items').hide();
+        $('.item-table').hide()
+        $('#form-recipes').show();
+        $('.recipe-table').show();
 
     });
 });

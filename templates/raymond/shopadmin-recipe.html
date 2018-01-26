@@ -1,0 +1,13 @@
+{% for i in recipes[::-1] %}
+<tr>
+    <th>{{ i.id }}</th>
+    <td>{{ i.name }}</td>
+    <td>{{ i.info }}</td>
+    <td>{{ i.calories }}</td>
+    <td>{{ i.ingredients }}</td>
+    <td>{{ i.price }}</td>
+    <td>{{ i.preperation }}</td>
+    <td>img.png</td>
+    <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+</tr>
+{% endfor %}

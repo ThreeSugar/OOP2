@@ -5,7 +5,7 @@ import os
 from flask import Flask, render_template, url_for, request, session, redirect, send_from_directory, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql import select, func, or_, and_, between
+from sqlalchemy.sql import select, func, or_, and_, between, desc
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
@@ -155,7 +155,7 @@ def utility_processor():
                 count += 1
         except:
             count = 0
-            cart = Cart.query.filter(Cart.user_id == None).all()
+            cart = Cart.query.filter(Cart.user_id == 0).all()
             for c in cart:
                 count += 1
         return count
@@ -181,6 +181,7 @@ path = os.path.join(os.path.dirname(__file__), 'static/assets')
 # admin.add_view(FileAdmin(path, name='Videos'))
 admin.add_view(ItemView(Item, db.session))
 admin.add_view(ModelView(Recipe, db.session))
+admin.add_view(ModelView(RecipeIngredients, db.session))
 admin.add_view(ModelView(Cart, db.session))
 admin.add_view(ModelView(Orders, db.session))
 admin.add_view(ModelView(Comments, db.session))
@@ -214,6 +215,10 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.check_password(form.password.data):
                 login_user(user)
+                cart = Cart.query.filter_by(user_id=0).all()
+                for i in cart:
+                    i.user_id = user.uid
+                    db.session.commit()
                 return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password!')
@@ -249,7 +254,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 #PROFILE
 @app.route('/dashboard')
@@ -860,10 +865,20 @@ def new_recipe():
 
 #RAYMOND
 
-#ADD ADMIN SALE QUANTITY (SOLD OUT)
 #ADD USER TIME TO DELIVER
-#ADD PAYPAL CHECKOUT
+#ADD CHECKOUT FORM
 #ADD RECIPE EDIT INGREDIENT
+#ADD EVERY FORM VALIDATION
+#DELETE IMG
+#AJAX SHOP PAGE (CART)
+#AJAX CART PAGE
+#KCAL CALC FILTER
+#RECIPE IMAGE
+#DELIVERY PAGE
+#FILTER ORDERSADMIN
+#SEARCH RECIPES
+#CHECKOUT REDIRECTS LOGIN
+#IMAGE CROP
 
 #SHOP PAGE
 @app.route('/shop')
@@ -875,35 +890,45 @@ def shop():
 @app.route('/addCart', methods=['POST'])
 def addCart():
     item_id = request.form['item_id']
-
-    user = User.query.filter_by(username=current_user.username).first()
-    uid = user.uid
     items = Item.query.filter_by(id=item_id).first()
-    check = Cart.query.filter_by(user_id=uid).all()
 
-    check_item = False
+    if current_user.is_authenticated == True:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
 
-    for c in check:
-        if c.item_id == items.id:
-            c.quantity += 1
+        check = Cart.query.filter_by(user_id=uid).all()
+
+        check_item = False
+
+        for c in check:
+            if c.item_id == items.id:
+                c.quantity += 1
+                db.session.commit()
+                check_item = True
+                break
+
+        if check_item == False:
+            new_item = Cart(user_id=uid, item_id=items.id, name=items.name, quantity=1, price=items.price,
+                            subtotal=items.price)
+            db.session.add(new_item)
             db.session.commit()
-            check_item = True
-            break
+    else:
+        check = Cart.query.filter_by(user_id=0).all()
 
-    if check_item == False:
-        new_item = Cart(user_id=uid, item_id=items.id, name=items.name, quantity=1, price=items.price,
-                        subtotal=items.price)
-        db.session.add(new_item)
-        db.session.commit()
+        check_item = False
 
+        for c in check:
+            if c.user_id == 0 and c.item_id == items.id:
+                c.quantity += 1
+                db.session.commit()
+                check_item = True
+                break
 
-
-
-    # except AttributeError:
-    #     items = Item.query.filter_by(id=item_id).first()
-    #     new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
-    #     db.session.add(new_item)
-    #     db.session.commit()
+        if check_item == False:
+            new_item = Cart(user_id=0, item_id=items.id, name=items.name, quantity=1, price=items.price,
+                            subtotal=items.price)
+            db.session.add(new_item)
+            db.session.commit()
 
     def cart_count():
         try:
@@ -915,7 +940,7 @@ def addCart():
                 count += 1
         except:
             count = 0
-            cart = Cart.query.filter(Cart.user_id == None).all()
+            cart = Cart.query.filter(Cart.user_id == 0).all()
             for c in cart:
                 count += 1
         return count
@@ -928,9 +953,14 @@ def filter():
     filter = request.form['filter']
     if filter is "":
         items = Item.query.all() #[item1, item2]
+        return render_template("raymond/shop-view.html", items=items, filter=filter)
+    elif filter == "recipes":
+        items = Recipe.query.all()
+        return render_template("raymond/shop-recipe.html", items=items, filter=filter)
     else:
         items = Item.query.filter(Item.category == filter).all()
-    return render_template("raymond/shop-view.html", items=items, filter=filter)
+        return render_template("raymond/shop-view.html", items=items, filter=filter)
+
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -939,7 +969,8 @@ def search():
         items = Item.query.all()
     else:
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
-    return render_template("raymond/shop-view.html", items=items)
+        return render_template("raymond/shop-view.html", items=items)
+
 
 #BMR
 @app.route('/bmr/calculate', methods=['POST'])
@@ -1005,9 +1036,7 @@ def cart():
         uid = user.uid
         cart = Cart.query.filter(Cart.user_id==uid).all()
     except:
-        cart = Cart.query.filter(Cart.user_id==None).all()
-
-    # cart = Cart.query.all()
+        cart = Cart.query.filter(Cart.user_id==0).all()
 
     return render_template("raymond/cart.html", cart=cart)
 
@@ -1015,7 +1044,10 @@ def cart():
 def updateCart(item_id):
     items = Cart.query.filter_by(item_id=item_id).first()
     quantity = request.form['newquantity']
-    items.quantity = quantity
+    if int(items.quantity) < int(quantity):
+        items.quantity = items.quantity
+    else:
+        items.quantity = quantity
     items.subtotal = "{0:.2f}".format(float(items.quantity)*items.price)
     db.session.commit()
     return redirect(url_for('cart'))
@@ -1029,51 +1061,59 @@ def deleteCart(item_id):
 
 @app.route('/checkout')
 def checkout():
-    user = User.query.filter_by(username=current_user.username).first()
-    uid = user.uid
-    cart = Cart.query.filter(Cart.user_id==uid).all()
-    date = datetime.datetime.now()
-    check = Orders.query.all()
+    if current_user.is_authenticated == True:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        cart = Cart.query.filter(Cart.user_id==uid).all()
+        date = datetime.datetime.now()
+        uid_check = Orders.query.filter(Orders.user_id==uid).all()
 
-    if not check:
-        cart_count = 0
-        for c in cart:
-            cart_count += 1
+        max_cart = db.session.query(db.func.max(Cart.id)).scalar()
+        max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
 
-        for c in cart:
-            checkout = Orders(order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
-                              items_quantity=cart_count, price=c.price,
-                              subtotal=c.subtotal, date=date, delivered="Not Delivered")
-            db.session.add(checkout)
-            db.session.delete(c)
-            db.session.commit()
+        if not uid_check:
+            check = Orders.query.all()
+            if not check:
+                for c in cart:
+                    checkout = Orders(oid=1, order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
+                                      items_quantity=max_cart, price=c.price,
+                                      subtotal=c.subtotal, date=date, delivered="Order received")
+                    db.session.add(checkout)
+                    db.session.delete(c)
+                    item = Item.query.filter_by(id=c.item_id).first()
+                    item.quantity -= c.quantity
+                    db.session.commit()
+            else:
+                oid_count = max_oid + 1
+                for c in cart:
+                    checkout = Orders(oid=oid_count, order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
+                                      items_quantity=max_cart, price=c.price,
+                                      subtotal=c.subtotal, date=date, delivered="Order received")
+                    db.session.add(checkout)
+                    db.session.delete(c)
+                    item = Item.query.filter_by(id=c.item_id).first()
+                    item.quantity -= c.quantity
+                    db.session.commit()
+        else:
+            oid_count = max_oid + 1
+
+            user_id = Orders.query.filter(Orders.user_id==uid).all()
+            order_id = user_id[-1].order_id
+            orderid_count = order_id + 1
+
+            for c in cart:
+                checkout = Orders(oid=oid_count ,order_id=orderid_count, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=max_cart, price=c.price,
+                                  subtotal=c.subtotal, date=date, delivered="Order received")
+                db.session.add(checkout)
+                db.session.delete(c)
+                item = Item.query.filter_by(id=c.item_id).first()
+                item.quantity -= c.quantity
+                db.session.commit()
+
+        return redirect(url_for('shop'))
     else:
-        # total items in orders
-        count = 0
-        orders = Orders.query.all()
-        for o in orders:
-            count += 1
+        return redirect(url_for('login'))
 
-        order_count = count + 1
-
-        # total items in cart
-        cart_count = 0
-        for c in cart:
-            cart_count += 1
-
-        # get last entry in orders
-        row = Orders.query.filter(Orders.id == count).first()
-        qty = row.order_id
-        qty += 1
-
-        for c in cart:
-            checkout = Orders(order_id=qty, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=cart_count, price=c.price,
-                              subtotal=c.subtotal, date=date, delivered="Not Delivered")
-            db.session.add(checkout)
-            db.session.delete(c)
-            db.session.commit()
-
-    return redirect(url_for('shop'))
 
 #ITEM PAGE
 @app.route('/item/<int:item_id>')
@@ -1085,10 +1125,35 @@ def item(item_id):
     return render_template('raymond/item.html', item=item, comment=comment)
 
 #RECIPE PAGE
-@app.route('/shop_recipe')
-def shop_recipe():
+@app.route('/shop/recipe/<int:item_id>')
+def shop_recipe(item_id):
+    item = Recipe.query.filter_by(id=item_id).one()
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
 
-    return render_template('raymond/recipe.html')
+    return render_template('raymond/recipe.html',item=item, recipe_items=recipe_items)
+
+@app.route('/shop/recipe/add/<item_id>')
+def addRecipetoCart(item_id):
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
+
+    if current_user.is_authenticated == True:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        for i in recipe_items:
+            item_id = i.item_id
+            item = Item.query.filter_by(id=item_id).first()
+            cart = Cart(user_id=uid,item_id=item.id,name=item.name,quantity=1,price=item.price,subtotal=item.price)
+            db.session.add(cart)
+            db.session.commit()
+    else:
+        for i in recipe_items:
+            item_id = i.item_id
+            item = Item.query.filter_by(id=item_id).first()
+            cart = Cart(user_id=0, item_id=item.id, name=item.name, quantity=1, price=item.price, subtotal=item.price)
+            db.session.add(cart)
+            db.session.commit()
+
+    return redirect(url_for('cart'))
 
 @app.route('/item/<int:item_id>/add', methods=['POST'])
 @login_required
@@ -1153,59 +1218,97 @@ def deleteItem():
 @app.route('/shopadmin')
 def shopadmin():
     items = Item.query.all()
-    return render_template("raymond/shopadmin.html", items=items)
+    recipes = Recipe.query.all()
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    if max_id is None:
+        max_id = 1
+    else:
+        max_id += 1
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
+    return render_template("raymond/shopadmin.html", items=items, recipes=recipes, recipe_items=recipe_items)
 
+@app.route('/addRecipe', methods=['POST'])
+def addRecipe():
+    name = request.form['name']
+    info = request.form['info']
+    ingredients = request.form['ingredients']
+    preperation = request.form['preperation']
+
+    recipe = Recipe(name=name, info=info, preperation=preperation, ingredients=ingredients)
+    db.session.add(recipe)
+    db.session.commit()
+
+    recipes = Recipe.query.all()
+
+    return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
+
+@app.route('/addRecipeItem', methods=['POST'])
+def addRecipeItem():
+
+    filter_id = request.form['filter_id']
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    if max_id is None:
+        max_id = 1
+    else:
+        max_id += 1
+
+    item = Item.query.filter(Item.id==filter_id).first()
+    name = item.name
+    price = item.price
+    info = item.info
+    quantity = item.quantity
+    calories = item.calories
+
+
+    ingredient = RecipeIngredients(recipe_id=max_id, item_id=filter_id, name=name, price=price, info=info, quantity=quantity, calories=calories, change=True)
+    db.session.add(ingredient)
+    db.session.commit()
+
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
+
+    return render_template('raymond/shopadmin-recipetable.html', recipe_items=recipe_items)
+
+@app.route('/addRecipeSearch', methods=['POST'])
+def addRecipeSearch():
+    filter = request.form['filter']
+    items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
+
+    return render_template('raymond/shopadmin-search.html', items=items)
+
+#ORDERS PAGE
 @app.route('/ordersadmin')
 def ordersadmin():
 
-    #check if user id is same, then check if order id is same
+    #check if user id is same, then check if oid is same
 
-    #get max userid
-    max_userid = db.session.query(db.func.max(Orders.user_id)).scalar()
-    max_orderid = db.session.query(db.func.max(Orders.order_id)).scalar()
-    max_id = db.session.query(db.func.max(Orders.id)).scalar()
+    #get max oid
+    max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
 
     list = [] #[[4,1],[4,2]]
     group = [] #[[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
 
-    for i in range(max_orderid+1):
-        o = Orders.query.filter(Orders.order_id == i).first()
+    for i in range(max_oid+1):
+        o = Orders.query.filter(Orders.oid == i).first()
         if o:
             o_userid = o.user_id
-            o_orderid = o.order_id
-            list.append([o_userid,o_orderid])
+            o_oid = o.oid
+            list.append([o_userid,o_oid])
 
     for i in list:
-        q_userid = Orders.query.filter(and_(Orders.user_id==i[0], Orders.order_id==i[1])).all()
+        q_userid = Orders.query.filter(and_(Orders.user_id==i[0], Orders.oid==i[1])).all()
         group.append(q_userid)
 
-    #check if userid not in orders
-    #if not, new orderid = 1
-    #else retrieve latest userid latest entry
-    #select row with orderid
-    #orderid+=1
-
-    #TESTT
-
-
-    # return str(group)
-
-    # pass
     return render_template("raymond/ordersadmin.html", group=group, list=list)
 
 @app.route('/deliver/<group_id>')
 def deliver(group_id):
-    max_orderid = db.session.query(db.func.max(Orders.order_id)).scalar()
-
-    # oid = group_id.order_id
-    query_gid = Orders.query.filter(Orders.order_id==group_id).all()
+    query_gid = Orders.query.filter(Orders.oid==group_id).all()
     for i in query_gid:
-        i.delivered = 'Ongoing Delivery'
+        i.delivered = 'Delivery scheduled'
         db.session.commit()
 
 
     return render_template("raymond/ordersadmin.html")
-    # return str(group_id)
 
 #
 # #CYNTHIA

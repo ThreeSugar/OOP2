@@ -1,0 +1,12 @@
+{% for i in items %}
+<a class="filterOptionBtn" filter_id="{{ i.id }}" recipe_id="{{ new_id }}">
+    <li>
+        <h3>ID: {{ i.id }}</h3>
+        <img src="{{ url_for('static', filename='raymond/img/' ~ i.id ~ ".jpg") }}">
+        <h3>Name: {{ i.name }}</h3>
+        <h3>Info: {{ i.info }}</h3>
+        <h3>Price: {{ i.price }}</h3>
+        <h3>Category: {{ i.category }}</h3>
+    </li>
+</a>
+{% endfor %}

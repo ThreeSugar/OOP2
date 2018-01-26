@@ -58,6 +58,16 @@
     color: white;
     background-color: dimgrey;
 }
+.notification{
+    position: fixed;
+    right: 80px;
+    bottom: -100px;
+    background-color: whitesmoke;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.5);
+    color: black;
+    padding: 20px 70px 20px 70px;
+    z-index: 1000;
+}
 @keyframes shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -72,6 +82,7 @@
     100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 </style>
+<div class="notification">Added to cart!</div>
 <div class="cart">
     <h3>YOUR CART</h3>
     <table class="table table-bordered table-striped table-hover" width="400">

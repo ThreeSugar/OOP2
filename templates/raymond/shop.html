@@ -50,6 +50,9 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
 }
+.cardrecipe{
+    width: 300px;
+}
 
 .card{
     animation: slide-up-fade-in ease 1s;
@@ -131,23 +134,7 @@ p{
     width: 93%;
     margin-bottom: 15px;
 }
-
-@media only screen and (max-width:650px) {
-    /* For mobile phones: */
-    .menu, .main{
-        width:100%;
-    }
-    .menuitem, .menuform{
-        margin:0;
-    }
-    .search{
-        width:100%;
-        margin: 0;
-    }
-    .card{
-        width: 170px;
-    }
-}.checked {
+.checked {
     color: orange;
 }
 .results {
@@ -166,7 +153,20 @@ button:hover {
 .addCartBtn{
     margin: 0;
     padding: 0;
-    width: 60px;
+    width: 50px;
+    background-color: white;
+    height: 50px;
+    border-radius: 0;
+    color: black;
+}
+.addCartBtn i{
+    margin: 30%;
+}
+
+.addCartBtn:hover{
+    background-color: white;
+    color: black;
+    font-size: 20px;
 }
 .cartbtn img{
     width: 20px;
@@ -280,6 +280,26 @@ a:hover {
     position: absolute;
     bottom: 0;
 }
+@media only screen and (max-width:650px) {
+    /* For mobile phones: */
+    .menu, .main{
+        width:100%;
+    }
+    .menuitem, .menuform{
+        margin:0;
+    }
+    .search{
+        width:100%;
+        margin: 0;
+    }
+    .card {
+        width: 170px;
+    }
+    .addCartBtn{
+        height: 40px;
+        width: 40px;
+    }
+}
 </style>
 {#<div style="position: sticky; top: 0;">HELLO</div>#}
 <div class="notification">Added to cart!</div>
@@ -316,7 +336,7 @@ a:hover {
     <div class="menu">
         <input class="form-control search" type="text" name="search" id="search" onkeyup="searchFunction()" placeholder="Search..">
         <a href="{{ url_for('cart') }}"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;"><img src="{{ url_for('static', filename='img/cart.png') }}" style="width: 7%"> Cart (<span id="cartcount">{{ cart_count() }}</span>)</div></a>
-        <a href="#"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;">Featured Recipes</div></a>
+        <a category="recipes" class="filterbtn"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;">featured recipes</div></a>
         <a category="" class="filterbtn"><div class="menuitem">all</div></a>
         <a category="Meat & Seafood" class="filterbtn"><div class="menuitem">meat & seafood</div></a>
         <a category="Fruit & Veg" class="filterbtn"><div class="menuitem">fruit & veg</div></a>
@@ -364,16 +384,17 @@ a:hover {
             {% for item in items %}
             <div class="card" id="card1">
                 <div class="cardcontainer">
-    {#                <img src="http://placehold.it/200x250">#}
-                    <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">
+                    <img src="http://placehold.it/200x250">
+{#                    <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">#}
                     <div class="overlay"></div>
                     <div class="button">
-                        {% if item.quantity > 1 %}<a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><img src="{{ url_for('static', filename='img/cart.png') }}"></a>{% endif %}
+                        <a class="btn addCartBtn" href="{{ url_for('item', item_id=item.id) }}"><i class="fa fa-search"></i></a>
+                        {% if item.quantity > 0 %}<a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><i class="fa fa-shopping-cart"></i></a>{% endif %}
                     </div>
                 </div>
                 <div class="cardinfo">
                     <p style="float: left"><b><a href="{{ url_for('item', item_id=item.id) }}">{{ item.name }}</a></b><br>{{ item.info }}</p>
-                    <p style="text-align: right; overflow: auto">{% if item.quantity > 1 %}${{ '{0:.2f}'.format(item.price) }}{% else %}<span style="color: red; font-weight: bold;">OUT OF STOCK</span>{% endif %}</p>
+                    <p style="text-align: right; overflow: auto">{% if item.quantity > 0 %}${{ '{0:.2f}'.format(item.price) }}{% else %}<span style="color: red; font-weight: bold;">OUT OF STOCK</span>{% endif %}</p>
                     <p style="float: right;">
                     {% if item.rating == 5 %}
                         <span class="fa fa-star checked"></span>

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %} Shop | EDIT {% endblock %}
+{% block title %} Shop | {{ item.name }} {% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -12,7 +12,24 @@
 .main-section{
 	padding:20px 0 110px;
 }
+.item{
+    overflow: auto;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
 
+.item ul{
+    overflow: auto;
+    margin: 0;
+    color: black;
+}
+.item ul li{
+    margin-bottom: 2%;
+}
+.item img{
+    float: left;
+    margin: 20px;
+}
 .reviewform textarea {
     width: 100%;
     height: 100px;
@@ -124,92 +141,40 @@
 }
 </style>
 <div class="container">
-<h2>1 pot chicken alfredo</h2>
+<h2>{{ item.name }}</h2>
     <div class="item">
-        <h4>Ingredients</h4>
-        <ul>
-            <li>1 tbsp. olive oil</li>
-            <li>2 chicken breasts, cubed</li>
-            <li>3 garlic cloves, minced</li>
-            <li>14 oz. chicken broth</li>
-            <li>1 cup heavy cream</li>
-            <li>1/2 lb. uncooked penne pasta</li>
-            <li>1.5 cups grated parmesan</li>
-            <li>Parsley for garnish (optional)</li>
+        <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}" style="width: 300px;">
+        <ul style="list-style: none;">
+            <li><h4><b>ID:</b> {{ item.id }}</h4></li>
+            <hr>
+            <li><h4><b>Name:</b> {{ item.name }}</h4></li>
+            <hr>
+            <li><h4><b>Info:</b> {{ item.info }}</h4></li>
+            <hr>
+            <hr>
+{#            <li><h4><b>Price:</b>${{ '{0:.2f}'.format(item.price) }}</h4></li>#}
+            <hr>
+{#            <li><h4><b>Calories:</b> {{ item.calories }}</h4></li>#}
+            <hr>
+            <li><h4><b>Description:</b> {{ item.ingredients }}</h4></li>
+            <li><h4><b>Preperation:</b> {{ item.preperation }}</h4></li>
         </ul>
     </div>
-    <hr>
-{#    <div class="reviewform" style="overflow: auto">#}
-{#        <h3 style="margin: 10px; font-size: 20px"><b>Write a review</b></h3>#}
-{#        <form method="POST" action="{{ url_for('addComment', item_id=item.id) }}">#}
-{#        <form>#}
-{#            <label>Name:</label>#}
-{#            <input type="text" name="name" id="name">#}
-{#            <div class="">#}
-{#                <label style="float: left">Rating:</label>#}
-{#                <fieldset class="rating" id="rating">#}
-{#                    <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>#}
-{#                    <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="Pretty good - 4 stars"></label>#}
-{#                    <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="Meh - 3 stars"></label>#}
-{#                    <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>#}
-{#                    <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>#}
-{#                </fieldset>#}
-{#            </div>#}
-{#            <textarea name="comment" id="comment"></textarea>#}
-{#            <button type="submit" class="btn submitcomment">Submit</button>#}
-{#        </form>#}
-{#    </div>#}
-{#    <hr>#}
-{#    <h2>Reviews</h2>#}
-{#    <div id="commentsection">#}
-{#        {% for c in comment[::-1] %}#}
-{#            <div class="reviewitem">#}
-{#                <h3 class="reviewiteminfo"><a href="/profile/{{ c.name }}">{{ c.name }}</a>:</h3>#}
-{#                <h3 class="reviewitemrating">{% if c.rating == 5 %}#}
-{#                        (<span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>)#}
-{#                    {% endif %}#}
-{#                    {% if c.rating == 4 %}#}
-{#                        (<span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star"></span>)#}
-{#                    {% endif %}#}
-{#                    {% if c.rating == 3 %}#}
-{#                        (<span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>)#}
-{#                    {% endif %}#}
-{#                    {% if c.rating == 2 %}#}
-{#                        (<span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>)#}
-{#                    {% endif %}#}
-{#                    {% if c.rating == 1 %}#}
-{#                        (<span class="fa fa-star checked"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>)#}
-{#                    {% endif %}#}
-{#                    {% if c.rating == 0 %}#}
-{#                        (<span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>#}
-{#                        <span class="fa fa-star"></span>)#}
-{#                    {% endif %}</h3>#}
-{#                <p class="reviewitemcomment">{{ c.comment }}</p>#}
-{#            </div>#}
-{#        {% endfor %}#}
-{#    </div>#}
+    <div>
+        <ul>
+        {% for i in recipe_items %}
+            <li>
+                <p>{{ i.name }}</p>
+                <p>{{ i.price }}</p>
+                <p>{{ i.info }}</p>
+                <p>{{ i.quantity }}</p>
+                {% if i.change == True %}
+                    <button>Change</button>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+        <a href="{{ url_for('addRecipetoCart',item_id = item.id) }}">Add to Cart</a>
+    </div>
 </div>
 {% endblock %}

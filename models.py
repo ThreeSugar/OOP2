@@ -293,7 +293,6 @@ class NewPlaylist(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=4)])
 
-    
 
 class SavePlaylistVids(db.Model):
     id = db.Column(db.Integer, primary_key = True)

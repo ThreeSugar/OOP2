@@ -1134,39 +1134,47 @@ def playlist_vid(id):
     selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
     play_id = selected_playlist.id
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
-    if request.method == "POST":
-        value = request.form.getlist("selectvid")
-        counter = 1
-        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
-        if not s:
-            for v in value:
-                    get_video = Video.query.filter_by(id = int(v)).first()
-                    save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = counter, playlist_vid_id = counter)
-                    counter +=1
-                    db.session.add(save)
-                    db.session.commit()
-                    
-            return redirect(url_for('playlist_vid', id = play_id))
-        
-        else:
-            for v in value:
-                    playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()
-                    order_array = []
-                    for play in playlist_id:
-                        order_array.append(int(play.id))
-
-                    get_video = Video.query.filter_by(id = int(v)).first()
-                    new_order_no = len(order_array) + 1
-                    save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = new_order_no, playlist_vid_id = new_order_no)
-                    db.session.add(save)
-                    db.session.commit()
-
-            return redirect(url_for('playlist_vid', id = play_id))
            
     return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
                             first_playlist_vid = first_playlist_vid)
+
+@app.route('/dashboard/playlist/viewvideo/add/<id>', methods=['GET', 'POST'])
+def add_playlist_vid(id):
+    playlist_json = request.get_json()
+    checked_value = playlist_json['checkedvalue_array']
+    selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
+    play_id = selected_playlist.id
+    all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
+    counter = 1
+    s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
+    if not s:
+        for v in checked_value:
+                get_video = Video.query.filter_by(id = int(v)).first()
+                save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
+                desc = get_video.description, order_no = counter, playlist_vid_id = counter)
+                counter +=1
+                db.session.add(save)
+                db.session.commit()
+                
+        return jsonify({'playlist': render_template('_addplaylist.html', all_vid=all_vid)})
+    
+    else:
+        for v in checked_value:
+                playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+                order_array = []
+                for play in playlist_id:
+                    order_array.append(int(play.id))
+
+                get_video = Video.query.filter_by(id = int(v)).first()
+                new_order_no = len(order_array) + 1
+                save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
+                desc = get_video.description, order_no = new_order_no, playlist_vid_id = new_order_no)
+                db.session.add(save)
+                db.session.commit()
+
+        return jsonify({'playlist': render_template('_addplaylist.html', all_vid=all_vid)})
+
+
 
 @app.route('/dashboard/playlist/viewvideo/delete/<id>', methods=['GET', 'POST']) 
 def delete_playlist_vid(id):

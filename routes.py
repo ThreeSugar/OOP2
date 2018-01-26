@@ -1107,7 +1107,6 @@ def viewsavedvideo():
 @app.route('/dashboard/playlist/view', methods=['GET', 'POST'])
 def viewplaylist():
     playlist = FitnessPlaylist.query.filter_by(username = current_user.username)
-
     form = NewPlaylist()
     if form.validate_on_submit():
         new_playlist = FitnessPlaylist(title = form.title.data, desc = form.desc.data, username = current_user.username)
@@ -1129,7 +1128,9 @@ def deleteplaylist(id):
 
 @app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])
 def playlist_vid(id):
-    playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).order_by('order_no asc')
+    playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).order_by('order_no asc') #array of objects
+    first_vid = playlist_vids[0]
+    first_playlist_vid = Video.query.filter_by(id=first_vid.video_id).first()
     selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
     play_id = selected_playlist.id
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
@@ -1164,9 +1165,10 @@ def playlist_vid(id):
 
             return redirect(url_for('playlist_vid', id = play_id))
            
-    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id)
+    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
+                            first_playlist_vid = first_playlist_vid)
 
-@app.route('/dashboard/playlist/viewvideo/delete/<id>') 
+@app.route('/dashboard/playlist/viewvideo/delete/<id>', methods=['GET', 'POST']) 
 def delete_playlist_vid(id):
     selected_vid = SavePlaylistVids.query.filter_by(id=id).first()
     play_id = selected_vid.playlist_id
@@ -1181,7 +1183,7 @@ def delete_playlist_vid(id):
         db.session.commit()
         counter += 1
         number += 1
-    return redirect(url_for('playlist_vid', id = play_id))
+    return jsonify({'playlist': render_template('_playlist.html', all_vid=all_vid)})
 
 
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])

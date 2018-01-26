@@ -10,6 +10,12 @@ a:hover {
     cursor: pointer;
 }
 
+#searchlist {
+    width:298px;
+    overflow-y: auto;
+    height: 440px;
+}
+
 </style>
 
 {% endblock %}
@@ -59,7 +65,7 @@ a:hover {
       
         <li id='{{p.id}}' class="list-group-item">
            <a href = "{{url_for('load_playlist_vid', id = p.video_id)}}">{{p.title}}
-                <a href = "{{url_for('delete_playlist_vid', id = p.id)}}" type="button" class="close ml-auto" aria-label="Close">
+                <a href = "#" type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
             </a> 
@@ -134,6 +140,22 @@ $( function(){
     });
   });
 
+
+$('.close').on('click', function() {
+    var playlist_id = $(this).attr('name');
+
+    req = $.ajax({
+    url : '/dashboard/playlist/viewvideo/delete/' + playlist_id,
+    type : 'POST',
+
+    });
+
+    req.done(function(data) {
+        $('.playlist').empty();
+        $('.playlist').append(data.playlist);
+    });
+
+});
 
    function search() {
     // Declare variables

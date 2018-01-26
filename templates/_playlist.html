@@ -1,0 +1,88 @@
+<div class="card-header">
+    Playlist
+ <a data-toggle="modal" data-target="#myModal"><i style = "font-size:15px; margin-top:3px; margin-left:195px;"class="fa fa-plus" aria-hidden="true"></i></a>
+</div>
+<ul id = "searchlist" class="list-group list-group-flush">
+
+ {% for p in all_vid %}
+
+ <li id='{{p.id}}' class="list-group-item">
+    <a href = "{{url_for('load_playlist_vid', id = p.video_id)}}">{{p.title}}
+         <a href = "#" type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+         </a>
+     </a> 
+ </li>
+
+ {% endfor %}       
+</ul>
+
+
+{% block script %}
+
+<script
+    src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+    integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+    crossorigin="anonymous"></script>
+
+<script>
+
+$( function(){
+    $('#searchlist').sortable({
+        axis: 'y',
+        update: function (event, ui) {
+            var value = $(this).sortable('toArray' );
+            console.log(value);
+    
+            // POST to server using $.post or $.ajax
+            $.ajax({
+                type: 'POST',
+                url: "{{url_for('update_order')}}",
+                data: JSON.stringify({value:value}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+            });
+        }
+    });
+  });
+
+
+$('.close').on('click', function() {
+    var playlist_id = $(this).attr('name');
+
+    req = $.ajax({
+    url : '/dashboard/playlist/viewvideo/delete/' + playlist_id,
+    type : 'POST',
+
+    });
+
+    req.done(function(data) {
+        $('.playlist').empty();
+        $('.playlist').append(data.playlist);
+    });
+
+});
+
+
+
+   function search() {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('searchinput');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("searchlist");
+    li = ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+{% endblock %}

@@ -10,6 +10,11 @@ a:hover {
     cursor: pointer;
 }
 
+#searchlist {
+    width:298px;
+    overflow-y: auto;
+    height: 440px;
+}
 
 </style>
 
@@ -30,7 +35,20 @@ a:hover {
 </div>
 
 
+<div class="video">
 
+        <video class='videos' width="700" height="400" controls>
+            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link)}}" type="video/mp4">
+            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/webm">
+            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/opgg">
+        </video>
+    
+        <p style = "font-size:20px;" class="extitle"><b>{{first_playlist_vid.title}}</b></p>
+        <div style="padding-bottom:10%; white-space: pre-line;" class='exdesc'>
+             {{first_playlist_vid.description}}
+        </div>
+    </div>
+    
 
 <div style = "margin-left:10px;" class="card playlist">
     <div class="card-header">
@@ -43,7 +61,7 @@ a:hover {
       
         <li id='{{p.id}}' class="list-group-item">
            <a href = "{{url_for('load_playlist_vid', id = p.video_id)}}">{{p.title}}
-                <a href = "{{url_for('delete_playlist_vid', id = p.id)}}" type="button" class="close ml-auto" aria-label="Close">
+                <a href = "#" type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </a>
             </a> 
@@ -117,6 +135,22 @@ $( function(){
         }
     });
   });
+
+  $('.close').on('click', function() {
+    var playlist_id = $(this).attr('name');
+
+    req = $.ajax({
+    url : '/dashboard/playlist/viewvideo/delete/' + playlist_id,
+    type : 'POST',
+
+    });
+
+    req.done(function(data) {
+        $('.playlist').empty();
+        $('.playlist').append(data.playlist);
+    });
+
+});
 
 
    function search() {

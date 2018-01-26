@@ -1188,10 +1188,10 @@ def delete_playlist_vid(id):
 
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])
 def load_playlist_vid(id):
-    load_vid = Video.query.filter_by(id=id).first()
+    load_vid_id = SavePlaylistVids.query.filter_by(id = id).first()
+    load_vid = Video.query.filter_by(id=load_vid_id.video_id).first()
 
-    playlist_vid_id = SavePlaylistVids.query.filter_by(video_id = id).first()
-    get_playlist_vid_id = playlist_vid_id.playlist_id
+    get_playlist_vid_id = load_vid_id.playlist_id
     playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).order_by('order_no asc')
     selected_playlist = FitnessPlaylist.query.filter_by(id=get_playlist_vid_id).first()
 
@@ -1214,7 +1214,7 @@ def load_playlist_vid(id):
         
         else:
             for v in value:
-                    playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+                    playlist_id = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).all()
                     order_array = []
                     for play in playlist_id:
                         order_array.append(int(play.id))

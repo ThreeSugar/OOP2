@@ -1204,7 +1204,7 @@ def delete_playlist_vid(id):
     db.session.delete(selected_vid)
     db.session.commit()
     sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
-    return jsonify({'playlist': render_template('_playlist.html', all_vid=all_vid)})
+    return jsonify({'playlist': 'test' })
 
 
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])

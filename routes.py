@@ -1153,7 +1153,7 @@ def playlist_vid(id):
         play_id = selected_playlist.id
         savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
         return render_template('viewemptyplaylist.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
-        )
+    )
 
 
 @app.route('/dashboard/playlist/viewvideo/add/<id>', methods=['GET', 'POST'])
@@ -1213,28 +1213,31 @@ def delete_playlist_vid(id):
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])
 def load_playlist_vid(id):
     load_vid_id = SavePlaylistVids.query.filter_by(id = id).first()
-    load_vid = Video.query.filter_by(id=load_vid_id.video_id).first()
+    if load_vid_id is not None:
+        load_vid = Video.query.filter_by(id=load_vid_id.video_id).first()
 
-    get_playlist_vid_id = load_vid_id.playlist_id
-    playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).order_by('order_no asc')
+        get_playlist_vid_id = load_vid_id.playlist_id
+        playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).order_by('order_no asc')
 
-    counter = 1
-    number = 0
+        counter = 1
+        number = 0
 
+        for a in playlist_vids:  #manual recalibration of 'order_no' after deletion 
+            playlist_vids[number].order_no = counter
+            db.session.commit()
+            counter += 1
+            number += 1
 
-    for a in playlist_vids:  #manual recalibration of 'order_no' after deletion 
-        playlist_vids[number].order_no = counter
-        db.session.commit()
-        counter += 1
-        number += 1
+        selected_playlist = FitnessPlaylist.query.filter_by(id=get_playlist_vid_id).first()
 
-    selected_playlist = FitnessPlaylist.query.filter_by(id=get_playlist_vid_id).first()
+        play_id = selected_playlist.id
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+            
+        return render_template('loadplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, \
+                                play_id=play_id, load_vid=load_vid)
 
-    play_id = selected_playlist.id
-    savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
-           
-    return render_template('loadplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, \
-                            play_id=play_id, load_vid=load_vid)
+    else:
+        return redirect(url_for('playlist_vid'))
 
 
 @app.route('/updateorder', methods=['GET', 'POST'])

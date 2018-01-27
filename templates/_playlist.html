@@ -6,7 +6,7 @@
 
      {% for p in sorted_vid  %}
    
-     <li id='{{p.id}}' class="list-group-item">
+     <li id='{{p.id}}' class="list-group-item playlist_id" name = "{{p.playlist_id}}">
         <a href = "{{url_for('load_playlist_vid', id = p.id)}}">{{p.title}}
              <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
                  <span aria-hidden="true">&times;</span>
@@ -95,10 +95,7 @@ $('.modal').click(function(event){
     
     
     $('.confirm').on('click', function() {
-        var url = window.location;
-        var url_string = String(url);
-    
-        var playlist_id = url_string[url_string.length-1]
+        var playlist_id = $('.playlist_id').attr('name');
 
         var checkedvalue_array = [];
         var checkedvalue = $('.vid_checkbox:checked').each(function(){

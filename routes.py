@@ -1129,6 +1129,14 @@ def deleteplaylist(id):
 @app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])
 def playlist_vid(id):
     playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).order_by('order_no asc') #array of objects
+    counter = 1
+    number = 0
+
+    for a in playlist_vids:  #manual recalibration of 'order_no' after deletion 
+        playlist_vids[number].order_no = counter
+        db.session.commit()
+        counter += 1
+        number += 1
 
     try:
         first_vid = playlist_vids[0]
@@ -1192,6 +1200,7 @@ def add_playlist_vid(id):
 def delete_playlist_vid(id):
     selected_vid = SavePlaylistVids.query.filter_by(id=id).first()
     play_id = selected_vid.playlist_id
+    all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
     db.session.delete(selected_vid)
     db.session.commit()
     sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
@@ -1209,10 +1218,9 @@ def load_playlist_vid(id):
     counter = 1
     number = 0
 
-    all_vid = SavePlaylistVids.query.filter_by(playlist_id = get_playlist_vid_id).all()
 
-    for a in all_vid:  #manual recalibration of 'order_no' after deletion 
-        all_vid[number].order_no = counter
+    for a in playlist_vids:  #manual recalibration of 'order_no' after deletion 
+        playlist_vids[number].order_no = counter
         db.session.commit()
         counter += 1
         number += 1

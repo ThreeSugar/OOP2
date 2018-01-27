@@ -83,7 +83,7 @@ a:hover {
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Confirm</button>
+            <button type="button" class="btn btn-primary confirm">Confirm</button>
         </div>
      
       </div>
@@ -159,9 +159,7 @@ $('.confirm').on('click', function() {
     }
 
     var reverse_url_array = url_array.reverse();
-
     var reverse_url_array_length = reverse_url_array.length;
-
     var playlist_id = ''
 
     for (var i = 0; i < reverse_url_array_length; i++) {
@@ -184,18 +182,17 @@ $('.confirm').on('click', function() {
     });
 
     req.done(function(data) {
-        $('.playlist').empty();
-        $('.playlist').append(data.playlist);
+        $('#myModal').modal('hide');
+        $('#myModal').on('hidden.bs.modal', function () {
+            $('.playlist').empty();
+            $('.playlist').append(data.playlist);
+        })     
     });
 
 });
 
 
-$('.test').on('click', function() {
-    
 
-    console.log(checkedvalue_array);
-});
 
    function search() {
     // Declare variables

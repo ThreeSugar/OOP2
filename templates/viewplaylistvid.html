@@ -203,9 +203,11 @@ $('.confirm').on('click', function() {
     });
 
     req.done(function(data) {
-        $('#myModal').hide();
-        $('.playlist').empty();
-        $('.playlist').append(data.playlist);
+        $('#myModal').modal('hide');
+        $('#myModal').on('hidden.bs.modal', function () {
+            $('.playlist').empty();
+            $('.playlist').append(data.playlist);
+        })     
     });
 
 });

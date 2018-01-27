@@ -18,7 +18,7 @@
  </ul>
 
  <!-- Modal -->
- <div class="modal fade" data-backdrop="false" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
    <div class="modal-dialog" role="document">
      <div class="modal-content">
          <div class="modal-header">
@@ -42,7 +42,7 @@
          </div>
          <div class="modal-footer">
              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-             <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Confirm</button>
+             <button type="button" class="btn btn-primary confirm">Confirm</button>
          </div>
      
      </div>
@@ -54,9 +54,6 @@
     
 <script>
 
-$('.modal').click(function(event){
-    $(event.target).modal('hide');
-});
     
     $(function(){
         $('#searchlist').sortable({
@@ -136,15 +133,14 @@ $('.modal').click(function(event){
         });
     
         req.done(function(data) {
-            $('#myModal').hide();
-            $('.playlist').empty();
-            $('.playlist').append(data.playlist);
+            $('#myModal').modal('hide');
+            $('#myModal').on('hidden.bs.modal', function () {
+                $('.playlist').empty();
+                $('.playlist').append(data.playlist);
+            })     
         });
-    
     });
-    
-    
-    
+       
     function search() {
         // Declare variables
         var input, filter, ul, li, a, i;

@@ -75,7 +75,7 @@ a:hover {
          </ul>
         
          <!-- Modal -->
-         <div class="modal fade" data-backdrop="false" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
            <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">
@@ -99,7 +99,7 @@ a:hover {
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                     <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Confirm</button>
+                     <button type="button" class="btn btn-primary confirm">Confirm</button>
                  </div>
              
              </div>
@@ -116,10 +116,6 @@ a:hover {
     
 <script>
 
-$('.modal').click(function(event){
-    $(event.target).modal('hide');
-});
-    
     $(function(){
         $('#searchlist').sortable({
             axis: 'y',
@@ -156,8 +152,9 @@ $('.modal').click(function(event){
     });
     
     
-    $('.confirm').on('click', function() {
+    $('.confirm').on('click', function(e) {
         var playlist_id = $('.playlist_id').attr('name');
+        e.preventDefault();
 
         var checkedvalue_array = [];
         var checkedvalue = $('.vid_checkbox:checked').each(function(){
@@ -174,14 +171,14 @@ $('.modal').click(function(event){
         });
     
         req.done(function(data) {
-            $('#myModal').hide();
-            $('.playlist').empty();
-            $('.playlist').append(data.playlist);
+            $('#myModal').modal('hide');
+            $('#myModal').on('hidden.bs.modal', function () {
+                $('.playlist').empty();
+                $('.playlist').append(data.playlist);
+            })     
         });
-    
     });
-    
-    
+
     function search() {
         // Declare variables
         var input, filter, ul, li, a, i;

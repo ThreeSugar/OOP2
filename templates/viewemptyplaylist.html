@@ -35,20 +35,6 @@ a:hover {
 </div>
 
 
-<div class="video">
-
-        <video class='videos' width="700" height="400" controls>
-            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link)}}" type="video/mp4">
-            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/webm">
-            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/opgg">
-        </video>
-    
-        <p style = "font-size:20px;" class="extitle"><b>{{first_playlist_vid.title}}</b></p>
-        <div style="padding-bottom:10%; white-space: pre-line;" class='exdesc'>
-             {{first_playlist_vid.description}}
-        </div>
-</div>
-    
 
 <div style = "margin-left:10px;" class="card playlist">
     <div class="card-header">
@@ -59,7 +45,7 @@ a:hover {
 
         {% for p in playlist_vids  %}
       
-        <li id='{{p.id}}' class="list-group-item playlist_id" name = "{{p.playlist_id}}">
+        <li id='{{p.id}}' class="list-group-item">
            <a href = "{{url_for('load_playlist_vid', id = p.id)}}">{{p.title}}
                 <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -69,41 +55,40 @@ a:hover {
 
         {% endfor %}       
     </ul>
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
-            <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-
-        
-            <ul style = "margin-left:-40px;">
-                {% for s in savedvids  %}
-        
-                <li class="list-group-item">
-                    <label><input type="checkbox" class = "vid_checkbox" name = "selectvid" value="{{s.videoid}}">  {{s.title}}</label> 
-                </li>
-        
-                {% endfor %}     
-            </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary confirm">Confirm</button>
-            </div>
-        
-        </div>
-      </div>
-    </div>
 </div>
 
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
+          <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+       
+          <ul style = "margin-left:-40px;">
+            {% for s in savedvids  %}
+      
+            <li class="list-group-item">
+                <label><input type="checkbox" class = "vid_checkbox" name = "selectvid" value="{{s.videoid}}">  {{s.title}}</label> 
+            </li>
+    
+            {% endfor %}     
+          </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary confirm">Confirm</button>
+        </div>
+     
+      </div>
+    </div>
+</div>
 
 
 
@@ -117,7 +102,6 @@ a:hover {
     crossorigin="anonymous"></script>
 
 <script>
-
 
 $(function(){
     $('#searchlist').sortable({
@@ -156,16 +140,12 @@ $(function(){
 
 
 $('.confirm').on('click', function() {
-
-    //To retrieve playlist_id via the http url
-    
     var url = window.location;
     var url_string = String(url);
     var url_tracker = true;
     var url_array = [];
     var counter = 1;
-    var check_playlist_id = $('.playlist_id').attr('name');
-    
+
     while(url_tracker) {
         var url_char = url_string[url_string.length-counter]
         url_array.push(url_char)
@@ -181,16 +161,15 @@ $('.confirm').on('click', function() {
     var reverse_url_array = url_array.reverse();
     var reverse_url_array_length = reverse_url_array.length;
     var playlist_id = ''
+
     for (var i = 0; i < reverse_url_array_length; i++) {
         playlist_id += reverse_url_array[i];
-    } 
-
-    //Array containing values of selected options
+    }
 
     var checkedvalue_array = [];
     var checkedvalue = $('.vid_checkbox:checked').each(function(){
         checkedvalue_array.push($(this).val())
-    });
+        });
     
     
     req = $.ajax({
@@ -213,11 +192,7 @@ $('.confirm').on('click', function() {
 });
 
 
-$('.test').on('click', function() {
-    
 
-    console.log(checkedvalue_array);
-});
 
    function search() {
     // Declare variables

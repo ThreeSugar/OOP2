@@ -78,7 +78,7 @@
         var playlist_id = $(this).attr('name');
     
         req = $.ajax({
-        url : '/dashboard/playlist/viewvideo/delete/' + playlist_id,
+        url : '/dashboard/playlist/viewvideo/deletevid/' + playlist_id,
         type : 'POST',
     
         });
@@ -92,31 +92,7 @@
     
     
     $('.confirm').on('click', function() {
-        var url = window.location;
-        var url_string = String(url);
-        var url_tracker = true;
-        var url_array = [];
-        var counter = 1;
-
-        while(url_tracker) {
-            var url_char = url_string[url_string.length-counter]
-            url_array.push(url_char)
-            counter += 1
-
-            if (url_char == '/') {
-                url_array.pop(url_char)
-                url_tracker = false;
-            } 
-
-        }
-
-        var reverse_url_array = url_array.reverse();
-        var reverse_url_array_length = reverse_url_array.length;
-        var playlist_id = ''
-
-        for (var i = 0; i < reverse_url_array_length; i++) {
-            playlist_id += reverse_url_array[i];
-        }
+        var playlist_id = $('.playlist_id').attr('name');
 
         var checkedvalue_array = [];
         var checkedvalue = $('.vid_checkbox:checked').each(function(){
@@ -124,7 +100,7 @@
         });
     
         req = $.ajax({
-        url : '/dashboard/playlist/viewvideo/add/' + playlist_id,
+        url : '/dashboard/playlist/viewvideo/addvid/' + playlist_id,
         type : 'POST',
         data: JSON.stringify({checkedvalue_array:checkedvalue_array}),
         contentType: 'application/json;charset=UTF-8',
@@ -140,7 +116,7 @@
             })     
         });
     });
-       
+    
     function search() {
         // Declare variables
         var input, filter, ul, li, a, i;

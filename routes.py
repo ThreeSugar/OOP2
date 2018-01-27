@@ -1164,7 +1164,7 @@ def add_playlist_vid(id):
     print(checked_value)
     selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
     play_id = selected_playlist.id
-    all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
+    sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
     counter = 1
     s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
     if not s:
@@ -1176,9 +1176,10 @@ def add_playlist_vid(id):
                 db.session.add(save)
                 db.session.commit()
                 
-        return jsonify({'playlist': 'test'})
+        return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
     
     else:
+        sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
         for v in checked_value:
                 playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()
                 order_array = []
@@ -1192,7 +1193,7 @@ def add_playlist_vid(id):
                 db.session.add(save)
                 db.session.commit()
 
-        return jsonify({'playlist': 'test' })
+        return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
 
 
 
@@ -1200,11 +1201,11 @@ def add_playlist_vid(id):
 def delete_playlist_vid(id):
     selected_vid = SavePlaylistVids.query.filter_by(id=id).first()
     play_id = selected_vid.playlist_id
-    all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
     db.session.delete(selected_vid)
     db.session.commit()
     sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
-    return jsonify({'playlist': 'test' })
+    savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+    return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
 
 
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])

@@ -1,21 +1,53 @@
 <div class="card-header">
-    Playlist
- <a data-toggle="modal" data-target="#myModal"><i style = "font-size:15px; margin-top:3px; margin-left:195px;"class="fa fa-plus" aria-hidden="true"></i></a>
-</div>
-<ul id = "searchlist" class="list-group list-group-flush">
+        Playlist
+     <a data-toggle="modal" data-target="#myModal"><i style = "font-size:15px; margin-top:3px; margin-left:195px;"class="fa fa-plus" aria-hidden="true"></i></a>
+ </div>
+ <ul id = "searchlist" class="list-group list-group-flush">
 
- {% for p in all_vid %}
+     {% for p in sorted_vid  %}
+   
+     <li id='{{p.id}}' class="list-group-item">
+        <a href = "{{url_for('load_playlist_vid', id = p.id)}}">{{p.title}}
+             <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+             </a>
+         </a> 
+     </li>
 
- <li id='{{p.id}}' class="list-group-item">
-    <a href = "{{url_for('load_playlist_vid', id = p.id)}}">{{p.title}}
-         <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
+     {% endfor %}       
+ </ul>
+
+ <!-- Modal -->
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+         <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
+         <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
              <span aria-hidden="true">&times;</span>
-         </a>
-     </a> 
- </li>
+         </button>
+         </div>
+         <div class="modal-body">
 
- {% endfor %}       
-</ul>
+     
+         <ul style = "margin-left:-40px;">
+             {% for s in savedvids  %}
+     
+             <li class="list-group-item">
+                 <label><input type="checkbox" class = "vid_checkbox" name = "selectvid" value="{{s.videoid}}">  {{s.title}}</label> 
+             </li>
+     
+             {% endfor %}     
+         </ul>
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Confirm</button>
+         </div>
+     
+     </div>
+   </div>
+ </div>
 
 {% block script %}
 

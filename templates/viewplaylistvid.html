@@ -47,7 +47,7 @@ a:hover {
         <div style="padding-bottom:10%; white-space: pre-line;" class='exdesc'>
              {{first_playlist_vid.description}}
         </div>
-    </div>
+</div>
     
 
 <div style = "margin-left:10px;" class="card playlist">
@@ -69,40 +69,41 @@ a:hover {
 
         {% endfor %}       
     </ul>
-</div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
+            <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
-          <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        
+            <ul style = "margin-left:-40px;">
+                {% for s in savedvids  %}
+        
+                <li class="list-group-item">
+                    <label><input type="checkbox" class = "vid_checkbox" name = "selectvid" value="{{s.videoid}}">  {{s.title}}</label> 
+                </li>
+        
+                {% endfor %}     
+            </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Confirm</button>
+            </div>
+        
         </div>
-        <div class="modal-body">
-
-       
-          <ul style = "margin-left:-40px;">
-            {% for s in savedvids  %}
-      
-            <li class="list-group-item">
-                <label><input type="checkbox" class = "vid_checkbox" name = "selectvid" value="{{s.videoid}}">  {{s.title}}</label> 
-            </li>
-    
-            {% endfor %}     
-          </ul>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary confirm" data-dismiss="modal">Confirm</button>
-        </div>
-     
       </div>
     </div>
 </div>
+
+
 
 
 

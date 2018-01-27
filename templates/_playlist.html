@@ -114,9 +114,7 @@ $('.modal').click(function(event){
         }
 
         var reverse_url_array = url_array.reverse();
-
         var reverse_url_array_length = reverse_url_array.length;
-
         var playlist_id = ''
 
         for (var i = 0; i < reverse_url_array_length; i++) {
@@ -126,7 +124,7 @@ $('.modal').click(function(event){
         var checkedvalue_array = [];
         var checkedvalue = $('.vid_checkbox:checked').each(function(){
             checkedvalue_array.push($(this).val())
-            });
+        });
     
         req = $.ajax({
         url : '/dashboard/playlist/viewvideo/add/' + playlist_id,

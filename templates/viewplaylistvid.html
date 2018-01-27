@@ -164,7 +164,8 @@ $('.confirm').on('click', function() {
     var url_tracker = true;
     var url_array = [];
     var counter = 1;
-
+    var check_playlist_id = $('.playlist_id').attr('name');
+    
     while(url_tracker) {
         var url_char = url_string[url_string.length-counter]
         url_array.push(url_char)

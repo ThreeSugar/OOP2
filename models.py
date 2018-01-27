@@ -293,8 +293,6 @@ class NewPlaylist(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=4)])
 
-    
-
 class SavePlaylistVids(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     playlist_id = db.Column(db.Integer)
@@ -303,7 +301,12 @@ class SavePlaylistVids(db.Model):
     order_no = db.Column(db.Integer)
     title = db.Column(db.String)
     desc = db.Column(db.String)   
-    
+
+class PlaylistSession(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    playlist_id = db.Column(db.Integer)
+    username = db.Column(db.String)
+    playlist_vid_id = db.Column(db.Integer)
 
 
 

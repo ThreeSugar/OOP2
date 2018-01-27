@@ -156,6 +156,8 @@ $(function(){
 
 
 $('.confirm').on('click', function() {
+
+    //To retrieve playlist_id via the http url
     
     var url = window.location;
     var url_string = String(url);
@@ -176,19 +178,18 @@ $('.confirm').on('click', function() {
     }
 
     var reverse_url_array = url_array.reverse();
-
     var reverse_url_array_length = reverse_url_array.length;
-
     var playlist_id = ''
-
     for (var i = 0; i < reverse_url_array_length; i++) {
         playlist_id += reverse_url_array[i];
-    }
+    } 
+
+    //Array containing values of selected options
 
     var checkedvalue_array = [];
     var checkedvalue = $('.vid_checkbox:checked').each(function(){
         checkedvalue_array.push($(this).val())
-        });
+    });
     
     
     req = $.ajax({

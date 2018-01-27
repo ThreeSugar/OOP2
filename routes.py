@@ -1215,9 +1215,25 @@ def load_playlist_vid(id):
     load_vid_id = SavePlaylistVids.query.filter_by(id = id).first()
     if load_vid_id is not None:
         load_vid = Video.query.filter_by(id=load_vid_id.video_id).first()
-
+        
         get_playlist_vid_id = load_vid_id.playlist_id
         playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).order_by('order_no asc')
+
+        check_user_state = PlaylistSession.query.filter_by(username=current_user.username).first()
+
+        if check_user_state is None:
+            save_user_state = PlaylistSession(playlist_id = get_playlist_vid_id, username = current_user.username,\
+            playlist_vid_id = id)
+            db.session.add(save_user_state)
+            db.session.commit()
+        
+        elif check_user_state is not None:
+            db.session.delete(check_user_state)
+            db.session.commit()
+            save_user_state = PlaylistSession(playlist_id = get_playlist_vid_id, username = current_user.username,\
+            playlist_vid_id = id)
+            db.session.add(save_user_state)
+            db.session.commit()
 
         counter = 1
         number = 0
@@ -1237,7 +1253,7 @@ def load_playlist_vid(id):
                                 play_id=play_id, load_vid=load_vid)
 
     else:
-        return redirect(url_for('playlist_vid'))
+        return 'error'
 
 
 @app.route('/updateorder', methods=['GET', 'POST'])

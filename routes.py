@@ -1253,7 +1253,9 @@ def load_playlist_vid(id):
                                 play_id=play_id, load_vid=load_vid)
 
     else:
-        return 'error'
+        get_playlist_id = PlaylistSession.query.filter_by(username=current_user.username).first()
+        playlist_id = get_playlist_id.playlist_id
+        return redirect(url_for('playlist_vid', id = playlist_id))
 
 
 @app.route('/updateorder', methods=['GET', 'POST'])

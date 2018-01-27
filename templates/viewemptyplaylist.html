@@ -35,20 +35,6 @@ a:hover {
 </div>
 
 
-<div class="video">
-
-        <video class='videos' width="700" height="400" controls>
-            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link)}}" type="video/mp4">
-            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/webm">
-            <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/opgg">
-        </video>
-    
-        <p style = "font-size:20px;" class="extitle"><b>{{first_playlist_vid.title}}</b></p>
-        <div style="padding-bottom:10%; white-space: pre-line;" class='exdesc'>
-             {{first_playlist_vid.description}}
-        </div>
-    </div>
-    
 
 <div style = "margin-left:10px;" class="card playlist">
     <div class="card-header">

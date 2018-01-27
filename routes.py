@@ -1129,19 +1129,31 @@ def deleteplaylist(id):
 @app.route('/dashboard/playlist/viewvideo/<id>', methods=['GET', 'POST'])
 def playlist_vid(id):
     playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=id).order_by('order_no asc') #array of objects
-    first_vid = playlist_vids[0]
-    first_playlist_vid = Video.query.filter_by(id=first_vid.video_id).first()
-    selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
-    play_id = selected_playlist.id
-    savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
-           
-    return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
+
+    try:
+        first_vid = playlist_vids[0]
+        first_playlist_vid = Video.query.filter_by(id=first_vid.video_id).first()
+        selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
+        play_id = selected_playlist.id
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+        
+        return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
                             first_playlist_vid = first_playlist_vid)
+    
+    except IndexError:
+        selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
+        play_id = selected_playlist.id
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+        return render_template('viewemptyplaylist.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
+        )
+
 
 @app.route('/dashboard/playlist/viewvideo/add/<id>', methods=['GET', 'POST'])
 def add_playlist_vid(id):
     playlist_json = request.get_json()
     checked_value = playlist_json['checkedvalue_array']
+    print(playlist_json)
+    print(checked_value)
     selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
     play_id = selected_playlist.id
     all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
@@ -1156,7 +1168,7 @@ def add_playlist_vid(id):
                 db.session.add(save)
                 db.session.commit()
                 
-        return jsonify({'playlist': render_template('_addplaylist.html', all_vid=all_vid)})
+        return jsonify({'playlist': 'test'})
     
     else:
         for v in checked_value:
@@ -1172,7 +1184,7 @@ def add_playlist_vid(id):
                 db.session.add(save)
                 db.session.commit()
 
-        return jsonify({'playlist': render_template('_addplaylist.html', all_vid=all_vid)})
+        return jsonify({'playlist': 'test' })
 
 
 
@@ -1182,15 +1194,7 @@ def delete_playlist_vid(id):
     play_id = selected_vid.playlist_id
     db.session.delete(selected_vid)
     db.session.commit()
-    all_vid = SavePlaylistVids.query.filter_by(playlist_id = play_id).all()
-    counter = 1
-    number = 0
     sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
-    for a in all_vid: #manual recalibration of 'order_no' after deletion 
-        all_vid[number].order_no = counter
-        db.session.commit()
-        counter += 1
-        number += 1
     return jsonify({'playlist': render_template('_playlist.html', all_vid=all_vid)})
 
 
@@ -1201,40 +1205,22 @@ def load_playlist_vid(id):
 
     get_playlist_vid_id = load_vid_id.playlist_id
     playlist_vids = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).order_by('order_no asc')
+
+    counter = 1
+    number = 0
+
+    all_vid = SavePlaylistVids.query.filter_by(playlist_id = get_playlist_vid_id).all()
+
+    for a in all_vid:  #manual recalibration of 'order_no' after deletion 
+        all_vid[number].order_no = counter
+        db.session.commit()
+        counter += 1
+        number += 1
+
     selected_playlist = FitnessPlaylist.query.filter_by(id=get_playlist_vid_id).first()
 
     play_id = selected_playlist.id
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
-    if request.method == "POST":
-        value = request.form.getlist("selectvid")
-        counter = 1
-        s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
-        if not s:
-            for v in value:
-                    get_video = Video.query.filter_by(id = int(v)).first()
-                    save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = counter, playlist_vid_id = counter)
-                    counter +=1
-                    db.session.add(save)
-                    db.session.commit()
-                    
-            return redirect(url_for('playlist_vid', id = play_id))
-        
-        else:
-            for v in value:
-                    playlist_id = SavePlaylistVids.query.filter_by(playlist_id=get_playlist_vid_id).all()
-                    order_array = []
-                    for play in playlist_id:
-                        order_array.append(int(play.id))
-
-                    get_video = Video.query.filter_by(id = int(v)).first()
-                    new_order_no = len(order_array) + 1
-                    save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
-                    desc = get_video.description, order_no = new_order_no, playlist_vid_id = new_order_no)
-                    db.session.add(save)
-                    db.session.commit()
-
-            return redirect(url_for('playlist_vid', id = play_id))
            
     return render_template('loadplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, \
                             play_id=play_id, load_vid=load_vid)

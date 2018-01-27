@@ -157,7 +157,33 @@ $(function(){
 
 $('.confirm').on('click', function() {
     
-    var playlist_id = $('.playlist_id').attr('name');
+    var url = window.location;
+    var url_string = String(url);
+    var url_tracker = true;
+    var url_array = [];
+    var counter = 1;
+
+    while(url_tracker) {
+        var url_char = url_string[url_string.length-counter]
+        url_array.push(url_char)
+        counter += 1
+
+        if (url_char == '/') {
+            url_array.pop(url_char)
+            url_tracker = false;
+        } 
+
+    }
+
+    var reverse_url_array = url_array.reverse();
+
+    var reverse_url_array_length = reverse_url_array.length;
+
+    var playlist_id = ''
+
+    for (var i = 0; i < reverse_url_array_length; i++) {
+        playlist_id += reverse_url_array[i];
+    }
 
     var checkedvalue_array = [];
     var checkedvalue = $('.vid_checkbox:checked').each(function(){

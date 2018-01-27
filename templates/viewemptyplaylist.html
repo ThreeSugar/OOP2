@@ -148,10 +148,11 @@ $('.confirm').on('click', function() {
 
     while(url_tracker) {
         var url_char = url_string[url_string.length-counter]
-        url_array.append(url_char)
+        url_array.push(url_char)
         counter += 1
 
         if (url_char == '/') {
+            url_array.pop(url_char)
             url_tracker = false;
         } 
 

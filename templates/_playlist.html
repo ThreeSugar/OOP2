@@ -18,7 +18,7 @@
  </ul>
 
  <!-- Modal -->
- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal fade" data-backdrop="false" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
    <div class="modal-dialog" role="document">
      <div class="modal-content">
          <div class="modal-header">
@@ -53,6 +53,10 @@
 
     
 <script>
+
+$('.modal').click(function(event){
+    $(event.target).modal('hide');
+});
     
     $(function(){
         $('#searchlist').sortable({
@@ -96,8 +100,6 @@
     
         var playlist_id = url_string[url_string.length-1]
 
-        console.log(playlist_id)
-    
         var checkedvalue_array = [];
         var checkedvalue = $('.vid_checkbox:checked').each(function(){
             checkedvalue_array.push($(this).val())
@@ -113,6 +115,7 @@
         });
     
         req.done(function(data) {
+            $('#myModal').hide();
             $('.playlist').empty();
             $('.playlist').append(data.playlist);
         });

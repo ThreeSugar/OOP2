@@ -1168,6 +1168,7 @@ def add_playlist_vid(id):
     counter = 1
     s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
     if not s:
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
         for v in checked_value:
                 get_video = Video.query.filter_by(id = int(v)).first()
                 save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
@@ -1179,6 +1180,7 @@ def add_playlist_vid(id):
         return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
     
     else:
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
         sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
         for v in checked_value:
                 playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()

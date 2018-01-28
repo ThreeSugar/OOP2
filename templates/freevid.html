@@ -52,6 +52,11 @@ LifeStyle28 | Video
         text-decoration: underline;
     }
 
+    .vidusername:hover, .vidusername:visited, .vidusername:link, .vidusername:active {
+        color:black;
+        font-weight:600;
+    }
+
 
 
 </style>
@@ -101,8 +106,6 @@ LifeStyle28 | Video
                         </div>
                     </div>
                   {% endfor %}
-
-                  <a class = "viewall">View All</a>
                 </div>
             </div>
         </div>
@@ -136,15 +139,14 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <p class="text-time">
-                                       <em>{{a.username}}</em>
-                                    </p>
+                                    <a class = "vidusername" href = "{{url_for('profile', username = a.username)}}" class="text-time">
+                                        <em>{{a.username}}</em>
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
                   {% endfor %}
-                  <a class = "viewall">View All</a>
                 </div>
             </div>
         </div>
@@ -177,15 +179,14 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <p class="text-time">
+                                    <a class = "vidusername" href = "{{url_for('profile', username = a.username)}}" class="text-time">
                                         <em>{{a.username}}</em>
-                                    </p>
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
                   {% endfor %}
-                  <a class = "viewall">View All</a>
                 </div>
             </div>
         </div>
@@ -216,15 +217,14 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <p class="text-time">
+                                    <a class = "vidusername" href = "{{url_for('profile', username = a.username)}}" class="text-time">
                                         <em>{{a.username}}</em>
-                                    </p>
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
                   {% endfor %}
-                  <a class = "viewall">View All</a>
                 </div>
             </div>
         </div>
@@ -255,15 +255,14 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <p class="text-time">
+                                    <a class = "vidusername" href = "{{url_for('profile', username = a.username)}}" class="text-time">
                                         <em>{{a.username}}</em>
-                                    </p>
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
                   {% endfor %}
-                  <a class = "viewall">View All</a>
                 </div>
             </div>
         </div>
@@ -294,15 +293,14 @@ LifeStyle28 | Video
                                 </div>
                                 <p class="card-text">{{a.description}}</p>
                                 <p class="card-text">
-                                    <p class="text-time">
+                                    <a class = "vidusername" href = "{{url_for('profile', username = a.username)}}" class="text-time">
                                         <em>{{a.username}}</em>
-                                    </p>
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
                   {% endfor %}
-                  <a style ="padding-bottom:20px;" class = "viewall">View All</a>
                 </div>
             </div>
         </div>

@@ -45,7 +45,7 @@ mail = Mail(app)
 
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
-# 'postgresql://postgres:class@localhost/flaskvids'
+
 
 
 app.secret_key = "development-key"

@@ -64,7 +64,7 @@
 
 
     
-    <p style = "font-size:30px; margin-top:10px;">{{title}}</p>
+    <p style = "font-size:30px; color:black; margin-top:10px;">{{title}}</p>
      
     <p style = "margin-top:5px;">{{tviews}} views</p>
 
@@ -256,7 +256,7 @@
 </div>
 
 <div class="sidearea">
-    <p style="font-size:30px;">Related Videos</p>
+    <p style="font-size:30px; color:black;">Related Videos</p>
     <hr>
     {% for r in related %}
 
@@ -265,7 +265,7 @@
     </div>
 
     <div style = "display:inline-block; margin-top: 1%;" >
-        <a href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
+        <a style = "font-size:20px; color:black;"href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
         <p>Posted by: {{r.username}}</p>
         <p>Date: {{r.date}}</p>
     </div>

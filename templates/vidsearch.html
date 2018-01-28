@@ -31,6 +31,11 @@
             text-decoration: underline; 
         }
 
+    .vidusername:hover, .vidusername:visited, .vidusername:link, .vidusername:active {
+        color:black;
+        font-weight:600;
+    }
+
     .title-small:hover, .title-small:visited, .title-small:link, a:active {
           color:black;
           font-weight: 600;
@@ -41,6 +46,8 @@
       border: 0px;
       color:grey;
    }
+
+
 
 
 
@@ -65,7 +72,7 @@
 <div class = "vidcontainer">
 
     <div class = "dropdown" style = "float:left; margin-top:-75px; margin-left: -35%;">
-       <p data-toggle="dropdown" style = "font-size:18px;"><i class="fa fa-list" aria-hidden="true"></i> FLITER BY</p>
+       <p data-toggle="dropdown" style = "font-size:18px; color:black;"><i class="fa fa-list" aria-hidden="true"></i> FLITER BY</p>
         <div class="dropdown-menu filter" aria-labelledby="dLabel">
             <ul style="list-style: none;">
                <li id = "foodz"><a href = "#"> Food </a></li>
@@ -81,10 +88,10 @@
     <div class = "searchdiv"> 
 
         <div style = "display:inline-block; vertical-align:top;">
-            <img style = "height:150px;"class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+            <img style = "height:150px; margin-top:18px; "class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
         </div> 
             
-        <div style = "display:inline-block; margin-top:-18px; padding:10px;">
+        <div style = "display:inline-block; padding:10px;">
             <a class=" title-small" href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a> 
             <p class="card-text">{{s.description }}</p>
             <a class = "vidusername" href = "{{url_for('profile', username = s.username)}}"class="card-text">{{s.username }}</a>

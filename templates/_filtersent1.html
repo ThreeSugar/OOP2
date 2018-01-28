@@ -11,6 +11,11 @@
       <td><a href = "{{url_for('profile', username=i.target)}}">{{i.target}}</a></td>
       <td><a href = "{{url_for('viewsent', id=i.id)}}">{{i.subject}}</a></td>
       <td>{{i.date}}</td> 
+      <td width = "5%">
+        <a data-toggle="modal" data-target="#myModal{{i.id}}">
+            <i class="fa fa-trash"></i> Delete 
+        </a>
+      </td>
     </tr>
     {% endfor %}
 </tbody>

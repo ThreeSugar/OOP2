@@ -242,6 +242,7 @@ def profile(username):
         message=form.message.data, seen=False)
         db.session.add(new_msg)
         db.session.commit() 
+        flash("Your message was successfully sent.", 'success')
         return redirect(url_for('inbox'))
 
     if current_user.is_authenticated:
@@ -1204,7 +1205,7 @@ def add_playlist_load(id):
     play_id = selected_playlist.id
     sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
     counter = 1
-    s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
+    s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. 
     if not s:
         savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
         for v in checked_value:

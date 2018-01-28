@@ -364,6 +364,9 @@ def sortflagasc(type):
     sort_type = str(type)
     savestate = SaveFlaggedState.query.filter_by(username=current_user.username).first()
 
+    subjectasc = True
+    dateasc = True
+   
     if sort_type == 'date':
         savestate.dateasc = True
         savestate.datedesc = False
@@ -378,7 +381,7 @@ def sortflagasc(type):
         savestate.datedesc = False
         db.session.commit()
 
-    return jsonify({'flagged': render_template('_filterflag.html', flagged=flagged)}) 
+    return jsonify({'flagged': render_template('_filterflag.html', flagged=flagged, subjectasc=subjectasc, dateasc=dateasc)}) 
 
 @app.route('/inbox/flag/sort/descending/<type>', methods=['GET', 'POST'])
 def sortflagdesc(type):
@@ -387,6 +390,9 @@ def sortflagdesc(type):
 
     sort_type = str(type)
     savestate = SaveFlaggedState.query.filter_by(username=current_user.username).first()
+
+    subjectasc = False
+    dateasc = False
 
     if sort_type == 'date':
         savestate.dateasc = False
@@ -402,7 +408,7 @@ def sortflagdesc(type):
         savestate.datedesc = False
         db.session.commit()
 
-    return jsonify({'flagged': render_template('_filterflag1.html', flagged=flagged)}) 
+    return jsonify({'flagged': render_template('_filterflag1.html', flagged=flagged, subjectasc=subjectasc, dateasc=dateasc)}) 
 
 
 #SORT SENT
@@ -414,6 +420,9 @@ def sortsentasc(type):
     sort_type = str(type)
     savestate = SaveSentState.query.filter_by(username=current_user.username).first()
 
+    subjectasc = True
+    dateasc = True
+
     if sort_type == 'date':
         savestate.dateasc = True
         savestate.datedesc = False
@@ -428,13 +437,16 @@ def sortsentasc(type):
         savestate.datedesc = False
         db.session.commit()
 
-    return jsonify({'sent': render_template('_filtersent.html', sent=sent)}) 
+    return jsonify({'sent': render_template('_filtersent.html', sent=sent, subjectasc=subjectasc, dateasc=dateasc)}) 
 
 @app.route('/inbox/send/sort/descending/<type>', methods=['GET', 'POST'])
 def sortsentdesc(type):
     sent = UserMail.query.filter_by(sender=current_user.username).order_by(str(type) + " " + "desc").all()
     sort_type = str(type)
     savestate = SaveSentState.query.filter_by(username=current_user.username).first()
+
+    subjectasc = False
+    dateasc = False
 
     if sort_type == 'date':
         savestate.dateasc = False
@@ -450,7 +462,7 @@ def sortsentdesc(type):
         savestate.datedesc = False
         db.session.commit()
 
-    return jsonify({'sent': render_template('_filtersent1.html', sent=sent)}) 
+    return jsonify({'sent': render_template('_filtersent1.html', sent=sent, subjectasc=subjectasc, dateasc=dateasc)}) 
 
 #MARK
 
@@ -503,6 +515,9 @@ def removeflag():
 
     savestate = SaveSentState.query.filter_by(username=current_user.username).first()
 
+    subjectasc = True
+    dateasc = True
+
     if savestate is None:
         savestate_init = SaveFlaggedState(username=current_user.username, subjectasc = False, subjectdesc = False, \
         dateasc = False, datedesc = True)
@@ -518,6 +533,7 @@ def removeflag():
         elif savestate.subjectdesc:
             flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
             order_by("subject desc").all()
+            subjectasc=False
         
         elif savestate.dateasc:
             flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
@@ -526,8 +542,9 @@ def removeflag():
         elif savestate.datedesc:
             flagged = UserMail.query.filter_by(flag=True).filter_by(target=current_user.username).\
             order_by("date desc").all()
+            dateasc=False
 
-    return jsonify({'removeflag' : render_template('_removeflag.html', flagged=flagged)})
+    return jsonify({'removeflag' : render_template('_removeflag.html', flagged=flagged, subjectasc=subjectasc, dateasc=dateasc)})
 
 @app.route('/inbox/flag/view')
 def viewflagged():

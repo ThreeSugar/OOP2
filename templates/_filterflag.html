@@ -1,15 +1,23 @@
 <thead>
-  <tr>
-    <th width="5%">
-      <a class="dates" href="#"> From </a>
-    </th>
-    <th width="15%">
-      <a id="subject" class="dates" href="#"> Subject </a>
-    </th>
-    <th width="15%">
-      <a id="date" class="dates" href="#"> Date </a>
-    </th>
-  </tr>
+    <tr>
+        <th width="5%"> <a class = "dates" href = "#"> From </a></th>
+        <th width="15%"><a id = "subject" class = "dates" href = "#"> Subject 
+
+          {% if subjectasc %}
+          <i class="fa-lg fa fa-caret-down"></i> 
+          {% else %}
+          <i class="fa-lg fa fa-caret-up"></i> 
+          {% endif %}
+
+        </a></th>
+        <th width="5%"><a id = "date" class = "dates" href = "#"> Date 
+          {% if dateasc %}
+          <i class="fa-lg fa fa-caret-down"></i>
+          {% else %}
+          <i class="fa-lg fa fa-caret-up"></i> 
+          {% endif %}
+        </a></th>
+      </tr>
 </thead>
 <tbody>
   {% for i in flagged %}

@@ -275,6 +275,8 @@ def editprofile(id):
 def inbox():
     savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
     inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
+    subjectasc = True
+    dateasc = True
 
     if savestate is None:
         savestate_init = SaveInboxState(username=current_user.username, subjectasc = False, subjectdesc = False, \
@@ -286,17 +288,21 @@ def inbox():
 
         if savestate.subjectasc:
             inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject asc").all()
+            subjectasc = True
         
         elif savestate.subjectdesc:
             inbox = UserMail.query.filter_by(target=current_user.username).order_by("subject desc").all()
+            subjectasc = False
         
         elif savestate.dateasc:
             inbox = UserMail.query.filter_by(target=current_user.username).order_by("date asc").all()
+            dateasc = True
         
         elif savestate.datedesc:
             inbox = UserMail.query.filter_by(target=current_user.username).order_by("date desc").all()
+            dateasc = False
 
-    return render_template('inbox.html', inbox=inbox)
+    return render_template('inbox.html', inbox=inbox, subjectasc=subjectasc, dateasc=dateasc)
 
 #SORT INBOX
 
@@ -305,6 +311,8 @@ def sortasc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "asc").all() # a list containing objects
     sort_type = str(type)
     savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
+    subjectasc = True
+    dateasc = True
 
     if sort_type == 'date':
         savestate.dateasc = True
@@ -320,13 +328,15 @@ def sortasc(type):
         savestate.datedesc = False
         db.session.commit()
     
-    return jsonify({'inbox': render_template('filterinbox.html', inbox=inbox)}) 
+    return jsonify({'inbox': render_template('filterinbox.html', inbox=inbox, subjectasc=subjectasc, dateasc=dateasc)}) 
 
 @app.route('/inbox/sort/descending/<type>', methods=['GET', 'POST'])
 def sortdesc(type):
     inbox = UserMail.query.filter_by(target=current_user.username).order_by(str(type) + " " + "desc").all()
     sort_type = str(type)
     savestate = SaveInboxState.query.filter_by(username=current_user.username).first()
+    subjectasc = False
+    dateasc = False
 
     if sort_type == 'date':
         savestate.dateasc = False
@@ -342,7 +352,7 @@ def sortdesc(type):
         savestate.datedesc = False
         db.session.commit()
 
-    return jsonify({'inbox': render_template('filterinbox1.html', inbox=inbox)}) 
+    return jsonify({'inbox': render_template('filterinbox1.html', inbox=inbox, dateasc=dateasc, subjectasc=subjectasc)}) 
 
 #SORT FLAGGED
 

@@ -3,10 +3,10 @@
     <div style = "margin-top:5px;" class = "fsearch"> 
 
         <div style = "display:inline-block; vertical-align:top;">
-            <img style = "height:150px;"class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
+            <img style = "height:150px; margin-top:18px;"class="img-fluid" src="{{url_for('static', filename = 'img/lifestyle.jpg')}}" alt="Generic Placeholder Image">
         </div> 
             
-        <div style = "display:inline-block; margin-top:-18px; padding:10px;">
+        <div style = "display:inline-block; padding:10px;">
             <a class=" title-small" href="{{url_for('videoz', videoid = s.id)}}">{{s.title}}</a> 
             <p class="card-text">{{s.description }}</p>
             <a class = "vidusername" href = "{{url_for('profile', username = s.username)}}"class="card-text">{{s.username }}</a>

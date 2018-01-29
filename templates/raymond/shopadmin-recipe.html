@@ -8,6 +8,6 @@
     <td>{{ i.price }}</td>
     <td>{{ i.preperation }}</td>
     <td>img.png</td>
-    <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+    <td><a class="btn recipeDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
 </tr>
 {% endfor %}

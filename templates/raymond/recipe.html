@@ -132,7 +132,14 @@
     color: white;
     background-color: dimgrey;
 }
-
+.ingredients{
+    list-style-type: none;
+    width: 100%;
+    border: solid 1px black;
+}
+.ingredients p{
+    display: inline-block;
+}
 @media only screen and (max-width:650px) {
     /* For mobile phones: */
     .reviewitemcomment {
@@ -143,7 +150,7 @@
 <div class="container">
 <h2>{{ item.name }}</h2>
     <div class="item">
-        <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}" style="width: 300px;">
+        <img src="{{ url_for('static', filename='raymond/img/' "r-" ~ item.id ~ ".jpg") }}" style="width: 300px;">
         <ul style="list-style: none;">
             <li><h4><b>ID:</b> {{ item.id }}</h4></li>
             <hr>
@@ -161,9 +168,8 @@
         </ul>
     </div>
     <div>
-        <ul>
         {% for i in recipe_items %}
-            <li>
+            <div class="ingredients">
                 <p>{{ i.name }}</p>
                 <p>{{ i.price }}</p>
                 <p>{{ i.info }}</p>
@@ -171,9 +177,8 @@
                 {% if i.change == True %}
                     <button>Change</button>
                 {% endif %}
-            </li>
+            </div>
         {% endfor %}
-        </ul>
         <a href="{{ url_for('addRecipetoCart',item_id = item.id) }}">Add to Cart</a>
     </div>
 </div>

@@ -865,20 +865,21 @@ def new_recipe():
 
 #RAYMOND
 
-#ADD USER TIME TO DELIVER
+
+#SEARCH RECIPES
 #ADD CHECKOUT FORM
-#ADD RECIPE EDIT INGREDIENT
+#ADD USER TIME TO DELIVER
+#FILTER ORDERSADMIN
+
 #ADD EVERY FORM VALIDATION
-#DELETE IMG
 #AJAX SHOP PAGE (CART)
 #AJAX CART PAGE
+
 #KCAL CALC FILTER
-#RECIPE IMAGE
 #DELIVERY PAGE
-#FILTER ORDERSADMIN
-#SEARCH RECIPES
-#CHECKOUT REDIRECTS LOGIN
 #IMAGE CROP
+#ADD RECIPE EDIT INGREDIENT
+
 
 #SHOP PAGE
 @app.route('/shop')
@@ -967,6 +968,9 @@ def search():
     filter = request.form['filter']
     if filter is "":
         items = Item.query.all()
+    # else:
+    #     items = Recipe.query.filter(func.lower(Recipe.name).contains(func.lower(filter))).all()
+    #     return render_template("raymond/shop-recipe.html", items=items)
     else:
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
         return render_template("raymond/shop-view.html", items=items)
@@ -1042,13 +1046,14 @@ def cart():
 
 @app.route('/cart/<int:item_id>/update', methods=['POST'])
 def updateCart(item_id):
-    items = Cart.query.filter_by(item_id=item_id).first()
+    itemsCart = Cart.query.filter_by(item_id=item_id).first()
+    items = Item.query.filter_by(id=item_id).first()
     quantity = request.form['newquantity']
     if int(items.quantity) < int(quantity):
         items.quantity = items.quantity
     else:
-        items.quantity = quantity
-    items.subtotal = "{0:.2f}".format(float(items.quantity)*items.price)
+        itemsCart.quantity = quantity
+    itemsCart.subtotal = "{0:.2f}".format(float(itemsCart.quantity)*itemsCart.price)
     db.session.commit()
     return redirect(url_for('cart'))
 
@@ -1077,7 +1082,7 @@ def checkout():
                 for c in cart:
                     checkout = Orders(oid=1, order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
                                       items_quantity=max_cart, price=c.price,
-                                      subtotal=c.subtotal, date=date, delivered="Order received")
+                                      subtotal=c.subtotal, date=date, delivered="Order Received")
                     db.session.add(checkout)
                     db.session.delete(c)
                     item = Item.query.filter_by(id=c.item_id).first()
@@ -1088,7 +1093,7 @@ def checkout():
                 for c in cart:
                     checkout = Orders(oid=oid_count, order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
                                       items_quantity=max_cart, price=c.price,
-                                      subtotal=c.subtotal, date=date, delivered="Order received")
+                                      subtotal=c.subtotal, date=date, delivered="Order Received")
                     db.session.add(checkout)
                     db.session.delete(c)
                     item = Item.query.filter_by(id=c.item_id).first()
@@ -1103,14 +1108,14 @@ def checkout():
 
             for c in cart:
                 checkout = Orders(oid=oid_count ,order_id=orderid_count, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=max_cart, price=c.price,
-                                  subtotal=c.subtotal, date=date, delivered="Order received")
+                                  subtotal=c.subtotal, date=date, delivered="Order Received")
                 db.session.add(checkout)
                 db.session.delete(c)
                 item = Item.query.filter_by(id=c.item_id).first()
                 item.quantity -= c.quantity
                 db.session.commit()
 
-        return redirect(url_for('shop'))
+        return redirect(url_for('orders'))
     else:
         return redirect(url_for('login'))
 
@@ -1212,6 +1217,10 @@ def deleteItem():
     del_item = Item.query.filter_by(id=item_id).first()
     db.session.delete(del_item)
     db.session.commit()
+
+    img = str(item_id) + ".jpg"
+    os.remove('static/raymond/img/' + img)
+
     items = Item.query.all()
     return render_template('raymond/shopadmin-table.html', items=items)
 
@@ -1238,9 +1247,35 @@ def addRecipe():
     db.session.add(recipe)
     db.session.commit()
 
+    img = request.files['image']
+    img.filename = "r-" + str(recipe.id) + ".jpg"
+    filename = photos.save(img)
+
     recipes = Recipe.query.all()
 
+
     return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
+
+
+@app.route('/deleteRecipe', methods=['POST'])
+def deleteRecipe():
+    item_id = request.form['delete_id']
+
+    del_recipe = Recipe.query.filter_by(id=item_id).first()
+    db.session.delete(del_recipe)
+    db.session.commit()
+
+    del_recipeitem = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
+    for i in del_recipeitem:
+        db.session.delete(i)
+        db.session.commit()
+
+    img = "r-" + str(item_id) + ".jpg"
+    os.remove('static/raymond/img/' + img)
+
+    recipes = Recipe.query.all()
+    return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
+
 
 @app.route('/addRecipeItem', methods=['POST'])
 def addRecipeItem():
@@ -1263,6 +1298,24 @@ def addRecipeItem():
     ingredient = RecipeIngredients(recipe_id=max_id, item_id=filter_id, name=name, price=price, info=info, quantity=quantity, calories=calories, change=True)
     db.session.add(ingredient)
     db.session.commit()
+
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
+
+    return render_template('raymond/shopadmin-recipetable.html', recipe_items=recipe_items)
+
+@app.route('/deleteRecipeItem', methods=['POST'])
+def deleteRecipeItem():
+    item_id = request.form['delete_id']
+
+    del_recipe = RecipeIngredients.query.filter_by(id=item_id).first()
+    db.session.delete(del_recipe)
+    db.session.commit()
+
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    if max_id is None:
+        max_id = 1
+    else:
+        max_id += 1
 
     recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
 
@@ -1300,15 +1353,94 @@ def ordersadmin():
 
     return render_template("raymond/ordersadmin.html", group=group, list=list)
 
-@app.route('/deliver/<group_id>')
-def deliver(group_id):
+@app.route('/deliver/<group_id>/<status>')
+def deliver(group_id, status):
     query_gid = Orders.query.filter(Orders.oid==group_id).all()
     for i in query_gid:
-        i.delivered = 'Delivery scheduled'
+        i.delivered = status
         db.session.commit()
 
+    return redirect(url_for('ordersadmin'))
 
-    return render_template("raymond/ordersadmin.html")
+@app.route('/orders')
+@login_required
+def orders():
+    # check if user id is same, then check if oid is same
+
+    #order received, delivery scheduled, delivery started, delivery in progress, delivery completed
+
+    # get max oid
+    max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
+
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+
+    list = []  # [[4,1],[4,2]]
+    group = []  # [[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+    for i in range(max_oid + 1):
+        o = Orders.query.filter(Orders.oid == i).first()
+        if o and o.user_id == uid:
+            o_userid = o.user_id
+            o_oid = o.oid
+            list.append([o_userid, o_oid])
+
+    for i in list:
+        q_userid = Orders.query.filter(and_(Orders.user_id == i[0], Orders.oid == i[1])).all()
+        group.append(q_userid)
+
+    percent = 0
+    status = 'true'
+    oid = 0
+    for i in range(max_oid + 1):
+        o = Orders.query.filter(Orders.oid == i).first()
+        if o and o.user_id == uid:
+            oid = o.oid
+    check = Orders.query.filter(and_(Orders.user_id == uid, Orders.oid == oid)).first()
+    if check.delivered == 'Order Received':
+        status = 'true'
+        percent = 10
+    elif check.delivered == 'Delivery Scheduled':
+        status = 'true'
+        percent = 40
+    elif check.delivered == 'Delivery In Progress':
+        status = 'true'
+        percent = 70
+    elif check.delivered == 'Delivery Completed':
+        status = 'true'
+        percent = 100
+
+    return render_template("raymond/orders.html", group=group, list=list, percent=percent, status=status, uid=uid, order_id=oid)
+    # return str(oid)
+
+@app.route('/orderstatus', methods=['POST'])
+@login_required
+def orderstatus():
+
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+
+    percent = 0
+    status = 'true'
+
+    order_id = request.form['order_id']
+    q_userid = Orders.query.filter(and_(Orders.user_id == uid, Orders.oid == order_id)).first()
+    if q_userid.delivered == 'Order Received':
+        status = 1
+        percent = 10
+    elif q_userid.delivered == 'Delivery Scheduled':
+        status = 2
+        percent = 40
+    elif q_userid.delivered == 'Delivery In Progress':
+        status = 3
+        percent = 70
+    elif q_userid.delivered == 'Delivery Completed':
+        status = 4
+        percent = 100
+
+    return render_template("raymond/orders-status.html", percent=percent, status=status, uid=uid, order_id=order_id)
+
+
 
 #
 # #CYNTHIA

@@ -16,7 +16,7 @@
         <td>{{ i.name }}</td>
         <td>{{ i.calories }}</td>
         <td>{{ i.change }}</td>
-        <td>Delete</td>
+        <td><a class="btn recipeItemDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
     </tr>
 </tbody>
 {% endfor %}

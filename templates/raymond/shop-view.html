@@ -1,53 +1,54 @@
 {% for item in items %}
-<div class="card" id="card1">
-    <div class="cardcontainer">
-{#                <img src="http://placehold.it/200x250">#}
-        <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">
-        <div class="overlay"></div>
-        <div class="button">
-            <a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><img src="{{ url_for('static', filename='img/cart.png') }}"></a>
-        </div>
-    </div>
-    <div class="cardinfo">
-        <p style="float: left"><b><a href="{{ url_for('item', item_id=item.id) }}">{{ item.name }}</a></b><br>{{ item.info }}</p>
-        <p style="text-align: right; overflow: auto">{% if item.quantity > 1 %}${{ '{0:.2f}'.format(item.price) }}{% else %}<span style="color: red; font-weight: bold;">OUT OF STOCK</span>{% endif %}</p>
-        <p style="float: right;">
-        {% if item.rating == 5 %}
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span> ({{ item.rating_count }})
-        {% endif %}
-        {% if item.rating == 4 %}
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span> ({{ item.rating_count }})
-        {% endif %}
-        {% if item.rating == 3 %}
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span> ({{ item.rating_count }})
-        {% endif %}
-        {% if item.rating == 2 %}
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span> ({{ item.rating_count }})
-        {% endif %}
-        {% if item.rating == 1 %}
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span> ({{ item.rating_count }})
-        {% endif %}
-        </p>
-    </div>
-</div>
-{% endfor %}
+            <div class="card" id="card1">
+                <div class="cardcontainer">
+{#                    <img src="http://placehold.it/200x250">#}
+                    <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">
+                    <div class="overlay"></div>
+                    <div class="button">
+                        <a class="btn addCartBtn" href="{{ url_for('item', item_id=item.id) }}"><i class="fa fa-search"></i></a>
+                        {% if item.quantity > 0 %}<a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><i class="fa fa-shopping-cart"></i></a>{% endif %}
+                    </div>
+                </div>
+                <div class="cardinfo">
+                    <p style="float: left"><b><a href="{{ url_for('item', item_id=item.id) }}">{{ item.name }}</a></b><br>{{ item.info }}</p>
+                    <p style="text-align: right; overflow: auto">{% if item.quantity > 0 %}${{ '{0:.2f}'.format(item.price) }}{% else %}<span style="color: red; font-weight: bold;">OUT OF STOCK</span>{% endif %}</p>
+                    <p style="float: right;">
+                    {% if item.rating == 5 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 4 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 3 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 2 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 1 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}

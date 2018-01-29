@@ -1,8 +1,8 @@
 {% for item in items %}
 <div class="card cardrecipe" id="card1">
     <div class="cardcontainer">
-            <img src="http://placehold.it/200x250">
-{#        <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">#}
+{#            <img src="http://placehold.it/200x250">#}
+        <img src="{{ url_for('static', filename='raymond/img/' "r-" ~ item.id ~ ".jpg") }}">
         <div class="overlay"></div>
         <div class="button">
             <a class="btn addCartBtn" href="{{ url_for('shop_recipe', item_id=item.id) }}"><i class="fa fa-search"></i></a>

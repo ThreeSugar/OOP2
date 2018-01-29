@@ -82,6 +82,16 @@
     padding: 0;
     width: 20px;
 }
+.recipeDelete{
+    margin: 0;
+    padding: 0;
+    width: 20px;
+}
+.recipeItemDelete{
+    margin: 0;
+    padding: 0;
+    width: 20px;
+}
 .order-button{
     width: 49%;
     outline: 1px solid black;
@@ -101,7 +111,7 @@
     padding: 8px;
     outline: none;
     border:1px solid rgba(0, 0, 0, 0.2);
-    width: 100%;
+    width: 49%;
 }
 #filterOptions{
     margin: 20px 0;
@@ -189,6 +199,7 @@
             </li>
             <li>
                 <input class="item-search" id="rsearch" type="search" placeholder="Search items.." onkeyup="searchFunction()">
+                <input type="file" id="rimage" class="field-style field-split align-right" required>
                 <ul id="filterOptions">
                     {% for i in items %}
                     <a class="filterOptionBtn" filter_id="{{ i.id }}" recipe_id="{{ new_id }}">
@@ -206,28 +217,7 @@
             </li>
             <li>
                 <table style="width: 100%" class="table table-bordered" id="recipeitems-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Item ID: </th>
-                            <th>Name: </th>
-                            <th>Calories: </th>
-                            <th>Change: </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    {% for i in recipe_items %}
-                    <tbody>
-                        <tr>
-                            <td>{{ i.id }}</td>
-                            <td>{{ i.item_id }}</td>
-                            <td>{{ i.name }}</td>
-                            <td>{{ i.calories }}</td>
-                            <td>{{ i.change }}</td>
-                            <td>Delete</td>
-                        </tr>
-                    </tbody>
-                    {% endfor %}
+
                 </table>
             </li>
             <li>
@@ -301,7 +291,7 @@
                 <td>{{ i.price }}</td>
                 <td>{{ i.preperation }}</td>
                 <td>img.png</td>
-                <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                <td><a class="btn recipeDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -339,7 +329,7 @@ $(document).ready( function() {
     $(document).on('click', '.filterOptionBtn', function(){
 
         filter_id = $(this).attr('filter_id');
-        recipe_id = $(this).attr('recipe_id')
+        recipe_id = $(this).attr('recipe_id');
 
         req = $.ajax({
             url: '/addRecipeItem',
@@ -375,6 +365,46 @@ $(document).ready( function() {
 
         $('#deleteAlert').fadeIn(1000).fadeOut(1000);
     });
+
+    $(document).on('click', '.recipeDelete', function(){
+
+        delete_id = $(this).attr('delete_id');
+
+        req = $.ajax({
+            url: '/deleteRecipe',
+            type: 'POST',
+            data: {
+                delete_id : delete_id
+            }
+        });
+
+        req.done(function(data){
+            $('#admin-recipes').fadeOut(200).fadeIn(200);
+            $('#admin-recipes').html(data);
+        });
+
+        $('#deleteAlert').fadeIn(1000).fadeOut(1000);
+    });
+    $(document).on('click', '.recipeItemDelete', function(){
+
+        delete_id = $(this).attr('delete_id');
+
+        req = $.ajax({
+            url: '/deleteRecipeItem',
+            type: 'POST',
+            data: {
+                delete_id : delete_id
+            }
+        });
+
+        req.done(function(data){
+            $('#recipeitems-table').fadeOut(200).fadeIn(200);
+            $('#recipeitems-table').html(data);
+        });
+
+        $('#deleteAlert').fadeIn(1000).fadeOut(1000);
+    });
+
     $(document).on('click', '.Submit', function(){
         var name = $('#name').val()
         var info = $('#info').val()
@@ -428,7 +458,7 @@ $(document).ready( function() {
         file.append('info', info);
         file.append('ingredients', ingredients);
         file.append('preperation', preperation);
-        {#file.append('image', $("#image")[0].files[0]);#}
+        file.append('image', $("#rimage")[0].files[0]);
 
         if((name && info && ingredients && preperation) == '') {
             $('#rerrorAlert').fadeIn(1000);
@@ -448,9 +478,12 @@ $(document).ready( function() {
                 $('#admin-recipes').fadeOut(200).fadeIn(200);
                 $('#admin-recipes').html(data);
                 $('#form-recipes')[0].reset();
+                $('#filterOptions').hide();
+                $('#recipeitems-table').hide()
             });
             $('#rerrorAlert').fadeOut();
             $('#rsuccessAlert').fadeIn(1000).fadeOut(1000);
+
         }
 
     });

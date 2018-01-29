@@ -64,7 +64,7 @@
 
 
     
-    <p style = "font-size:30px; color:black; margin-top:10px;">{{title}}</p>
+    <p style = "font-size:30px; color:black; font-weight:600; margin-top:10px;">{{title}}</p>
      
     <p style = "margin-top:5px;">{{tviews}} views</p>
 
@@ -265,7 +265,7 @@
     </div>
 
     <div style = "display:inline-block; margin-top: 1%;" >
-        <a style = "font-size:20px; color:black;"href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
+        <a style = "font-size:20px; color:black; font-weight:600;"href = "{{url_for('videoz', videoid = r.id )}}">{{r.title}}</a>
         <p>Posted by: {{r.username}}</p>
         <p>Date: {{r.date}}</p>
     </div>

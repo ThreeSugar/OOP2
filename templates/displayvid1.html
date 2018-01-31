@@ -80,7 +80,7 @@
             {% if curr_save %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
-                <a class = "clicksave">
+                <a data-toggle="modal" data-target="#myModal4" class = "clicksave">
                     <span style = "font-size:30px;"><i id = "saveicon" class="fa-check" aria-hidden="true"></i>                    
                     </span><p class = "displaysave" style = "font-size:10px;">Saved</p>
                 </a>
@@ -89,7 +89,7 @@
             {% else %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
-                <a class = "clicksave">
+                <a data-toggle="modal" data-target="#myModal2" class = "clicksave">
                         <span style = "font-size:30px;"><i id = "saveicon" class="fa fa-plus" aria-hidden="true"></i>                    
                         </span><p class = "displaysave" style = "font-size:10px;">Save</p>
                 </a>    
@@ -97,7 +97,22 @@
             
             {% endif %}
 
-
+            <!-- Custom Modal for Save -->
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div style = "text-align:center;" class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Save to...</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       test
+                    </div>
+                    </div>
+                </div>
+            </div>
        
 
         <a id = "cdislikes">
@@ -334,9 +349,12 @@ $('.clicksave').on('click', function() {
         if (data.save == "saved") {
             $('.displaysave').html('Saved');
             $('#saveicon').removeClass('fa fa-plus').addClass('fa-check');
+            $('.clicksave').attr('data-target', '#myModal4');
+
         } else if (data.save == "save") {
             $('.displaysave').html('Save');
             $('#saveicon').removeClass('fa-check').addClass('fa fa-plus');
+            $('.clicksave').attr('data-target', '#myModal2');
         } else {
             console.log("If you see this message, please check the code and fix the errors.")
         }

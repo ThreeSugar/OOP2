@@ -29,6 +29,10 @@
         }
 
         a { cursor: pointer; }
+
+        ul {
+           list-style-type: none;
+        }
     
 
 </style>
@@ -108,7 +112,25 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                       test
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                                  Video successfully saved.
+                        </div>
+
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            Video successfully removed.
+                        </div>
+
+
+
+                    <ul>
+                        {% for a in all_playlist %}
+                        <li>
+                            <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox" name = "selectvid" value="1">
+                               Saved video
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
                     </div>
                     </div>
                 </div>
@@ -294,6 +316,27 @@
 
 <script>
     $(document).ready(function() {
+
+        
+
+        $('.surecheck').prop('checked', true);
+        $(".alert-success").hide();
+        $(".alert-danger").hide();
+
+        $('.vid_checkbox').on('click', function(){
+            var play_id = $(this).attr('data-playid');
+            var checkbox = $('#' + play_id);
+            console.log(checkbox.is(':checked'));
+            if(checkbox.is(':checked')){
+                $(".alert-success").delay(700).show().fadeOut('slow');
+                console.log('true');
+                console.log(play_id)
+            } else {
+                $(".alert-danger").delay(700).show().fadeOut('slow');
+                console.log('false');
+            }
+        });
+        
     $('#clikes').on('click', function() {
        
         req = $.ajax({
@@ -349,7 +392,7 @@ $('.clicksave').on('click', function() {
         if (data.save == "saved") {
             $('.displaysave').html('Saved');
             $('#saveicon').removeClass('fa fa-plus').addClass('fa-check');
-            $('.clicksave').attr('data-target', '#myModal4');
+            $('.clicksave').attr('data-target', '');
 
         } else if (data.save == "save") {
             $('.displaysave').html('Save');

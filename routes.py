@@ -924,11 +924,16 @@ def videoz(videoid):
     related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
     # ~Video.title.in_(s) == Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
     # 'NOT IN' omits all query results that contains videoid.title
+
+    #ADD VIDEO DIRECTLY TO PLAYLIST
+
+    all_playlist = FitnessPlaylist.filter_by(username=current_user.username).all()
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
-                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, signup_error=signup_error, tviews=tviews)
+                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, \
+                            signup_error=signup_error, tviews=tviews, all_playlist=all_playlist)
 
 
 
@@ -1102,6 +1107,14 @@ def videofilter(option):
     searchy = search_json['value']
     search = Video.query.filter_by(category=option).filter(Video.title.ilike('%' + searchy + '%')).all()
     return jsonify({'search': render_template('filtersearch.html', search=search)}) 
+
+@app.route('/video/addtoplaylist/<id>')
+def add_to_playlist(id):
+    pass
+
+@app.route('/video/deletefromplaylist/<id>')
+def delete_from_playlist(id):
+    pass
    
 #FITNESS LIBRARY
 

@@ -65,11 +65,11 @@ a:hover {
            
              <li id='{{p.id}}' class="list-group-item playlist_id" name = "{{p.playlist_id}}">
                 <a href = "{{url_for('load_playlist_vid', id = p.id)}}">{{p.title}}
-                     <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
-                         <span aria-hidden="true">&times;</span>
-                     </a>
+                    <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
                  </a> 
-             </li>
+            </li>
         
              {% endfor %}       
          </ul>

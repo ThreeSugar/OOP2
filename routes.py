@@ -1119,6 +1119,44 @@ def add_to_playlist(id):
     selected_vid = Video.query.filter_by(id=id).first()
     playid_json = request.get_json()
     play_id = playid_json['value']
+
+    counter = 1
+    s = SavePlaylistVids.query.distinct(SavePlaylistVids.order_no).all() #if table is completely empty. i don't even know if i even need this
+    if not s:
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+        for v in checked_value:
+                get_video = Video.query.filter_by(id = int(v)).first()
+                save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
+                desc = get_video.description, order_no = counter, playlist_vid_id = counter)
+                counter +=1
+                db.session.add(save)
+                db.session.commit()
+                
+        return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
+    
+    else:
+        savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
+        sorted_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id).order_by('order_no asc')
+        for v in checked_value:
+                playlist_id = SavePlaylistVids.query.filter_by(playlist_id=id).all()
+                order_array = []
+                for play in playlist_id:
+                    order_array.append(int(play.id))
+
+                get_video = Video.query.filter_by(id = int(v)).first()
+                new_order_no = len(order_array) + 1
+                save = SavePlaylistVids(playlist_id = play_id, video_id= int(v), title = get_video.title, \
+                desc = get_video.description, order_no = new_order_no, playlist_vid_id = new_order_no)
+                db.session.add(save)
+                db.session.commit()
+
+
+
+
+
+
+
+
     add_playlist = SavePlaylistVids(playlist_id=play_id, video_id=selected_vid.id, \
                                     title=selected_vid.title, desc = selected_vid.description)
     db.session.add(add_playlist)

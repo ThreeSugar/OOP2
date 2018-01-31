@@ -927,7 +927,7 @@ def videoz(videoid):
 
     #ADD VIDEO DIRECTLY TO PLAYLIST
 
-    all_playlist = FitnessPlaylist.filter_by(username=current_user.username).all()
+    all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
@@ -1108,13 +1108,31 @@ def videofilter(option):
     search = Video.query.filter_by(category=option).filter(Video.title.ilike('%' + searchy + '%')).all()
     return jsonify({'search': render_template('filtersearch.html', search=search)}) 
 
-@app.route('/video/addtoplaylist/<id>')
+@app.route('/video/addtoplaylist/<id>', methods=['GET', 'POST'])
 def add_to_playlist(id):
-    pass
+    selected_vid = Video.query.filter_by(id=id).first()
+    playid_json = request.get_json()
+    play_id = playid_json['value']
+    add_playlist = SavePlaylistVids(playlist_id=play_id, video_id=selected_vid.id, \
+                                    title=selected_vid.title, desc = selected_vid.description)
+    db.session.add(add_playlist)
+    db.session.commit()
+    return jsonify({'result' : 'success'})
 
-@app.route('/video/deletefromplaylist/<id>')
+
+
+
+@app.route('/video/deletefromplaylist/<id>', methods=['GET', 'POST'])
 def delete_from_playlist(id):
-    pass
+    selected_vid = Video.query.filter_by(id=id).first()
+    playid_json = request.get_json()
+    play_id = playid_json['value']
+    delete_vid = SavePlaylistVids.query.filter_by(username=current_user.username).filter_by(playlist_id=play_id)\
+                .filter_by(video_id=id).first()
+
+    db.session.delete(delete_vid)
+    db.session.commit()
+    return jsonify({'result' : 'success'})
    
 #FITNESS LIBRARY
 

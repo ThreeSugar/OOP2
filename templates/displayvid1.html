@@ -126,7 +126,7 @@
                         {% for a in all_playlist %}
                         <li>
                             <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox" name = "selectvid" value="1">
-                               Saved video
+                               {{a.title}}
                             </label>
                         </li>
                         {% endfor %}
@@ -327,13 +327,35 @@
             var play_id = $(this).attr('data-playid');
             var checkbox = $('#' + play_id);
             console.log(checkbox.is(':checked'));
+
             if(checkbox.is(':checked')){
-                $(".alert-success").delay(700).show().fadeOut('slow');
-                console.log('true');
-                console.log(play_id)
+                req = $.ajax({
+                url : "{{url_for('add_to_playlist', id = vid)}}",
+                type : 'POST',
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".alert-success").delay(700).show().fadeOut('slow');
+                });
+
             } else {
-                $(".alert-danger").delay(700).show().fadeOut('slow');
-                console.log('false');
+    
+                req = $.ajax({
+                url : "{{url_for('delete_from_playlist', id = vid)}}",
+                type : 'POST',
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".alert-danger").delay(700).show().fadeOut('slow');
+                });               
             }
         });
         

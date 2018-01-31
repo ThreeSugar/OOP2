@@ -1174,7 +1174,7 @@ def playlist_vid(id):
         savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
         
         return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
-                            first_playlist_vid = first_playlist_vid)
+                            first_playlist_vid = first_playlist_vid, first_vid = first_vid)
     
     except IndexError:
         selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
@@ -1325,7 +1325,7 @@ def load_playlist_vid(id):
         savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
             
         return render_template('loadplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, \
-                                play_id=play_id, load_vid=load_vid)
+                                play_id=play_id, load_vid=load_vid, load_vid_id=load_vid_id)
 
     else:
         get_playlist_id = PlaylistSession.query.filter_by(username=current_user.username).first()

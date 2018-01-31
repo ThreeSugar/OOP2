@@ -43,3 +43,7 @@ a:hover, a:visited, a:link, a:active
     text-decoration: none;
     color:grey;
 }
+
+.vidhighlight {
+    background-color:#D3D3D3;
+}

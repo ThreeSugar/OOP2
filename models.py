@@ -208,6 +208,11 @@ class EditForm(FlaskForm):
 class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
+class AddToPlaylist(FlaskForm):
+    title = StringField(validators=[InputRequired(), ])
+    desc = StringField(validators=[InputRequired(), ])
+
+
 
 #INBOX
 

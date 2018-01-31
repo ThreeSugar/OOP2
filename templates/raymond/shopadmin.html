@@ -245,6 +245,7 @@
                 <th>Quantity</th>
                 <th><a href="image"></a></th>
                 <th></th>
+{#                <th></th>#}
             </tr>
         </thead>
         <tbody id="admin-items">
@@ -258,6 +259,7 @@
                 <td>{{ i.category }}</td>
                 <td>{{ i.calories }}</td>
                 <td>{{ i.quantity }}</td>
+{#                <td><a class="updatebtn">update</a></td>#}
                 <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
             </tr>
             {% endfor %}
@@ -278,6 +280,7 @@
                 <th>Preperation</th>
                 <th><a href="image"></a></th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody id="admin-recipes">
@@ -291,6 +294,7 @@
                 <td>{{ i.price }}</td>
                 <td>{{ i.preperation }}</td>
                 <td>img.png</td>
+                <td><a href="#">update</a></td>
                 <td><a class="btn recipeDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
             </tr>
             {% endfor %}
@@ -404,6 +408,22 @@ $(document).ready( function() {
 
         $('#deleteAlert').fadeIn(1000).fadeOut(1000);
     });
+
+    {#$(document).on('click', '.updatebtn', function(){#}
+    {##}
+    {#    req = $.ajax({#}
+    {#        url: '/updateItem',#}
+    {#        type: 'POST',#}
+    {#        data: ''#}
+    {#    });#}
+    {##}
+    {#    req.done(function(data){#}
+    {#        $('#form-items').fadeOut(200).fadeIn(200);#}
+    {#        $('#form-items').html(data);#}
+    {#    });#}
+    {##}
+    {#    $('#deleteAlert').fadeIn(1000).fadeOut(1000);#}
+    {#});#}
 
     $(document).on('click', '.Submit', function(){
         var name = $('#name').val()

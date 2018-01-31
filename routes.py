@@ -867,14 +867,6 @@ def new_recipe():
 
 
 #SEARCH RECIPES
-#ADD CHECKOUT FORM
-#ADD USER TIME TO DELIVER
-#FILTER ORDERSADMIN
-
-#ADD EVERY FORM VALIDATION
-#AJAX SHOP PAGE (CART)
-#AJAX CART PAGE
-
 #KCAL CALC FILTER
 #DELIVERY PAGE
 #IMAGE CROP
@@ -946,7 +938,10 @@ def addCart():
                 count += 1
         return count
 
-    return jsonify({'count' : cart_count()})
+    cart = Cart.query.all()
+
+    return render_template('raymond/shop-cart.html', cart=cart, count=cart_count())
+    # return jsonify({'count' : cart_count()})
     # return redirect(request.referrer)
 
 @app.route('/filter', methods=['POST'])
@@ -1235,6 +1230,11 @@ def shopadmin():
         max_id += 1
     recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
     return render_template("raymond/shopadmin.html", items=items, recipes=recipes, recipe_items=recipe_items)
+#
+# @app.route('/updateItem/<item_id>', methods=['POST'])
+# def updateItem(item_id):
+#     items = Item.query.filter_by(id=item_id).first()
+#     return render_template("raymond/shopadmin-itemform.html", itemid=items)
 
 @app.route('/addRecipe', methods=['POST'])
 def addRecipe():
@@ -1253,9 +1253,7 @@ def addRecipe():
 
     recipes = Recipe.query.all()
 
-
     return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
-
 
 @app.route('/deleteRecipe', methods=['POST'])
 def deleteRecipe():
@@ -1440,7 +1438,10 @@ def orderstatus():
 
     return render_template("raymond/orders-status.html", percent=percent, status=status, uid=uid, order_id=order_id)
 
-
+@app.route('/checkoutform')
+def checkoutform():
+    cart = Cart.query.all()
+    return render_template('raymond/checkoutform.html', cart=cart)
 
 #
 # #CYNTHIA

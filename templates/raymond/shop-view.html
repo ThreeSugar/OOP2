@@ -2,7 +2,7 @@
             <div class="card" id="card1">
                 <div class="cardcontainer">
 {#                    <img src="http://placehold.it/200x250">#}
-                    <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">
+                    <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'">
                     <div class="overlay"></div>
                     <div class="button">
                         <a class="btn addCartBtn" href="{{ url_for('item', item_id=item.id) }}"><i class="fa fa-search"></i></a>

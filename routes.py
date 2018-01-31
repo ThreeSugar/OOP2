@@ -1140,20 +1140,20 @@ def add_to_playlist(id):
 
 @app.route('/video/createplaylist', methods=['GET', 'POST'])
 def create_playlist():
-    # all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
-    # videoid = Video.query.filter_by(id = video_id_value).first()
-    # vid = videoid.id
+    data_json = request.get_json()
+    video_id_value = data_json['value']
+    form_data = data_json['form_data']
+    print(form_data['title'])
+    all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
+    videoid = Video.query.filter_by(id = video_id_value).first()
+    vid = videoid.id
     playform = NewPlaylist()
-    if playform.validate_on_submit():
-        new_playlist = FitnessPlaylist(title = playform.title.data, desc = playform.desc.data, username = current_user.username)
-        db.session.add(new_playlist)
-        db.session.commit()
+    new_playlist = FitnessPlaylist(title = str(form_data['title']), desc = str(form_data['desc']), username = current_user.username)
+    db.session.add(new_playlist)
+    db.session.commit()
+    return jsonify({'playlist' : render_template('_playlistmodal.html')})
        
-    else:
-        print(playform.errors)
-        print('fail')
-    
-    return 'success'
+   
     
 
 @app.route('/video/deletefromplaylist/<id>', methods=['GET', 'POST'])

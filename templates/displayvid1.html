@@ -355,10 +355,12 @@
             $("#createplaylist").toggle();
         });
 
-        $('#submitplay').on('click', function(event) {
+        $('#createplaylist').submit(function(event) {
            event.preventDefault();
            var video_id = $('#playvid').attr('name');
-           var form_data = $('#createplaylist').serialize()
+           var form_data = { 'title' : $('#title').val(),
+                             'desc'  : $('#desc').val(),
+           }
            req = $.ajax({
                 url : "{{url_for('create_playlist')}}",
                 type : 'POST',

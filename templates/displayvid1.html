@@ -59,7 +59,7 @@
 <div class="video">
 
 
-<video id = "playvid" width="800" height="500" controls>
+<video id = "playvid" name = "{{vid}}" width="800" height="500" controls>
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/mp4">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/webm">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">
@@ -112,7 +112,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div style = "text-align:center;" class="modal-header">
-                        <h5 style = "font-size:30px;" class="modal-title" id="exampleModalLabel"><b>Save to...</b></h5>
+                        <h5 style = "font-size:26px;" class="modal-title" id="exampleModalLabel"><b>Save to...</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -126,7 +126,11 @@
                             Video successfully removed.
                         </div>
 
-                        <ul>
+                        <div class="alert alert-success alert-dismissible playlist-success" role="alert">
+                                Playlist successfully created.
+                        </div>
+
+                        <ul id = "listplay">
                             {% for a in all_playlist %}
 
                             {% if check_playlist_save(a.id, vid) %}
@@ -153,7 +157,7 @@
                             {{playform.hidden_tag()}}
                             {{wtf.form_field(playform.title)}}
                             {{wtf.form_field(playform.desc)}}
-                            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                            <button class="btn btn-lg btn-primary btn-block" id = "submitplay" type="submit">Create</button>
                         </form>
                     </div>
                  </div>
@@ -344,11 +348,34 @@
         $('.surecheck').prop('checked', true);
         $(".alert-success").hide();
         $(".alert-danger").hide();
+        $(".playlist-success").hide();
         $("#createplaylist").hide();
 
         $("#openplaylist").on('click', function(){
             $("#createplaylist").toggle();
-        })
+        });
+
+        $('#submitplay').on('click', function(event) {
+           event.preventDefault();
+           var video_id = $('#playvid').attr('name');
+           var form_data = $('#createplaylist').serialize()
+           req = $.ajax({
+                url : "{{url_for('create_playlist')}}",
+                type : 'POST',
+                data: JSON.stringify({value:video_id, form_data:form_data}),
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+                },
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+                });
+ 
+                req.done(function(data) {
+                    console.log('back')
+                    $(".playlist-success").delay(700).show().fadeOut('slow');
+                    $("#listplay").empty().append(data.playlist);
+                });
+        });
 
 
         $('.vid_checkbox').on('click', function(){

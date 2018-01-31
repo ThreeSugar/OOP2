@@ -293,7 +293,6 @@ class FitnessPlaylist(db.Model):
     title = db.Column(db.String)
     desc = db.Column(db.String)
 
-
 class NewPlaylist(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])
     desc = TextAreaField('Description', validators=[InputRequired(), Length(min=4)])

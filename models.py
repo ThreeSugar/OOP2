@@ -209,8 +209,8 @@ class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
 class AddToPlaylist(FlaskForm):
-    title = StringField(validators=[InputRequired(), ])
-    desc = StringField(validators=[InputRequired(), ])
+    title = StringField('Title', validators=[InputRequired(), ])
+    desc = StringField('Description', validators=[InputRequired(), ])
 
 
 

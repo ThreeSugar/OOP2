@@ -934,12 +934,14 @@ def videoz(videoid):
     #ADD VIDEO DIRECTLY TO PLAYLIST
 
     all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
+    playform = AddToPlaylist()
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
                             curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, \
-                            signup_error=signup_error, tviews=tviews, all_playlist=all_playlist)
+                            signup_error=signup_error, tviews=tviews, all_playlist=all_playlist, \
+                            playform=playform)
 
 
 

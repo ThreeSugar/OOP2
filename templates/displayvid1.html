@@ -65,8 +65,6 @@
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">
 </video> 
 
-
-
     
     <p style = "font-size:30px; color:black; font-weight:600; margin-top:10px;">{{title}}</p>
      
@@ -92,7 +90,7 @@
             {% if curr_save %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
-                <a data-toggle="modal" data-target="#myModal4" class = "clicksave">
+                <a class = "clicksave">
                     <span style = "font-size:30px;"><i id = "saveicon" class="fa-heart" aria-hidden="true"></i>                    
                     </span><p class = "displaysave" style = "font-size:10px;">Favourited</p>
                 </a>
@@ -101,7 +99,7 @@
             {% else %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
-                <a data-toggle="modal" data-target="#myModal2" class = "clicksave">
+                <a class = "clicksave">
                         <span style = "font-size:30px;"><i id = "saveicon" class="fa-heart-o" aria-hidden="true"></i>                    
                         </span><p class = "displaysave" style = "font-size:10px;">Favourite</p>
                 </a>    
@@ -114,14 +112,14 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div style = "text-align:center;" class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Save to...</h5>
+                        <h5 style = "font-size:30px;" class="modal-title" id="exampleModalLabel"><b>Save to...</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-success alert-dismissible" role="alert">
-                                  Video successfully saved.
+                                Video successfully saved.
                         </div>
 
                         <div class="alert alert-danger alert-dismissible" role="alert">
@@ -149,10 +147,13 @@
                         </ul>
                     <hr>
         
-                        <a><span style = "font-size:15px;"><i class="fa fa-plus-square" aria-hidden="true"></i></span>
+                        <a id = "openplaylist" style = "font-size:15px;"><span style = "font-size:20px;"><i class="fa fa-plus-square" aria-hidden="true"></i></span>
                         Create Playlist</a>
-                        <form>
-                            
+                        <form style = "padding-top:15px;" id = "createplaylist">
+                            {{playform.hidden_tag()}}
+                            {{wtf.form_field(playform.title)}}
+                            {{wtf.form_field(playform.desc)}}
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                         </form>
                     </div>
                  </div>
@@ -343,6 +344,12 @@
         $('.surecheck').prop('checked', true);
         $(".alert-success").hide();
         $(".alert-danger").hide();
+        $("#createplaylist").hide();
+
+        $("#openplaylist").on('click', function(){
+            $("#createplaylist").toggle();
+        })
+
 
         $('.vid_checkbox').on('click', function(){
             var play_id = $(this).attr('data-playid');

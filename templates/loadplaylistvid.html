@@ -37,7 +37,7 @@ a:hover {
 
 <div class="video">
 
-    <video class='videos' width="700" height="400" controls>
+    <video name = "{{load_vid_id.id}}" class='videos' width="700" height="400" controls>
 
         <source src="{{url_for('static', filename = 'assets/' + load_vid.link)}}" type="video/mp4">
         <source src="{{url_for('static', filename = 'assets/' + load_vid.link )}}" type="video/webm">
@@ -115,6 +115,13 @@ a:hover {
 
     
 <script>
+
+$( document ).ready(function() {
+    var selected_vid = $('.videos').attr('name')
+    console.log(selected_vid)
+    console.log('#' + selected_vid)
+    $('#' + selected_vid ).addClass('vidhighlight')
+});
 
     $(function(){
         $('#searchlist').sortable({

@@ -35,7 +35,7 @@ a:hover {
 </div>
 
 
-<div class="video">
+<div class="video" name = "{{first_vid.id}}">
 
         <video class='videos' width="700" height="400" controls>
             <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link)}}" type="video/mp4">
@@ -117,6 +117,10 @@ a:hover {
     crossorigin="anonymous"></script>
 
 <script>
+$( document ).ready(function() {
+    var selected_vid = $('.video').attr('name')
+    $('#' + selected_vid ).addClass('vidhighlight')
+});
 
 
 $(function(){

@@ -113,7 +113,13 @@ def utility_processor():
             flag = False
         return flag
 
-
+    def check_playlist_save(play_id, vid_id):
+        is_saved = SavePlaylistVids.query.filter_by(playlist_id=play_id).filter_by(video_id=vid_id).first()
+        if is_saved is not None:
+            return True
+        else:
+            return False
+        
     def show_cart_price():
         price = 0
         cart = Cart.query.all()
@@ -130,8 +136,8 @@ def utility_processor():
         return count
     
 
-    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag,
-                show_cart_price=show_cart_price, cart_count=cart_count)
+    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag, 
+                check_playlist_save = check_playlist_save, show_cart_price=show_cart_price, cart_count=cart_count)
 
 
 #ADMIN OVERALL
@@ -1127,7 +1133,7 @@ def delete_from_playlist(id):
     selected_vid = Video.query.filter_by(id=id).first()
     playid_json = request.get_json()
     play_id = playid_json['value']
-    delete_vid = SavePlaylistVids.query.filter_by(username=current_user.username).filter_by(playlist_id=play_id)\
+    delete_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id)\
                 .filter_by(video_id=id).first()
 
     db.session.delete(delete_vid)

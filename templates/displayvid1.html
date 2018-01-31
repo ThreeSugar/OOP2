@@ -124,11 +124,21 @@
 
                     <ul>
                         {% for a in all_playlist %}
+
+                        {% if check_playlist_save(a.id, vid) %}
+                        <li>
+                            <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox surecheck" name = "selectvid" value="1">
+                               {{a.title}}
+                            </label>
+                        </li>
+                        {% else %}
                         <li>
                             <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox" name = "selectvid" value="1">
                                {{a.title}}
                             </label>
                         </li>
+                        {% endif %}
+
                         {% endfor %}
                     </ul>
                     </div>

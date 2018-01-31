@@ -375,7 +375,12 @@
                 req.done(function(data) {
                     console.log('back')
                     $(".playlist-success").delay(700).show().fadeOut('slow');
-                    $("#listplay").empty().append(data.playlist);
+                    $('#myModal2').modal('show');
+                    $('#myModal2').on('shown.bs.modal', function () {
+                        $("#listplay").empty()
+                        $("#listplay").append(data.playlist);
+                    })     
+                    
                 });
         });
 

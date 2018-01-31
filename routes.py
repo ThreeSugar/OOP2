@@ -1144,14 +1144,14 @@ def create_playlist():
     video_id_value = data_json['value']
     form_data = data_json['form_data']
     print(form_data['title'])
-    all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
     videoid = Video.query.filter_by(id = video_id_value).first()
     vid = videoid.id
     playform = NewPlaylist()
     new_playlist = FitnessPlaylist(title = str(form_data['title']), desc = str(form_data['desc']), username = current_user.username)
     db.session.add(new_playlist)
     db.session.commit()
-    return jsonify({'playlist' : render_template('_playlistmodal.html')})
+    all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
+    return jsonify({'playlist' : render_template('_playlistmodal.html', all_playlist=all_playlist, vid=vid, playform=playform)})
        
    
     

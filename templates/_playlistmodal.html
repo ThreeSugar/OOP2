@@ -15,3 +15,152 @@
 {% endif %}
 
 {% endfor %}
+
+{% block script %}
+
+<script>
+    $(document).ready(function() {
+
+        $('.surecheck').prop('checked', true);
+        $(".alert-success").hide();
+        $(".alert-danger").hide();
+        $(".playlist-success").hide();
+        $("#createplaylist").hide();
+
+        $("#openplaylist").on('click', function(){
+            $("#createplaylist").toggle();
+        });
+
+        $('#createplaylist').submit(function(event) {
+           event.preventDefault();
+           var video_id = $('#playvid').attr('name');
+           var form_data = { 'title' : $('#title').val(),
+                             'desc'  : $('#desc').val(),
+           }
+           req = $.ajax({
+                url : "{{url_for('create_playlist')}}",
+                type : 'POST',
+                data: JSON.stringify({value:video_id, form_data:form_data}),
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+                },
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+                });
+ 
+                req.done(function(data) {
+                    console.log('back')
+                    $(".playlist-success").delay(700).show().fadeOut('slow');
+                    $('#myModal2').modal('show');
+                    $('#myModal2').on('shown.bs.modal', function () {
+                        $("#listplay").empty()
+                        $("#listplay").append(data.playlist);
+                    })     
+                });
+        });
+
+
+        $('.vid_checkbox').on('click', function(){
+            var play_id = $(this).attr('data-playid');
+            var checkbox = $('#' + play_id);
+            console.log(checkbox.is(':checked'));
+
+            if(checkbox.is(':checked')){
+                req = $.ajax({
+                url : "{{url_for('add_to_playlist', id = vid)}}",
+                type : 'POST',
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".alert-success").delay(700).show().fadeOut('slow');
+                });
+
+            } else {
+    
+                req = $.ajax({
+                url : "{{url_for('delete_from_playlist', id = vid)}}",
+                type : 'POST',
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".alert-danger").delay(700).show().fadeOut('slow');
+                });               
+            }
+        });
+        
+    $('#clikes').on('click', function() {
+       
+        req = $.ajax({
+        url : "{{url_for('likevideo', videoid = vid)}}",
+        type : 'POST',
+
+      });
+
+        req.done(function(data) {
+            $('#likes').html("Like: " + data.likes);
+            $('#dislikes').html("Dislike: " + data.dislikes);
+        });
+    });
+
+    $('#cdislikes').on('click', function() {
+    
+        req = $.ajax({
+        url : "{{url_for('dislikevideo', videoid = vid)}}",
+        type : 'POST',
+
+      });
+
+        req.done(function(data) {
+            $('#likes').html("Like: " + data.likes);
+            $('#dislikes').html("Dislike: " + data.dislikes);
+        });
+    });
+
+    $('#postvid').on('click', function() {
+    var value = $('#commentarea').val();
+    req = $.ajax({
+      url : "{{url_for('videocomment', videoid=vid)}}",
+      type : 'POST',
+      data: JSON.stringify({value:value}),
+      contentType: 'application/json;charset=UTF-8',
+      dataType: "json"
+  });
+
+    req.done(function(data) {
+      $('#videocomment').append("<li>"  + "<p>" + "Posted by: " +  data.user + "</p>" + "<p>" + data.comment + "</p>" + "</li>" + "<br>");
+      $('#commentarea').val("");
+    });
+});
+
+$('.clicksave').on('click', function() {
+    req = $.ajax({
+      url : "{{url_for('savevid', videoid = vid)}}",
+      type : 'POST',
+  });
+    req.done(function(data) {
+        if (data.save == "saved") {
+            $('.displaysave').html('Favourited');
+            $('#saveicon').removeClass('fa-heart-o').addClass('fa-heart');
+        } else if (data.save == "save") {
+            $('.displaysave').html('Favourite');
+            $('#saveicon').removeClass('fa-heart').addClass('fa-heart-o');
+        } else {
+            console.log("If you see this message, please check the code and fix the errors.")
+        }
+    });
+});
+
+});
+
+</script>
+
+
+{% endblock %}

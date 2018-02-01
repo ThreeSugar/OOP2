@@ -6,6 +6,11 @@ LifeStyle28 | Video
 
 {% endblock %} 
 
+{% block video %}
+<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>
+<li><a href="{{ url_for('vid_logout') }}">Logout</a></li>
+{% endblock %}
+
 {% block style %}
 
 <link href="{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">

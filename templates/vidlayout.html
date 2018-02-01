@@ -65,12 +65,17 @@
 				<li><a href="{{ url_for('index', _anchor='contact') }}">Contact</a></li>
 
 				{% if current_user.is_authenticated %}
+					
+				    {% block video %}
 					<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>
 					<li><a href="{{ url_for('logout') }}">Logout</a></li>
+					{% endblock %}
 
 				{% else %}
+				    {% block videologin %}
 					<li><a href="{{ url_for('signup') }}">Sign Up</a></li>
 					<li><a href="{{ url_for('login') }}">Login</a></li>
+					{% endblock %}
 				{% endif %}
 
 			</ul>

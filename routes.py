@@ -947,6 +947,13 @@ def videoz(videoid):
                             signup_error=signup_error, tviews=tviews, all_playlist=all_playlist, \
                             playform=playform)
 
+#CUSTOM LOGOUT
+@app.route('/video/logout')
+def vid_logout():
+    logout_user()
+    return redirect(url_for('explorevideo'))
+
+
 
 
 @app.route('/video/likes/<videoid>', methods=['GET', 'POST'])

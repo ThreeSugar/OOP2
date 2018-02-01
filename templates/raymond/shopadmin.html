@@ -72,6 +72,18 @@
     color: white;
     background-color: dimgrey;
 }
+.updateItemSubmit{
+    {#width: 100px;#}
+    float: right;
+    width: 100%;
+    margin: 0;
+    color: white;
+    background-color: grey;
+}
+.updateItemSubmit:hover {
+    color: white;
+    background-color: dimgrey;
+}
 .category{
     border: 1px solid #ccc;
     font-size: 14px;
@@ -141,6 +153,18 @@
 .recipeSubmit:hover {
     color: white;
     background-color: dimgrey;
+}
+.updateItem{
+    background-color: grey;
+    color: white;
+    padding: 5px;
+    margin-right: 0;
+    text-decoration: none;
+}
+.updateItem:hover{
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
 }
 </style>
 
@@ -243,9 +267,8 @@
                 <th>Category</th>
                 <th>Calories</th>
                 <th>Quantity</th>
-                <th><a href="image"></a></th>
                 <th></th>
-{#                <th></th>#}
+                <th></th>
             </tr>
         </thead>
         <tbody id="admin-items">
@@ -254,12 +277,12 @@
                 <th>{{ i.id }}</th>
                 <td>{{ i.name }}</td>
                 <td>{{ i.info }}</td>
-                <td>{{ i.price }}</td>
+                <td>${{ '{0:.2f}'.format(i.price) }}</td>
                 <td>{{ i.description }}</td>
                 <td>{{ i.category }}</td>
                 <td>{{ i.calories }}</td>
                 <td>{{ i.quantity }}</td>
-{#                <td><a class="updatebtn">update</a></td>#}
+                <td><a itemid="{{ i.id }}" class="updateItem">update</a></td>
                 <td><a class="btn Delete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
             </tr>
             {% endfor %}
@@ -278,8 +301,6 @@
                 <th>Ingredients</th>
                 <th>Price</th>
                 <th>Preperation</th>
-                <th><a href="image"></a></th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -291,10 +312,8 @@
                 <td>{{ i.info }}</td>
                 <td>{{ i.calories }}</td>
                 <td>{{ i.ingredients }}</td>
-                <td>{{ i.price }}</td>
+                <td>${{ '{0:.2f}'.format(i.price) }}</td>
                 <td>{{ i.preperation }}</td>
-                <td>img.png</td>
-                <td><a href="#">update</a></td>
                 <td><a class="btn recipeDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
             </tr>
             {% endfor %}
@@ -370,6 +389,24 @@ $(document).ready( function() {
         $('#deleteAlert').fadeIn(1000).fadeOut(1000);
     });
 
+    $(document).on('click', '.updateItem', function(){
+
+        itemid = $(this).attr('itemid');
+
+        req = $.ajax({
+            url: '/updateItem',
+            type: 'POST',
+            data: {
+                itemid : itemid
+            }
+        });
+
+        req.done(function(data){
+            $('#form-items').fadeOut(200).fadeIn(200);
+            $('#form-items').html(data);
+        });
+    });
+
     $(document).on('click', '.recipeDelete', function(){
 
         delete_id = $(this).attr('delete_id');
@@ -409,22 +446,6 @@ $(document).ready( function() {
         $('#deleteAlert').fadeIn(1000).fadeOut(1000);
     });
 
-    {#$(document).on('click', '.updatebtn', function(){#}
-    {##}
-    {#    req = $.ajax({#}
-    {#        url: '/updateItem',#}
-    {#        type: 'POST',#}
-    {#        data: ''#}
-    {#    });#}
-    {##}
-    {#    req.done(function(data){#}
-    {#        $('#form-items').fadeOut(200).fadeIn(200);#}
-    {#        $('#form-items').html(data);#}
-    {#    });#}
-    {##}
-    {#    $('#deleteAlert').fadeIn(1000).fadeOut(1000);#}
-    {#});#}
-
     $(document).on('click', '.Submit', function(){
         var name = $('#name').val()
         var info = $('#info').val()
@@ -459,6 +480,47 @@ $(document).ready( function() {
             });
 
             req.done(function(data){
+                $('#form-items')[0].reset();
+                $('#admin-items').fadeOut(200).fadeIn(200);
+                $('#admin-items').html(data);
+            });
+            $('#errorAlert').fadeOut();
+            $('#successAlert').fadeIn(1000).fadeOut(1000);
+        }
+
+    });
+    $(document).on('click', '.updateItemSubmit', function(){
+        var name = $('#iname').val();
+        var info = $('#iinfo').val();
+        var price = $('#iprice').val();
+        var description = $('#idescription').val();
+        var category = $('#icategory').val();
+        var calories = $('#icalories').val();
+        var quantity = $('#iquantity').val();
+        item_id = $(this).attr('update_id');
+
+        if((name && info && price && description && calories && quantity) == '') {
+            $('#errorAlert').fadeIn(1000);
+        }
+
+        else{
+            req = $.ajax({
+                url: '/updateItemButton',
+                type: 'POST',
+                data: {
+                    name : name,
+                    info : info,
+                    price : price,
+                    description : description,
+                    category : category,
+                    calories : calories,
+                    quantity : quantity,
+                    item_id : item_id
+                }
+            });
+
+            req.done(function(data){
+                $('#form-items')[0].reset();
                 $('#admin-items').fadeOut(200).fadeIn(200);
                 $('#admin-items').html(data);
             });
@@ -513,6 +575,7 @@ $(document).ready( function() {
         $('#form-items').show();
         $('.recipe-table').hide();
     });
+
     $(document).on('click', '#order-button-recipe', function(){
         $('#form-items').hide();
         $('.item-table').hide()
@@ -520,6 +583,7 @@ $(document).ready( function() {
         $('.recipe-table').show();
 
     });
+
 });
 </script>
 

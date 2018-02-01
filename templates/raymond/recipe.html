@@ -151,16 +151,16 @@
 <div class="container">
 <h2>{{ item.name }}</h2>
     <div class="item">
-        <img src="{{ url_for('static', filename='raymond/img/' "r-" ~ item.id ~ ".jpg") }}" style="width: 300px;">
+        <img src="{{ url_for('static', filename='raymond/img/' "r-" ~ item.id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'" style="width: 300px;">
         <ul style="list-style: none;">
-            <li><h4><b>Name:</b> {{ item.name }}</h4></li>
+            <li style="margin-top: 40px"><h4><b>Name:</b> {{ item.name }}</h4></li>
+            <hr>
             <li><h4><b>Info:</b> {{ item.info }}</h4></li>
-{#            <hr>#}
-{#            <hr>#}
-{#            <li><h4><b>Price:</b>${{ '{0:.2f}'.format(item.price) }}</h4></li>#}
-{#            <hr>#}
-{#            <li><h4><b>Calories:</b> {{ item.calories }}</h4></li>#}
-{#            <hr>#}
+            <hr>
+            <li><h4><b>Price:</b>${{ '{0:.2f}'.format(item.price) }}</h4></li>
+            <hr>
+            <li><h4><b>Calories:</b> {{ item.calories }}</h4></li>
+            <hr>
             <li style="margin: 0"><b>Description:</b> </li>
             <li style="white-space: pre-line"><h4>{{ item.ingredients }}</h4></li>
             <li style="margin: 0"><b>Preperation:</b> </li>

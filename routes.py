@@ -1203,7 +1203,6 @@ def addItem():
     filename = photos.save(img)
 
     items = Item.query.all()
-    # return render_template("raymond/shopadmin.html", items=items)
     return render_template('raymond/shopadmin-table.html', items=items)
 
 @app.route('/deleteItem', methods=['POST'])
@@ -1230,11 +1229,39 @@ def shopadmin():
         max_id += 1
     recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
     return render_template("raymond/shopadmin.html", items=items, recipes=recipes, recipe_items=recipe_items)
-#
-# @app.route('/updateItem/<item_id>', methods=['POST'])
-# def updateItem(item_id):
-#     items = Item.query.filter_by(id=item_id).first()
-#     return render_template("raymond/shopadmin-itemform.html", itemid=items)
+
+@app.route('/updateItem', methods=['POST'])
+def updateItem():
+    itemid = request.form['itemid']
+    items = Item.query.filter_by(id=itemid).first()
+    return render_template("raymond/shopadmin-itemupdate.html", items=items)
+
+@app.route('/updateItemButton', methods=['POST'])
+def updateItemButton():
+
+    item_id = request.form['item_id']
+    name = request.form['name']
+    info = request.form['info']
+    price = request.form['price']
+    description = request.form['description']
+    category = request.form['category']
+    calories = request.form['calories']
+    quantity = request.form['quantity']
+
+    item = Item.query.filter_by(id=item_id).first()
+    item.name = name
+    item.info = info
+    item.price = price
+    item. description = description
+    item.category = category
+    item.calories = calories
+    item.quantity = quantity
+
+    db.session.commit()
+
+    items = Item.query.all()
+
+    return render_template("raymond/shopadmin-table.html", items=items)
 
 @app.route('/addRecipe', methods=['POST'])
 def addRecipe():
@@ -1243,7 +1270,17 @@ def addRecipe():
     ingredients = request.form['ingredients']
     preperation = request.form['preperation']
 
-    recipe = Recipe(name=name, info=info, preperation=preperation, ingredients=ingredients)
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+
+    recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id+1).all()
+
+    calories = 0
+    price = 0
+    for i in recipeItems:
+        calories +=i.calories
+        price += i.price
+
+    recipe = Recipe(name=name, info=info, calories=calories, price=price, preperation=preperation, ingredients=ingredients)
     db.session.add(recipe)
     db.session.commit()
 
@@ -1254,6 +1291,8 @@ def addRecipe():
     recipes = Recipe.query.all()
 
     return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
+    # return str(calories)
+
 
 @app.route('/deleteRecipe', methods=['POST'])
 def deleteRecipe():
@@ -1350,6 +1389,43 @@ def ordersadmin():
         group.append(q_userid)
 
     return render_template("raymond/ordersadmin.html", group=group, list=list)
+
+@app.route('/searchOrdersID', methods=['POST'])
+def searchOrdersID():
+
+    filter = request.form['filter']
+
+    if filter == '':
+        max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
+
+        list = []  # [[4,1],[4,2]]
+        group = []  # [[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+        for i in range(max_oid + 1):
+            o = Orders.query.filter(Orders.oid == i).first()
+            if o:
+                o_userid = o.user_id
+                o_oid = o.oid
+                list.append([o_userid, o_oid])
+
+        for i in list:
+            q_userid = Orders.query.filter(and_(Orders.user_id == i[0], Orders.oid == i[1])).all()
+            group.append(q_userid)
+    else:
+        list = []  # [[4,1],[4,2]]
+        group = []  # [[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+        o = Orders.query.filter(Orders.oid == filter).first()
+        if o:
+            o_userid = o.user_id
+            o_oid = o.oid
+            list.append([o_userid, o_oid])
+
+        for i in list:
+            q_userid = Orders.query.filter(and_(Orders.user_id == i[0], Orders.oid == i[1])).all()
+            group.append(q_userid)
+
+    return render_template("raymond/ordersadmin-search.html", group=group, list=list)
 
 @app.route('/deliver/<group_id>/<status>')
 def deliver(group_id, status):

@@ -35,7 +35,9 @@
 }
 .orderid{
     display: inline-block;
-    margin-right: 50px;
+    {#margin-right: 50px;#}
+    width: 150px;
+
 }
 .filtermenu{
     width: 80%;
@@ -77,6 +79,7 @@ input[type=text] {
     font-size: 16px;
     border: none;
     cursor: pointer;
+    width: 200px;
 }
 
 .dropdown {
@@ -115,19 +118,19 @@ input[type=text] {
     <h2>Admin Orders</h2>
 </div>
 <div class="filtermenu">
-    <input type="text" name="search" placeholder="USER ID" >
-    <h3 class="menuid"><a href="">Date</a></h3>
-    <h3 class="menuid"><a href="">Delivery Status</a></h3>
+    <input type="text" name="search" id="search" placeholder="ORDER ID" onkeyup="searchFunction()">
+{#    <h3 class="menuid"><a href="">Delivery Status</a></h3>#}
 </div>
+<div class="orders">
 {% for i in group %}
 <div class="order-button" id="order-button{{ i[0].oid }}" table_id="{{ i[0].oid }}">
-    <h3 class="orderid">ID: {{ i[0].oid }}</h3>
-    <h3 class="orderid">User ID: {{ i[0].user_id }}</h3>
-    <h3 class="orderid">Order ID: {{ i[0].order_id }}</h3>
+    <h3 class="orderid" style="margin-left: 50px">Order ID: {{ i[0].oid }}</h3>
+{#    <h3 class="orderid">ID: {{ i[0].user_id }}</h3>#}
+{#    <h3 class="orderid">Order: {{ i[0].order_id }}</h3>#}
     <h3 class="orderid">Qty: {{ i[0].items_quantity }}</h3>
-    <h3 class="orderid">Date: {{ i[0].date.strftime("%d-%m-%y") }}</h3>
+    <h3 class="orderid" style="margin-right: 100px">Date: {{ i[0].date.strftime("%d %b %Y") }}</h3>
 {#    <h3 class="orderid">Status: <a href='{{ url_for('deliver', group_id=i[0].oid) }}'>{{ i[0].delivered }}</a></h3>#}
-    <h3 class="orderid">Status:
+{#    <h3 class="orderid">Status:#}
         <div class="dropdown">
         <button class="dropbtn">{{ i[0].delivered }}</button>
             <div class="dropdown-content">
@@ -137,17 +140,14 @@ input[type=text] {
                 <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery Completed') }}">Delivery Completed</a>
             </div>
         </div>
-    </h3>
+{#    </h3>#}
     <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
 </div>
 <table class="table table-bordered table-striped table-hover order-info" id="order-info{{ i[0].oid }}" style="display: none">
     <thead>
         <tr>
-            <th>#</th>
             <th>Order ID</th>
-            <th>User ID</th>
-            <th>Item ID</th>
-            <th>Name</th>
+            <th>Item</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>Date</th>
@@ -157,20 +157,18 @@ input[type=text] {
     <tbody id="admin-items">
         {% for z in i %}
         <tr>
-            <td>{{ z.oid }}</td>
             <td>{{ z.order_id }}</td>
-            <td>{{ z.user_id }}</td>
-            <td>{{ z.item_id }}</td>
             <td>{{ z.name }}</td>
             <td>{{ z.quantity }}</td>
-            <td>{{ z.price }}</td>
-            <td>{{ z.date }}</td>
+            <td>${{ '{0:.2f}'.format(z.price) }}</td>
+            <td>{{ z.date.strftime("%d %b %Y") }}</td>
             <td>{{ z.delivered }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 {% endfor %}
+</div>
 </div>
 
 <script>
@@ -182,6 +180,21 @@ $(document).ready(function(){
         $('#order-button'+table_id)[0].scrollIntoView(true);
     });
 });
+function searchFunction(){
+    filter = $('#search').val();
+
+    req = $.ajax({
+        url: '/searchOrdersID',
+        type: 'POST',
+        data: {
+            filter : filter
+        }
+    });
+
+    req.done(function(data){
+        $('.orders').html(data);
+    });
+}
 </script>
 
 {% endblock %}

@@ -23,8 +23,8 @@
     $(document).ready(function() {
 
         $('.surecheck').prop('checked', true);
-        $(".alert-success").hide();
-        $(".alert-danger").hide();
+        $(".video-success").hide();
+        $(".video-delete").hide();
         $(".playlist-success").hide();
         $("#createplaylist").hide();
 
@@ -98,7 +98,7 @@
                 });
  
                 req.done(function(data) {
-                    $(".alert-danger").delay(700).show().fadeOut('slow');
+                    $(".video-delete").delay(700).show().fadeOut('slow');
                 });               
             }
         });

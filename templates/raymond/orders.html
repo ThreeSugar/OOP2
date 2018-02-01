@@ -154,6 +154,9 @@ $(document).ready(function(){
         req.done(function(data){
             $('.tracker').fadeOut(200).fadeIn(200);
             $('.tracker').html(data);
+            $('html, body').animate({
+                scrollTop: $(".tracker").offset().top
+            }, 1000)
         });
 
     });

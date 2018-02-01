@@ -1,0 +1,104 @@
+<div class="admin-add">
+    <h2>Admin Shop</h2>
+    <div class="button-div">
+        <div class="order-button" style="float: left;" id="order-button-item">ITEM</div>
+        <div class="order-button" style="float: right;" id="order-button-recipe">RECIPE</div>
+    </div>
+{#    <form name="additemForm" id="additemForm" class="form-style-9" method="POST" enctype="multipart/form-data" action="{{ url_for('addItem') }}">#}
+    <form id="form-recipes" style="display: none" class="form-style-9" action='{{ url_for('addRecipe') }}' method="post" enctype="multipart/form-data">
+        <ul>
+            <li>
+                <input type="text" id="rname" class="field-style field-split align-left" placeholder="Name" required/>
+                <input type="text" id="rinfo" class="field-style field-split align-right" placeholder="Info" required/>
+            </li>
+            <li>
+                <textarea id="ringredients" class="field-style" placeholder="Ingredients" required></textarea>
+                <textarea id="rpreperation" class="field-style" placeholder="Preperation" required></textarea>
+            </li>
+            <li>
+                <input class="item-search" id="rsearch" type="search" placeholder="Search items.." onkeyup="searchFunction()">
+                <ul id="filterOptions">
+                    {% for i in items %}
+                    <a class="filterOptionBtn" filter_id="{{ i.id }}" recipe_id="{{ new_id }}">
+                        <li>
+                            <h3>ID: {{ i.id }}</h3>
+                            <img src="{{ url_for('static', filename='raymond/img/' ~ i.id ~ ".jpg") }}">
+                            <h3>Name: {{ i.name }}</h3>
+                            <h3>Info: {{ i.info }}</h3>
+                            <h3>Price: ${{ '{0:.2f}'.format(i.price) }}</h3>
+                            <h3>Category: {{ i.category }}</h3>
+                        </li>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li>
+                <table style="width: 100%" class="table table-bordered" id="recipeitems-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item ID: </th>
+                            <th>Name: </th>
+                            <th>Calories: </th>
+                            <th>Change: </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    {% for i in recipe_items %}
+                    <tbody>
+                        <tr>
+                            <td>{{ i.id }}</td>
+                            <td>{{ i.item_id }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.calories }}</td>
+                            <td>{{ i.change }}</td>
+                            <td><a class="btn recipeItemDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </li>
+            <li>
+                <a class="btn recipeSubmit">ADD RECIPE</a>
+            </li>
+            <li style="height: 50px">
+                <div id="rsuccessAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>
+                <div id="rerrorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>
+                <div id="rdeleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>
+            </li>
+        </ul>
+    </form>
+</div>
+<div class="recipe-table" style="display: none;">
+    <table class="table table-bordered table-striped table-hover">
+    <h2>Recipes</h2>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Info</th>
+                <th>Calories</th>
+                <th>Ingredients</th>
+                <th>Price</th>
+                <th>Preperation</th>
+                <th><a href="image"></a></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="admin-recipes">
+            {% for i in recipes[::-1] %}
+            <tr>
+                <th>{{ i.id }}</th>
+                <td>{{ i.name }}</td>
+                <td>{{ i.info }}</td>
+                <td>{{ i.calories }}</td>
+                <td>{{ i.ingredients }}</td>
+                <td>{{ i.price }}</td>
+                <td>{{ i.preperation }}</td>
+                <td>img.png</td>
+                <td><a class="btn recipeDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

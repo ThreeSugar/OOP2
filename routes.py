@@ -878,7 +878,8 @@ def new_recipe():
 def shop():
     items = Item.query.all()
     cart = Cart.query.all()
-    return render_template("raymond/shop.html", items=items, cart=cart)
+    bmi = BMR.query.first()
+    return render_template("raymond/shop.html", items=items, cart=cart, bmi=bmi)
 
 @app.route('/addCart', methods=['POST'])
 def addCart():
@@ -970,9 +971,14 @@ def search():
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
         return render_template("raymond/shop-view.html", items=items)
 
+@app.route('/filterCalories', methods=['POST'])
+def filterCalories():
+    filter = request.form['filter']
+    items = Recipe.query.filter(Recipe.calories <= filter).all()
+    return render_template('raymond/shop-recipesort.html', items=items)
 
 #BMR
-@app.route('/bmr/calculate', methods=['POST'])
+@app.route('/bmrcalculate', methods=['POST'])
 def bmr_calculate():
 
     gender = request.form['gender']
@@ -1011,21 +1017,11 @@ def bmr_calculate():
     bmi.cal = rec_cal
 
     db.session.commit()
-    return redirect(url_for('shop'))
 
-@app.route('/bmr/reset', methods=['POST'])
-def bmr_reset():
-    bmi = BMR.query.first()
-    bmi.gender = 0
-    bmi.weight = 0
-    bmi.height = 0
-    bmi.age = 0
-    bmi.exercise = 0
-    bmi.bmi = 0
-    bmi.cal = 0
-
-    db.session.commit()
-    return redirect(url_for('shop'))
+    bmi_query = BMR.query.first()
+    bmr = bmi_query.bmr
+    cal = bmi_query.cal
+    return jsonify({ 'bmr' : bmr, 'cal' : cal })
 
 #CART PAGE
 @app.route('/cart')

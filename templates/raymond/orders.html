@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+{% block title %} Lifestyle28 | Orders {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+.order-section{
+    margin-bottom: 100px;
+}
+.table{
+    width: 79%;
+    margin: 20px auto;
+    margin-bottom: 50px;
+    margin-top: 0px;
+}
+.orderadmin{
+    width: 90%;
+    margin: 20px auto;
+}
+.order-button{
+    width: 80%;
+    outline: 1px solid black;
+    margin: 0 auto;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+.order-button:hover {
+    cursor:pointer;
+    {#background-color: ghostwhite;#}
+    box-shadow: 0 16px 16px 0 rgba(0,0,0,0.2);
+}
+.orderid{
+    display: inline-block;
+    width: 250px;
+}
+.filtermenu{
+    width: 80%;
+    margin: 10px auto;
+    padding: 20px;
+}
+.menuid{
+    display: inline-block;
+    margin-right: 40px;
+    padding: 10px;
+    {#border: 1px solid black;#}
+    {#border-bottom-style: solid;#}
+    {#border-color: grey;#}
+}
+.menuid:hover{
+    border-bottom-style: solid;
+    border-color: grey;
+    {#box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2);#}
+}
+input[type=text] {
+    margin-right: 40px;
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    padding: 8px 10px 8px 10px;
+}
+.menuid a{
+    color: black;
+    text-decoration-line: none;
+}
+.tracker{
+    background-color: white;
+    margin: 10px auto;
+    width: 80%;
+    height: 200px;
+}
+.progress{
+    margin: 10px;
+}
+</style>
+<div class="order-section">
+<div class="orderadmin">
+    <h2>Orders</h2>
+</div>
+<div class="tracker">
+    <h3 style="font-size: 25px;">Order ID: {{ order_id }}</h3>
+    <i class="fa fa-address-card-o" id="order-or" aria-hidden="true" style="font-size: 100px; margin-left: 20px;"></i>
+    <i class="fa fa-calendar" id="order-ds" aria-hidden="true" style="font-size: 100px; margin-left: 210px"></i>
+    <i class="fa fa-truck" id="order-dip" aria-hidden="true" style="font-size: 100px; margin-left: 210px"></i>
+    <i class="fa fa-archive" id="order-dc" aria-hidden="true" style="font-size: 100px; margin-left: 210px"></i>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped active" id="percent{{ percent }}" role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ percent }}%">
+{#        {{ percent }}%#}
+        </div>
+    </div>
+</div>
+{% for i in group[::-1] %}
+<div class="order-button" id="order-button{{ i[0].oid }}" table_id="{{ i[0].oid }}" order_id="{{ i[0].oid }}">
+    <h3 class="orderid" style="margin-left: 50px; width: 200px">Order ID: {{ i[0].oid }}</h3>
+    <h3 class="orderid" style="width: 150px">Qty: {{ i[0].items_quantity }}</h3>
+    <h3 class="orderid">Date: {{ i[0].date.strftime("%d %b %Y") }}</h3>
+    <h3 class="orderid"{% if i[0].delivered == 'Order Received' %}style="color: darkslategrey"{% elif i[0].delivered == 'Delivery Scheduled' %}style="color: darkblue"{% elif i[0].delivered == 'Delivery In Progress' %}style="color: darkorange"{% elif i[0].delivered == 'Delivery Completed' %}style="color: green"{% endif %}>{% if i[0].delivered == 'Order Received' %}<i class="fa fa-address-card-o" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery Scheduled' %}<i class="fa fa-calendar" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery In Progress' %}<i class="fa fa-truck" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery Completed' %}<i class="fa fa-archive" id="order-or" aria-hidden="true"></i>{% endif %} {{ i[0].delivered }}</h3>
+    <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
+</div>
+<table class="table table-bordered table-striped table-hover order-info" id="order-info{{ i[0].oid }}" style="display: none">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Delivered</th>
+        </tr>
+    </thead>
+    <tbody id="admin-items">
+        {% for z in i %}
+        <tr>
+            <td>{{ z.oid }}</td>
+            <td>{{ z.name }}</td>
+            <td>{{ z.quantity }}</td>
+            <td>${{ '{0:.2f}'.format(z.price) }}</td>
+            <td>{{ z.date.strftime("%d %b %Y") }}</td>
+            <td>{{ z.delivered }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+</div>
+
+<script>
+$(document).ready(function(){
+    {#$('#order-or').css("color", "blue");#}
+
+    $(document).on('click', '.order-button', function() {
+        order_id = $(this).attr('order_id');
+
+        var table_id = $(this).attr('table_id');
+        $('.order-info').hide()
+        $("#order-info"+table_id).toggle();
+        $('#order-button'+table_id)[0].scrollIntoView(true);
+
+
+        req = $.ajax({
+            url: '/orderstatus',
+            type: 'POST',
+            data: {
+                order_id : order_id
+            }
+        });
+
+        req.done(function(data){
+            $('.tracker').fadeOut(200).fadeIn(200);
+            $('.tracker').html(data);
+        });
+
+    });
+});
+</script>
+
+{% endblock %}

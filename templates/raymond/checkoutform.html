@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block title %} Lifestyle28 | Cart {% endblock %}
+{% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+.main-section{
+	padding:20px 0 110px;
+}
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+form{
+    width: 70%;
+    padding: 100px;
+    float: left
+}
+h4{
+    padding: 0 auto;
+    font-size: 20px;
+}
+.cart{
+    float: right;
+    margin-top: 150px;
+    margin-right:55px;
+    width: 350px;
+    height: 500px;
+}
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+</style>
+<div class="checkout">
+    <form>
+        <h1 style="color: black;">Billing Address</h1>
+        <label>First name</label>
+        <input type="text" required/>
+        <label>Last name</label>
+        <input type="text" required/>
+        <label>Address</label>
+        <input type="text" required/>
+        <label>Address 2</label>
+        <input type="text" required/>
+        <label>Country</label>
+        <input type="text" required/>
+        <label>State</label>
+        <input type="text" required/>
+        <label>Zip</label>
+        <input type="text" required/>
+        <h1 style="color: black;">Payment</h1>
+        <label>Name on card</label>
+        <input type="text" required/>
+        <label>Credit card number</label>
+        <input type="text" required/>
+        <label>Expiration</label>
+        <input type="text" required/>
+        <label>CVV</label>
+        <input type="text" required/>
+        <a {% if cart %}href="{{ url_for('checkout') }}"{% endif %} type="submit" class="btn btn-success" style=" height: 40px;width: 200px; float: right;" {% if not cart %}disabled{% endif %}>Checkout</a>
+    </form>
+    <div class="cart">
+        <div class="shopcart" style="outline: 1px solid lightgrey">
+        <h2 style="font-size: 20px; background-color: lightgrey; padding: 5px;">Your Cart</h2>
+        {% for c in cart %}
+            <table>
+                <td style="width: 20px; padding-left: 5px;">{{ c.id }}</td>
+                <td style="width: 40px" id="tableimg"><img src="{{ url_for('static', filename='raymond/img/' ~ c.item_id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'" style="width: 50px"></td>
+                <td style="padding: 10px 10px 10px 10px; width: 200px">
+                    <p>{{ c.name }}</p>
+                    <p>QTY: {{ c.quantity }}</p>
+                </td>
+                <td style="width: 50px; padding: 10px">${{ '{0:.2f}'.format(c.subtotal) }}</td>
+            </table>
+            <hr style="color: black; margin: 0;">
+        {% endfor %}
+        <a href="{{ url_for('shop') }}" class="btn btn-success" style=" height: 40px;width: 350px; float: right;">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

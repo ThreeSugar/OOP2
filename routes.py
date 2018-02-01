@@ -1019,8 +1019,8 @@ def bmr_calculate():
     db.session.commit()
 
     bmi_query = BMR.query.first()
-    bmr = bmi_query.bmr
-    cal = bmi_query.cal
+    bmr = int(bmi_query.bmr)
+    cal = int(bmi_query.cal)
     return jsonify({ 'bmr' : bmr, 'cal' : cal })
 
 #CART PAGE

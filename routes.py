@@ -11,7 +11,9 @@ from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf.csrf import CSRFProtect
+
+
 
 from hashids import Hashids
 import requests
@@ -29,8 +31,7 @@ import pyrebase
 
 app = Flask(__name__)
 admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
-CsrfProtect(app)
-WTF_CSRF_ENABLED = True
+
 
 #EMAIL SETTINGS
 app.config.update(
@@ -1073,7 +1074,6 @@ def savevid(videoid):
          db.session.commit()
          return jsonify({'save':'save'})
         
-    
 
 @app.route('/video/delete/<videoid>')
 def deletevid(videoid):
@@ -1143,7 +1143,6 @@ def create_playlist():
     data_json = request.get_json()
     video_id_value = data_json['value']
     form_data = data_json['form_data']
-    print(form_data['title'])
     videoid = Video.query.filter_by(id = video_id_value).first()
     vid = videoid.id
     playform = NewPlaylist()
@@ -1154,8 +1153,6 @@ def create_playlist():
     return jsonify({'playlist' : render_template('_playlistmodal.html', all_playlist=all_playlist, vid=vid, playform=playform)})
        
    
-    
-
 @app.route('/video/deletefromplaylist/<id>', methods=['GET', 'POST'])
 def delete_from_playlist(id):
     selected_vid = Video.query.filter_by(id=id).first()

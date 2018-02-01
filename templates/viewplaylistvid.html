@@ -148,7 +148,6 @@ $(function(){
     req = $.ajax({
     url : '/dashboard/playlist/viewvideo/delete/' + playlist_id,
     type : 'POST',
-
     });
 
     req.done(function(data) {
@@ -217,11 +216,6 @@ $('.confirm').on('click', function() {
 });
 
 
-$('.test').on('click', function() {
-    
-
-    console.log(checkedvalue_array);
-});
 
    function search() {
     // Declare variables

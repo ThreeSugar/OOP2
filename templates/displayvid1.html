@@ -118,7 +118,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="alert alert-success alert-dismissible" role="alert">
+                        <div class="alert alert-success video-success alert-dismissible" role="alert">
                                 Video successfully saved.
                         </div>
 
@@ -373,14 +373,12 @@
                 });
  
                 req.done(function(data) {
-                    console.log('back')
                     $(".playlist-success").delay(700).show().fadeOut('slow');
-                    $('#myModal2').modal('show');
-                    $('#myModal2').on('shown.bs.modal', function () {
-                        $("#listplay").empty()
-                        $("#listplay").append(data.playlist);
-                    })     
-                    
+                    $("#listplay").empty()
+                    $("#listplay").append(data.playlist);   
+                    $("#openplaylist").on('click', function(){
+                         $("#createplaylist").toggle();
+                    });    
                 });
         });
 
@@ -394,6 +392,9 @@
                 req = $.ajax({
                 url : "{{url_for('add_to_playlist', id = vid)}}",
                 type : 'POST',
+                beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+            },
                 data: JSON.stringify({value:play_id}),
                 contentType: 'application/json;charset=UTF-8',
                 dataType: "json"
@@ -401,7 +402,7 @@
                 });
  
                 req.done(function(data) {
-                    $(".alert-success").delay(700).show().fadeOut('slow');
+                    $(".video-success").delay(700).show().fadeOut('slow');
                 });
 
             } else {
@@ -409,6 +410,9 @@
                 req = $.ajax({
                 url : "{{url_for('delete_from_playlist', id = vid)}}",
                 type : 'POST',
+                beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+            },
                 data: JSON.stringify({value:play_id}),
                 contentType: 'application/json;charset=UTF-8',
                 dataType: "json"
@@ -426,7 +430,7 @@
         req = $.ajax({
         url : "{{url_for('likevideo', videoid = vid)}}",
         type : 'POST',
-
+        
       });
 
         req.done(function(data) {
@@ -440,7 +444,7 @@
         req = $.ajax({
         url : "{{url_for('dislikevideo', videoid = vid)}}",
         type : 'POST',
-
+     
       });
 
         req.done(function(data) {

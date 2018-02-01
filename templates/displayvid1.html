@@ -45,7 +45,7 @@
 <!-- Page Content -->
 
 
-<form method = "POST" action = "{{url_for('videosearch')}}" >
+<form style = "margin-top:130px;" method = "POST" action = "{{url_for('videosearch')}}" >
     <div class="col-lg-6">
         <div style = "margin-left:-6%;" class="input-group">
             {{form.hidden_tag()}}
@@ -59,7 +59,7 @@
 <div class="video">
 
 
-<video id = "playvid" name = "{{vid}}" width="800" height="500" controls>
+<video style = "margin-top:30px;" id = "playvid" name = "{{vid}}" width="700" height="400" controls>
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/mp4">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/webm">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">

@@ -1729,12 +1729,32 @@ def updateCart(item_id):
     db.session.commit()
     return redirect(url_for('cart'))
 
-@app.route('/cart/<int:item_id>/delete')
+@app.route('/cart/<int:item_id>/delete', methods=['GET','POST'])
 def deleteCart(item_id):
+    item_json = request.get_json()
+    item_id = item_json['item_id']
     items = Cart.query.filter_by(item_id=item_id).first()
     db.session.delete(items)
     db.session.commit()
-    return redirect(url_for('cart'))
+
+    cart = Cart.query.all()
+    def cart_count():
+        try:
+            count = 0
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            cart = Cart.query.filter(Cart.user_id==uid).all()
+            for c in cart:
+                count += 1
+        except:
+            count = 0
+            cart = Cart.query.filter(Cart.user_id == 0).all()
+            for c in cart:
+                count += 1
+        return count
+
+    count = cart_count()
+    return jsonify({'cart': render_template('raymond/_shopcart.html', cart=cart), 'count': count})
 
 @app.route('/checkout')
 def checkout():

@@ -352,7 +352,7 @@ a:hover {
                     <p>QTY: {{ c.quantity }}</p>
                 </td>
                 <td style="width: 50px; padding: 10px">${{ '{0:.2f}'.format(c.subtotal) }}</td>
-                <td style="width: 20px;"><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename='img/delete-icon.png') }}" style="width: 20px;"></a></td>
+                <td style="width: 20px;"><a class = "deleteCartBtn" name = "{{c.item_id}}" role="button"><img src="{{ url_for('static', filename='img/delete-icon.png') }}" style="width: 20px;"></a></td>
             </table>
             <hr style="color: black; margin: 0;">
         {% endfor %}
@@ -489,6 +489,10 @@ function searchFunction(){
         $('.main').html(data);
     });
 }
+
+
+
+
 $(document).ready( function() {
     $(document).on('click', '.addCartBtn', function() {
         item_id = $(this).attr('item_id');
@@ -512,6 +516,27 @@ $(document).ready( function() {
             $('.notification').delay(500).animate({bottom:"-100px"},500);
         });
     });
+
+    $(document).on('click', '.deleteCartBtn', function() {
+        item_id = $(this).attr('name');
+
+        req = $.ajax({
+            url: "/cart/" + item_id + "/delete",
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            dataType: "json",
+            data: JSON.stringify({
+                'item_id' : item_id
+            })
+        });
+        req.done(function(data){
+            $('#cartcount').html('(' + data.count + ')').fadeOut(1000).fadeIn(1000);
+            $('.shopcart').empty();
+            $('.shopcart').append(data.cart);
+        });
+    });
+
+
     $(document).on('click', '.filterbtn', function() {
         filter = $(this).attr('category');
         $('#directory').text(filter);

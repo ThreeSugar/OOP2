@@ -969,10 +969,10 @@ def vid_signup():
             db.session.commit()
 
         except IntegrityError: #because of db's unique constraint
-            flash('Email or Username has already been taken!')
+            flash('Email or Username has already been taken!', 'error')
             return redirect(url_for('vid_signup'))
 
-        flash('Account successfully registered!')
+        flash('Account successfully registered!', 'success')
         return redirect(url_for('vid_login'))
 
     return render_template('videosignup.html', form=form)

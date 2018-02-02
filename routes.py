@@ -7,11 +7,11 @@ from flask import Flask, render_template, url_for, request, session, redirect, s
 jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql import select
+from sqlalchemy.sql import select, func, or_, and_, between, desc
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
-from flask_wtf.csrf import CSRFProtect
+import datetime
 
 
 
@@ -46,10 +46,8 @@ app.config.update(
 
 mail = Mail(app)
 
-
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
-
 
 
 app.secret_key = "development-key"

@@ -337,7 +337,11 @@ a:hover {
 <div class="modalcart">
     <div class="cart">
         <h3 style="text-align: center; margin: 10px"><b>Your Cart</b></h3>
-    {% if not cart %}<p id="empty">EMPTY!</p>{% endif %}
+    {% if not cart %}
+    <p id="empty">EMPTY!</p>
+    {% else %}
+    <p id="empty"></p>
+    {% endif %}
         <div class="shopcart">
         {% for c in cart %}
             <table>
@@ -348,7 +352,7 @@ a:hover {
                     <p>QTY: {{ c.quantity }}</p>
                 </td>
                 <td style="width: 50px; padding: 10px">${{ '{0:.2f}'.format(c.subtotal) }}</td>
-                <td style="width: 20px;"><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                <td style="width: 20px;"><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename='img/delete-icon.png') }}" style="width: 20px;"></a></td>
             </table>
             <hr style="color: black; margin: 0;">
         {% endfor %}
@@ -501,6 +505,7 @@ $(document).ready( function() {
             $('#cartcount').fadeOut(1000).fadeIn(1000);
             $('.shopcart').empty();
             $('.shopcart').append(data.cart);
+            $('#empty').html('');
             $('.shake').animate({width: "40px"});
             $('.shake').animate({width: "20px"});
             $('.notification').animate({bottom:"40px"}, 500);

@@ -116,32 +116,89 @@ class Item(db.Model):
     description = db.Column(db.Text)
     calories = db.Column(db.Integer)
     category = db.Column(db.String(50))
+    quantity = db.Column(db.Integer)
     totalratings = db.Column(db.Integer)
     rating = db.Column(db.Integer)
     rating_count = db.Column(db.Integer)
 
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    info = db.Column(db.String(50))
+    calories = db.Column(db.String)
+    ingredients = db.Column(db.Text)
+    price = db.Column(db.Float)
+    preperation = db.Column(db.Text)
+    totalratings = db.Column(db.Integer)
+    rating = db.Column(db.Integer)
+    rating_count = db.Column(db.Integer)
+
+class RecipeIngredients(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer)
+    item_id = db.Column(db.Integer)
+    name = db.Column(db.String(50))
+    price = db.Column(db.Float)
+    info = db.Column(db.String(50))
+    quantity = db.Column(db.Integer)
+    calories = db.Column(db.Integer)
+    change = db.Column(db.Boolean)
+
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer, unique=True)
+    user_id = db.Column(db.Integer)
+    item_id = db.Column(db.Integer)
     name = db.Column(db.Text)
     quantity = db.Column(db.Integer)
     price = db.Column(db.Float)
     subtotal = db.Column(db.Float)
 
+class Orders(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    oid = db.Column(db.Integer)
+    order_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    item_id = db.Column(db.Integer)
+    name = db.Column(db.Text)
+    quantity = db.Column(db.Integer)
+    items_quantity = db.Column(db.Integer)
+    price = db.Column(db.Float)
+    subtotal = db.Column(db.Float)
+    date = db.Column(db.DateTime)
+    delivered = db.Column(db.String)
+
+
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     item_id = db.Column(db.Integer)
     name = db.Column(db.Text)
     rating = db.Column(db.Integer)
     comment = db.Column(db.Text)
+    date = db.Column(db.DateTime)
+
+
+class BMR(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    gender = db.Column(db.Integer)
+    weight = db.Column(db.Integer)
+    height = db.Column(db.Integer)
+    age = db.Column(db.Integer)
+    exercise = db.Column(db.Integer)
+    bmr = db.Column(db.Float)
+    cal = db.Column(db.Float)
 
 class ItemView(ModelView):
         form_choices = {
             'category': [
+                ('Others', 'Others'),
+                ('Meat & Seafood', 'Meat & Seafood'),
+                ('Fruit & Veg', 'Fruit & Veg'),
+                ('Frozen', 'Frozen'),
                 ('Dairy', 'Dairy'),
-                ('Meat', 'Meat'),
-                ('Dry/Baking Goods', 'Dry/Baking Goods'),
-                ('Produce', 'Produce')
+                ('Bakery', 'Bakery'),
+                ('Beverages', 'Beverages')
             ]
         }
 

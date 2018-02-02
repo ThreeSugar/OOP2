@@ -133,15 +133,32 @@ def utility_processor():
         return "{0:.2f}".format(price)
 
     def cart_count():
-        count = 0
-        cart = Cart.query.all()
-        for c in cart:
-            count += 1
+        try:
+            count = 0
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            cart = Cart.query.filter(Cart.user_id==uid).all()
+            for c in cart:
+                count += 1
+        except:
+            count = 0
+            cart = Cart.query.filter(Cart.user_id == 0).all()
+            for c in cart:
+                count += 1
         return count
+
+    def cal_bmr():
+        bmr = BMR.query.first()
+        return "{0:.0f}".format(bmr.bmr)
+
+    def cal_cal():
+        bmr = BMR.query.first()
+        return "{0:.0f}".format(bmr.cal)
     
 
     return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag, 
-                check_playlist_save = check_playlist_save, show_cart_price=show_cart_price, cart_count=cart_count)
+                check_playlist_save = check_playlist_save, show_cart_price=show_cart_price, cart_count=cart_count,
+                cal_bmr=cal_bmr, cal_cal=cal_cal)
 
 
 #ADMIN OVERALL
@@ -151,8 +168,12 @@ admin.add_view(ModelView(BlogPost, db.session))
 path = os.path.join(os.path.dirname(__file__), 'static/assets')
 admin.add_view(FileAdmin(path, name='Videos'))
 admin.add_view(ItemView(Item, db.session))
+admin.add_view(ModelView(Recipe, db.session))
+admin.add_view(ModelView(RecipeIngredients, db.session))
 admin.add_view(ModelView(Cart, db.session))
+admin.add_view(ModelView(Orders, db.session))
 admin.add_view(ModelView(Comments, db.session))
+admin.add_view(ModelView(BMR, db.session))
 admin.add_view(ModelView(FitnessLib, db.session))
 
 
@@ -1528,79 +1549,248 @@ def new_recipe():
 @app.route('/shop')
 def shop():
     items = Item.query.all()
-    return render_template("raymond/shop.html", items=items)
+    cart = Cart.query.all()
+    bmi = BMR.query.first()
+    return render_template("raymond/shop.html", items=items, cart=cart, bmi=bmi)
 
-@app.route('/shop/filter/<category>')
-def filter(category):
-    filter = Item.query.filter(Item.category == category).all()
-    return render_template("raymond/shop.html", items=filter)
+@app.route('/addCart', methods=['POST'])
+def addCart():
+    item_id = request.form['item_id']
+    items = Item.query.filter_by(id=item_id).first()
 
-@app.route('/shop/<int:item_id>/add')
-def addCart(item_id):
+    if current_user.is_authenticated == True:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
 
+        check = Cart.query.filter_by(user_id=uid).all()
+
+        check_item = False
+
+        for c in check:
+            if c.item_id == items.id:
+                c.quantity += 1
+                db.session.commit()
+                check_item = True
+                break
+
+        if check_item == False:
+            new_item = Cart(user_id=uid, item_id=items.id, name=items.name, quantity=1, price=items.price,
+                            subtotal=items.price)
+            db.session.add(new_item)
+            db.session.commit()
+    else:
+        check = Cart.query.filter_by(user_id=0).all()
+
+        check_item = False
+
+        for c in check:
+            if c.user_id == 0 and c.item_id == items.id:
+                c.quantity += 1
+                db.session.commit()
+                check_item = True
+                break
+
+        if check_item == False:
+            new_item = Cart(user_id=0, item_id=items.id, name=items.name, quantity=1, price=items.price,
+                            subtotal=items.price)
+            db.session.add(new_item)
+            db.session.commit()
+
+    def cart_count():
+        try:
+            count = 0
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            cart = Cart.query.filter(Cart.user_id==uid).all()
+            for c in cart:
+                count += 1
+        except:
+            count = 0
+            cart = Cart.query.filter(Cart.user_id == 0).all()
+            for c in cart:
+                count += 1
+        return count
+
+    cart = Cart.query.all()
+
+    return render_template('raymond/shop-cart.html', cart=cart, count=cart_count())
+    # return jsonify({'count' : cart_count()})
+    # return redirect(request.referrer)
+
+@app.route('/filter', methods=['POST'])
+def filter():
+    filter = request.form['filter']
+    if filter is "":
+        items = Item.query.all() #[item1, item2]
+        return render_template("raymond/shop-view.html", items=items, filter=filter)
+    elif filter == "recipes":
+        items = Recipe.query.all()
+        return render_template("raymond/shop-recipe.html", items=items, filter=filter)
+    else:
+        items = Item.query.filter(Item.category == filter).all()
+        return render_template("raymond/shop-view.html", items=items, filter=filter)
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    filter = request.form['filter']
+    if filter is "":
+        items = Item.query.all()
+    # else:
+    #     items = Recipe.query.filter(func.lower(Recipe.name).contains(func.lower(filter))).all()
+    #     return render_template("raymond/shop-recipe.html", items=items)
+    else:
+        items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
+        return render_template("raymond/shop-view.html", items=items)
+
+@app.route('/filterCalories', methods=['POST'])
+def filterCalories():
+    filter = request.form['filter']
+    items = Recipe.query.filter(Recipe.calories <= filter).all()
+    return render_template('raymond/shop-recipesort.html', items=items)
+
+#BMR
+@app.route('/bmrcalculate', methods=['GET', 'POST'])
+def bmr_calculate():
+
+    bmi_json = request.get_json()
+    print(bmi_json)
+    
+    gender = bmi_json['gender']
+    weight = bmi_json['weight']
+    height = bmi_json['height']
+    age = bmi_json['age']
+    exercise = bmi_json['exercise']
+
+    bmi_save = BMR(gender=gender, weight=weight, height=height, age=age, exercise=exercise)
+    db.session.add(bmi_save)
+    db.session.commit()
+
+    bmi = BMR.query.first()
+    bmi.gender = gender
+    bmi.weight = weight
+    bmi.height = height
+    bmi.age = age
+    bmi.exercise = exercise
+
+    bmr = 0
+    rec_cal = 0
+
+    if gender == "0":
+        bmr = (10 * float(weight)) + (6.25 * float(height)) - (5 * float(age)) + 5
+    elif gender == "1":
+        bmr = (10 * float(weight)) + (6.25 * float(height)) - (5 * float(age)) - 161
+
+    if exercise == "1":
+        rec_cal = bmr * 1.2
+    elif exercise == "2":
+        rec_cal = bmr * 1.375
+    elif exercise == "3":
+        rec_cal = bmr * 1.55
+    elif exercise == "4":
+        rec_cal = bmr * 1.725
+    elif exercise == "5":
+        rec_cal = bmr * 1.9
+
+    bmi.bmr = bmr
+    bmi.cal = rec_cal
+
+    db.session.commit()
+
+    bmi_query = BMR.query.first()
+    bmr = int(bmi_query.bmr)
+    cal = int(bmi_query.cal)
+    return jsonify({ 'bmr' : bmr, 'cal' : cal })
+
+#CART PAGE
+@app.route('/cart')
+def cart():
     try:
-        items = Item.query.filter_by(id=item_id).first()
-        new_item = Cart(item_id=items.id, name=items.name, quantity=1, price=items.price, subtotal=items.price)
-        db.session.add(new_item)
-        db.session.commit()
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        cart = Cart.query.filter(Cart.user_id==uid).all()
+    except:
+        cart = Cart.query.filter(Cart.user_id==0).all()
 
-    except IntegrityError:
-        db.session.rollback()
-        carts = Cart.query.filter_by(item_id=item_id).first()
-        carts.quantity += 1
-        carts.subtotal = "{0:.2f}".format(carts.quantity*carts.price)
-        db.session.commit()
+    return render_template("raymond/cart.html", cart=cart)
 
-    return redirect(url_for('shop'))
+@app.route('/cart/<int:item_id>/update', methods=['POST'])
+def updateCart(item_id):
+    itemsCart = Cart.query.filter_by(item_id=item_id).first()
+    items = Item.query.filter_by(id=item_id).first()
+    quantity = request.form['newquantity']
+    if int(items.quantity) < int(quantity):
+        items.quantity = items.quantity
+    else:
+        itemsCart.quantity = quantity
+    itemsCart.subtotal = "{0:.2f}".format(float(itemsCart.quantity)*itemsCart.price)
+    db.session.commit()
+    return redirect(url_for('cart'))
 
-@app.route('/shop/<int:item_id>/delete')
+@app.route('/cart/<int:item_id>/delete')
 def deleteCart(item_id):
     items = Cart.query.filter_by(item_id=item_id).first()
     db.session.delete(items)
     db.session.commit()
     return redirect(url_for('cart'))
 
-@app.route('/shop/<int:item_id>/update', methods=['POST'])
-def updateCart(item_id):
-    items = Cart.query.filter_by(item_id=item_id).first()
-    quantity = request.form['newquantity']
-    items.quantity = quantity
-    items.subtotal = "{0:.2f}".format(float(items.quantity)*items.price)
-    db.session.commit()
-    return redirect(url_for('cart'))
+@app.route('/checkout')
+def checkout():
+    if current_user.is_authenticated == True:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        cart = Cart.query.filter(Cart.user_id==uid).all()
+        date = datetime.datetime.now()
+        uid_check = Orders.query.filter(Orders.user_id==uid).all()
 
-@app.route('/cart')
-def cart():
-    cart = Cart.query.all()
+        max_cart = db.session.query(db.func.max(Cart.id)).scalar()
+        max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
 
-    return render_template("raymond/cart.html", cart=cart)
+        if not uid_check:
+            check = Orders.query.all()
+            if not check:
+                for c in cart:
+                    checkout = Orders(oid=1, order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
+                                      items_quantity=max_cart, price=c.price,
+                                      subtotal=c.subtotal, date=date, delivered="Order Received")
+                    db.session.add(checkout)
+                    db.session.delete(c)
+                    item = Item.query.filter_by(id=c.item_id).first()
+                    item.quantity -= c.quantity
+                    db.session.commit()
+            else:
+                oid_count = max_oid + 1
+                for c in cart:
+                    checkout = Orders(oid=oid_count, order_id=1, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity,
+                                      items_quantity=max_cart, price=c.price,
+                                      subtotal=c.subtotal, date=date, delivered="Order Received")
+                    db.session.add(checkout)
+                    db.session.delete(c)
+                    item = Item.query.filter_by(id=c.item_id).first()
+                    item.quantity -= c.quantity
+                    db.session.commit()
+        else:
+            oid_count = max_oid + 1
 
-@app.route('/adminadd')
-def adminadd():
-    return render_template("raymond/adminadd.html")
+            user_id = Orders.query.filter(Orders.user_id==uid).all()
+            order_id = user_id[-1].order_id
+            orderid_count = order_id + 1
 
-@app.route('/addItem', methods=['POST'])
-def addItem():
-    name = request.form['name']
-    info = request.form['info']
-    price = request.form['price']
-    description = request.form['description']
-    category = request.form['category']
-    calories = request.form['calories']
+            for c in cart:
+                checkout = Orders(oid=oid_count ,order_id=orderid_count, user_id=uid, item_id=c.item_id, name=c.name, quantity=c.quantity, items_quantity=max_cart, price=c.price,
+                                  subtotal=c.subtotal, date=date, delivered="Order Received")
+                db.session.add(checkout)
+                db.session.delete(c)
+                item = Item.query.filter_by(id=c.item_id).first()
+                item.quantity -= c.quantity
+                db.session.commit()
 
-    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories, totalratings=0)
+        return redirect(url_for('orders'))
+    else:
+        return redirect(url_for('login'))
 
-    db.session.add(item)
-    db.session.commit()
 
-    if request.method == 'POST' and 'image' in request.files:
-        img = request.files['image']
-        img.filename = str(item.id)+".jpg"
-        filename = photos.save(img)
-        return redirect(url_for('adminadd'))
-
-    return redirect(url_for('shop'))
-
+#ITEM PAGE
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = Item.query.filter_by(id=item_id).one()
@@ -1609,15 +1799,52 @@ def item(item_id):
 
     return render_template('raymond/item.html', item=item, comment=comment)
 
+#RECIPE PAGE
+@app.route('/shop/recipe/<int:item_id>')
+def shop_recipe(item_id):
+    item = Recipe.query.filter_by(id=item_id).one()
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
+
+    return render_template('raymond/recipe.html',item=item, recipe_items=recipe_items)
+
+@app.route('/shop/recipe/add/<item_id>')
+def addRecipetoCart(item_id):
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
+
+    if current_user.is_authenticated == True:
+        user = User.query.filter_by(username=current_user.username).first()
+        uid = user.uid
+        for i in recipe_items:
+            item_id = i.item_id
+            item = Item.query.filter_by(id=item_id).first()
+            cart = Cart(user_id=uid,item_id=item.id,name=item.name,quantity=1,price=item.price,subtotal=item.price)
+            db.session.add(cart)
+            db.session.commit()
+    else:
+        for i in recipe_items:
+            item_id = i.item_id
+            item = Item.query.filter_by(id=item_id).first()
+            cart = Cart(user_id=0, item_id=item.id, name=item.name, quantity=1, price=item.price, subtotal=item.price)
+            db.session.add(cart)
+            db.session.commit()
+
+    return redirect(url_for('cart'))
+
 @app.route('/item/<int:item_id>/add', methods=['POST'])
+@login_required
 def addComment(item_id):
-    name = request.form['name']
+
     rating = request.form['rating']
     comment = request.form['comment']
 
-    addComment = Comments(item_id=item_id, name=name, rating=rating, comment=comment)
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+    uname = user.username
+
+    addComment = Comments(user_id=uid, item_id=item_id, name=uname, rating=rating, comment=comment)
     db.session.add(addComment)
 
+    #shopping view
     item = Item.query.filter_by(id=item_id).first()
     count = Comments.query.filter_by(item_id=item_id).count()
 
@@ -1629,9 +1856,343 @@ def addComment(item_id):
 
     return redirect(url_for('item', item_id=item_id))
 
-@app.route('/adminview')
-def adminview():
-    return render_template("raymond/adminview.html")
+#ADMIN
+@app.route('/addItem', methods=['POST'])
+def addItem():
+    name = request.form['name']
+    info = request.form['info']
+    price = request.form['price']
+    description = request.form['description']
+    category = request.form['category']
+    calories = request.form['calories']
+    quantity = request.form['quantity']
+
+    item = Item(name=name, info=info, price=price, description=description, category=category, calories=calories,
+                quantity=quantity, totalratings=0)
+
+    db.session.add(item)
+    db.session.commit()
+
+    img = request.files['image']
+    img.filename = str(item.id) + ".jpg"
+    filename = photos.save(img)
+
+    items = Item.query.all()
+    return render_template('raymond/shopadmin-table.html', items=items)
+
+@app.route('/deleteItem', methods=['POST'])
+def deleteItem():
+    item_id = request.form['delete_id']
+    del_item = Item.query.filter_by(id=item_id).first()
+    db.session.delete(del_item)
+    db.session.commit()
+
+    img = str(item_id) + ".jpg"
+    os.remove('static/raymond/img/' + img)
+
+    items = Item.query.all()
+    return render_template('raymond/shopadmin-table.html', items=items)
+
+@app.route('/shopadmin')
+def shopadmin():
+    items = Item.query.all()
+    recipes = Recipe.query.all()
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    if max_id is None:
+        max_id = 1
+    else:
+        max_id += 1
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
+    return render_template("raymond/shopadmin.html", items=items, recipes=recipes, recipe_items=recipe_items)
+
+@app.route('/updateItem', methods=['POST'])
+def updateItem():
+    itemid = request.form['itemid']
+    items = Item.query.filter_by(id=itemid).first()
+    return render_template("raymond/shopadmin-itemupdate.html", items=items)
+
+@app.route('/updateItemButton', methods=['POST'])
+def updateItemButton():
+
+    item_id = request.form['item_id']
+    name = request.form['name']
+    info = request.form['info']
+    price = request.form['price']
+    description = request.form['description']
+    category = request.form['category']
+    calories = request.form['calories']
+    quantity = request.form['quantity']
+
+    item = Item.query.filter_by(id=item_id).first()
+    item.name = name
+    item.info = info
+    item.price = price
+    item. description = description
+    item.category = category
+    item.calories = calories
+    item.quantity = quantity
+
+    db.session.commit()
+
+    items = Item.query.all()
+
+    return render_template("raymond/shopadmin-table.html", items=items)
+
+@app.route('/addRecipe', methods=['POST'])
+def addRecipe():
+    name = request.form['name']
+    info = request.form['info']
+    ingredients = request.form['ingredients']
+    preperation = request.form['preperation']
+
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+
+    recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id+1).all()
+
+    calories = 0
+    price = 0
+    for i in recipeItems:
+        calories +=i.calories
+        price += i.price
+
+    recipe = Recipe(name=name, info=info, calories=calories, price=price, preperation=preperation, ingredients=ingredients)
+    db.session.add(recipe)
+    db.session.commit()
+
+    img = request.files['image']
+    img.filename = "r-" + str(recipe.id) + ".jpg"
+    filename = photos.save(img)
+
+    recipes = Recipe.query.all()
+
+    return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
+    # return str(calories)
+
+
+@app.route('/deleteRecipe', methods=['POST'])
+def deleteRecipe():
+    item_id = request.form['delete_id']
+
+    del_recipe = Recipe.query.filter_by(id=item_id).first()
+    db.session.delete(del_recipe)
+    db.session.commit()
+
+    del_recipeitem = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
+    for i in del_recipeitem:
+        db.session.delete(i)
+        db.session.commit()
+
+    img = "r-" + str(item_id) + ".jpg"
+    os.remove('static/raymond/img/' + img)
+
+    recipes = Recipe.query.all()
+    return render_template('raymond/shopadmin-recipe.html', recipes=recipes)
+
+
+@app.route('/addRecipeItem', methods=['POST'])
+def addRecipeItem():
+
+    filter_id = request.form['filter_id']
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    if max_id is None:
+        max_id = 1
+    else:
+        max_id += 1
+
+    item = Item.query.filter(Item.id==filter_id).first()
+    name = item.name
+    price = item.price
+    info = item.info
+    quantity = item.quantity
+    calories = item.calories
+
+
+    ingredient = RecipeIngredients(recipe_id=max_id, item_id=filter_id, name=name, price=price, info=info, quantity=quantity, calories=calories, change=True)
+    db.session.add(ingredient)
+    db.session.commit()
+
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
+
+    return render_template('raymond/shopadmin-recipetable.html', recipe_items=recipe_items)
+
+@app.route('/deleteRecipeItem', methods=['POST'])
+def deleteRecipeItem():
+    item_id = request.form['delete_id']
+
+    del_recipe = RecipeIngredients.query.filter_by(id=item_id).first()
+    db.session.delete(del_recipe)
+    db.session.commit()
+
+    max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    if max_id is None:
+        max_id = 1
+    else:
+        max_id += 1
+
+    recipe_items = RecipeIngredients.query.filter_by(recipe_id=max_id).all()
+
+    return render_template('raymond/shopadmin-recipetable.html', recipe_items=recipe_items)
+
+@app.route('/addRecipeSearch', methods=['POST'])
+def addRecipeSearch():
+    filter = request.form['filter']
+    items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
+
+    return render_template('raymond/shopadmin-search.html', items=items)
+
+#ORDERS PAGE
+@app.route('/ordersadmin')
+def ordersadmin():
+
+    #check if user id is same, then check if oid is same
+
+    #get max oid
+    max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
+
+    list = [] #[[4,1],[4,2]]
+    group = [] #[[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+    for i in range(max_oid+1):
+        o = Orders.query.filter(Orders.oid == i).first()
+        if o:
+            o_userid = o.user_id
+            o_oid = o.oid
+            list.append([o_userid,o_oid])
+
+    for i in list:
+        q_userid = Orders.query.filter(and_(Orders.user_id==i[0], Orders.oid==i[1])).all()
+        group.append(q_userid)
+
+    return render_template("raymond/ordersadmin.html", group=group, list=list)
+
+@app.route('/searchOrdersID', methods=['POST'])
+def searchOrdersID():
+
+    filter = request.form['filter']
+
+    if filter == '':
+        max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
+
+        list = []  # [[4,1],[4,2]]
+        group = []  # [[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+        for i in range(max_oid + 1):
+            o = Orders.query.filter(Orders.oid == i).first()
+            if o:
+                o_userid = o.user_id
+                o_oid = o.oid
+                list.append([o_userid, o_oid])
+
+        for i in list:
+            q_userid = Orders.query.filter(and_(Orders.user_id == i[0], Orders.oid == i[1])).all()
+            group.append(q_userid)
+    else:
+        list = []  # [[4,1],[4,2]]
+        group = []  # [[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+        o = Orders.query.filter(Orders.oid == filter).first()
+        if o:
+            o_userid = o.user_id
+            o_oid = o.oid
+            list.append([o_userid, o_oid])
+
+        for i in list:
+            q_userid = Orders.query.filter(and_(Orders.user_id == i[0], Orders.oid == i[1])).all()
+            group.append(q_userid)
+
+    return render_template("raymond/ordersadmin-search.html", group=group, list=list)
+
+@app.route('/deliver/<group_id>/<status>')
+def deliver(group_id, status):
+    query_gid = Orders.query.filter(Orders.oid==group_id).all()
+    for i in query_gid:
+        i.delivered = status
+        db.session.commit()
+
+    return redirect(url_for('ordersadmin'))
+
+@app.route('/orders')
+@login_required
+def orders():
+    # check if user id is same, then check if oid is same
+
+    #order received, delivery scheduled, delivery started, delivery in progress, delivery completed
+
+    # get max oid
+    max_oid = db.session.query(db.func.max(Orders.oid)).scalar()
+
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+
+    list = []  # [[4,1],[4,2]]
+    group = []  # [[<obj 1>,<obj 1>,<obj 1>,<obj 1>],[<obj 1>,<obj 1>,<obj 1>,<obj 1>]]
+
+    for i in range(max_oid + 1):
+        o = Orders.query.filter(Orders.oid == i).first()
+        if o and o.user_id == uid:
+            o_userid = o.user_id
+            o_oid = o.oid
+            list.append([o_userid, o_oid])
+
+    for i in list:
+        q_userid = Orders.query.filter(and_(Orders.user_id == i[0], Orders.oid == i[1])).all()
+        group.append(q_userid)
+
+    percent = 0
+    status = 'true'
+    oid = 0
+    for i in range(max_oid + 1):
+        o = Orders.query.filter(Orders.oid == i).first()
+        if o and o.user_id == uid:
+            oid = o.oid
+    check = Orders.query.filter(and_(Orders.user_id == uid, Orders.oid == oid)).first()
+    if check.delivered == 'Order Received':
+        status = 'true'
+        percent = 10
+    elif check.delivered == 'Delivery Scheduled':
+        status = 'true'
+        percent = 40
+    elif check.delivered == 'Delivery In Progress':
+        status = 'true'
+        percent = 70
+    elif check.delivered == 'Delivery Completed':
+        status = 'true'
+        percent = 100
+
+    return render_template("raymond/orders.html", group=group, list=list, percent=percent, status=status, uid=uid, order_id=oid)
+    # return str(oid)
+
+@app.route('/orderstatus', methods=['POST'])
+@login_required
+def orderstatus():
+
+    user = User.query.filter_by(username=current_user.username).first()
+    uid = user.uid
+
+    percent = 0
+    status = 'true'
+
+    order_id = request.form['order_id']
+    q_userid = Orders.query.filter(and_(Orders.user_id == uid, Orders.oid == order_id)).first()
+    if q_userid.delivered == 'Order Received':
+        status = 1
+        percent = 10
+    elif q_userid.delivered == 'Delivery Scheduled':
+        status = 2
+        percent = 40
+    elif q_userid.delivered == 'Delivery In Progress':
+        status = 3
+        percent = 70
+    elif q_userid.delivered == 'Delivery Completed':
+        status = 4
+        percent = 100
+
+    return render_template("raymond/orders-status.html", percent=percent, status=status, uid=uid, order_id=order_id)
+
+@app.route('/checkoutform')
+def checkoutform():
+    cart = Cart.query.all()
+    return render_template('raymond/checkoutform.html', cart=cart)
 
 
 #CYNTHIA

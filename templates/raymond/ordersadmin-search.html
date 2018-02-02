@@ -1,0 +1,56 @@
+{% for i in group %}
+<div class="order-button" id="order-button{{ i[0].oid }}" table_id="{{ i[0].oid }}">
+    <h3 class="orderid" style="margin-left: 100px">Order ID: {{ i[0].oid }}</h3>
+{#    <h3 class="orderid">ID: {{ i[0].user_id }}</h3>#}
+{#    <h3 class="orderid">Order: {{ i[0].order_id }}</h3>#}
+    <h3 class="orderid" style="margin-left: 50px">Qty: {{ i[0].items_quantity }}</h3>
+    <h3 class="orderid" style="margin-right: 100px">Date: {{ i[0].date.strftime("%d %b %Y") }}</h3>
+{#    <h3 class="orderid">Status: <a href='{{ url_for('deliver', group_id=i[0].oid) }}'>{{ i[0].delivered }}</a></h3>#}
+{#    <h3 class="orderid">Status:#}
+        <div class="dropdown">
+        <button class="dropbtn" {% if i[0].delivered == 'Order Received' %}style="background-color: darkslategrey"{% elif i[0].delivered == 'Delivery Scheduled' %}style="background-color: darkblue"{% elif i[0].delivered == 'Delivery In Progress' %}style="background-color: darkorange"{% elif i[0].delivered == 'Delivery Completed' %}style="background-color: green"{% endif %}>{% if i[0].delivered == 'Order Received' %}<i class="fa fa-address-card-o" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery Scheduled' %}<i class="fa fa-calendar" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery In Progress' %}<i class="fa fa-truck" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery Completed' %}<i class="fa fa-archive" id="order-or" aria-hidden="true"></i>{% endif %} {{ i[0].delivered }}</button>
+            <div class="dropdown-content">
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Order Received') }}"><i class="fa fa-address-card-o" id="order-or" aria-hidden="true"></i> Order Received</a>
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery Scheduled') }}"><i class="fa fa-calendar" id="order-or" aria-hidden="true"></i> Delivery Scheduled</a>
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery In Progress') }}"><i class="fa fa-truck" id="order-or" aria-hidden="true"></i> Delivery In Progress</a>
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery Completed') }}"><i class="fa fa-archive" id="order-or" aria-hidden="true"></i> Delivery Completed</a>
+            </div>
+        </div>
+{#    </h3>#}
+    <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
+</div>
+<table class="table table-bordered table-striped table-hover order-info" id="order-info{{ i[0].oid }}" style="display: none">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Delivered</th>
+        </tr>
+    </thead>
+    <tbody id="admin-items">
+        {% for z in i %}
+        <tr>
+            <td>{{ z.oid }}</td>
+            <td>{{ z.name }}</td>
+            <td>{{ z.quantity }}</td>
+            <td>${{ '{0:.2f}'.format(z.price) }}</td>
+            <td>{{ z.date.strftime("%d %b %Y") }}</td>
+            <td>{{ z.delivered }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+$(document).ready(function(){
+    $(".order-button").on('click', function() {
+        var table_id = $(this).attr('table_id');
+        $('.order-info').hide();
+        $("#order-info"+table_id).toggle();
+        $('#order-button'+table_id)[0].scrollIntoView(true);
+    });
+});
+</script>
+{% endfor %}

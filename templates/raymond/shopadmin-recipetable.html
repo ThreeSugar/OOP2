@@ -1,0 +1,22 @@
+<thead>
+    <tr>
+        <th>#</th>
+        <th>Item ID: </th>
+        <th>Name: </th>
+        <th>Calories: </th>
+        <th>Change: </th>
+        <th></th>
+    </tr>
+</thead>
+{% for i in recipe_items %}
+<tbody>
+    <tr>
+        <td>{{ i.id }}</td>
+        <td>{{ i.item_id }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.calories }}</td>
+        <td>{{ i.change }}</td>
+        <td><a class="btn recipeItemDelete" delete_id="{{ i.id }}"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+    </tr>
+</tbody>
+{% endfor %}

@@ -28,6 +28,12 @@
     margin-top:0px;
     margin-left: 20px;
 }
+.menuform{
+    background-color:#e5e5e5;
+    padding:8px;
+    margin-top:0px;
+    margin-left: 20px;
+}
 .menuitem:hover{
     background-color: #cccccc;
 }
@@ -37,13 +43,37 @@
     padding:20px;
 }
 .card{
-    width: 20%;
+    width: 220px;
     float: left;
     margin: 10px 10px 10px 0px;
     border-radius: 0;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
 }
+.cardrecipe{
+    width: 300px;
+}
+
+.card{
+    animation: slide-up-fade-in ease 1s;
+    animation-iteration-count: 1;
+    transform-origin: 50% 50%;
+    animation-fill-mode:forwards; /*when the spec is finished*/
+    opacity:0;
+    opacity: 1\9;
+}
+
+@keyframes slide-up-fade-in{
+    0% {
+        opacity:0;
+        transform:  translate(0px,40px)  ;
+    }
+    100% {
+        opacity:1;
+        transform:  translate(0px,0px)  ;
+    }
+}
+
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
@@ -99,90 +129,458 @@ p{
     margin: 0;
     padding: 0;
 }
-@media only screen and (max-width:650px) {
-    /* For mobile phones: */
-    .menu, .main, .card{
-        width:100%;
-    }
-    .menuitem{
-        margin:0;
-    }
-}.checked {
+.search {
+    margin-left: 20px;
+    width: 93%;
+    margin-bottom: 15px;
+}
+.checked {
     color: orange;
 }
+.results {
+    margin-top: 10px;
+}
+button{
+    height: 30px;
+    color: white;
+    background-color: grey;
+    border-radius: 12px;
+}
+button:hover {
+    color: white;
+    background-color: dimgrey;
+}
+.addCartBtn{
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    background-color: white;
+    height: 50px;
+    border-radius: 0;
+    color: black;
+}
+.addCartBtn i{
+    margin: 30%;
+}
+
+.addCartBtn:hover{
+    background-color: white;
+    color: black;
+    font-size: 20px;
+}
+.cartbtn img{
+    width: 20px;
+    {#animation: shake 0.5s;#}
+    {#animation-iteration-count: 3;#}
+}
+.cartbtn{
+    background-color: white;
+    {#margin-right: 10px;#}
+    width: 80px;
+    padding: 10px;
+    padding-right: 20px;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.9);
+    color: black;
+    border-radius: 0px;
+    z-index: 1000;
+}
+.calcbtn{
+    background-color: white;
+    {#margin-right: 10px;#}
+    width: 80px;
+    padding: 10px;
+    padding-right: 20px;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.9);
+    color: black;
+    border-radius: 0px;
+    z-index: 1000;
+}
+.cartbtn:hover{
+    {#background-color: yellow;#}
+}
+.modalcart{
+    width: 0px;
+    {#width: 400px;#}
+    height: 460px;
+    background-color: white;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.9);
+    {#outline: 1px solid black;#}
+    position: fixed;
+    top: 90px;
+    right: 0;
+    z-index: 1001;
+    {#overflow: auto;#}
+    {#overflow-x: hidden;#}
+}
+.modalCalculator{
+    width: 0px;
+    {#width: 400px;#}
+    height: 350px;
+    background-color: white;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.9);
+    position: fixed;
+    top: 170px;
+    right: 0;
+    z-index: 1001;
+}
+
+a:hover {
+  cursor:pointer;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+.notification{
+    position: fixed;
+    right: 80px;
+    bottom: -100px;
+    background-color: whitesmoke;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.5);
+    color: black;
+    padding: 20px 70px 20px 70px;
+    z-index: 1000;
+}
+.cart{
+    overflow: auto;
+    width: 400px;
+    height: 400px;
+
+    {#margin: 10px 20px 10px 10px;#}
+}
+.calc{
+    overflow: auto;
+    width: 400px;
+    height: 400px;
+
+    {#margin: 10px 20px 10px 10px;#}
+}
+.cart table{
+    width: 100%;
+}
+.tableimg td{
+    width: 20%;
+}
+.gotoCart{
+    width: 100%;
+    margin: 0;
+    color: white;
+    background-color: grey;
+    border-radius: 0px;
+    {#margin-left: 2px;#}
+}
+.gotoCart:hover{
+    color: white;
+    background-color: dimgrey;
+}
+.modalcartCheckoutBtn{
+    width: 100%;
+    margin: 0;
+    color: white;
+    background-color: grey;
+    border-radius: 0px;
+    {#margin-right: 2px;#}
+}
+.modalcartCheckoutBtn:hover{
+    color: white;
+    background-color: dimgrey;
+}
+#empty{
+
+}
+#cartinfo{
+    background-color: white;
+    font-size: 20px;
+    padding: 10px;
+    color: black;
+}
+#cartinfoinfo{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+@media only screen and (max-width:650px) {
+    /* For mobile phones: */
+    .menu, .main{
+        width:100%;
+    }
+    .menuitem, .menuform{
+        margin:0;
+    }
+    .search{
+        width:100%;
+        margin: 0;
+    }
+    .card {
+        width: 170px;
+    }
+    .addCartBtn{
+        height: 40px;
+        width: 40px;
+    }
+}
 </style>
+{#<div style="position: sticky; top: 0;">HELLO</div>#}
+<div class="notification">Added to cart!</div>
+<div class="cartcount" style="position: fixed; top: 6px; right: 0; z-index: 1000;"><a class="btn cartbtn"><img class="shake" src="{{ url_for('static', filename='img/cart.png') }}"> <span id="cartcount"> ({{ cart_count() }}) </span></a></div>
+{#<div style="position: fixed; top: 6px; right: 0; z-index: 1000;"><a class="btn closebtn"><img class="shake" src="{{ url_for('static', filename='img/cart.png') }}"> <span id="cartcount"> ({{ cart_count() }}) </span></a></div>#}
+<div class="modalcart">
+    <div class="cart">
+        <h3 style="text-align: center; margin: 10px"><b>Your Cart</b></h3>
+    {% if not cart %}<p id="empty">EMPTY!</p>{% endif %}
+        <div class="shopcart">
+        {% for c in cart %}
+            <table>
+                <td style="width: 20px; padding-left: 5px;">{{ c.id }}</td>
+                <td style="width: 40px" id="tableimg"><img src="{{ url_for('static', filename='raymond/img/' ~ c.item_id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'" style="width: 50px"></td>
+                <td style="padding: 10px 10px 10px 10px; width: 200px">
+                    <p>{{ c.name }}</p>
+                    <p>QTY: {{ c.quantity }}</p>
+                </td>
+                <td style="width: 50px; padding: 10px">${{ '{0:.2f}'.format(c.subtotal) }}</td>
+                <td style="width: 20px;"><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+            </table>
+            <hr style="color: black; margin: 0;">
+        {% endfor %}
+        </div>
+    </div>
+    <div id="cartinfoinfo">
+        <div id="cartinfo">
+            <p style="float: left; margin: 0;">TOTAL:</p><p style="text-align: right; margin: 0;">${{ show_cart_price() }}</p>
+        </div>
+        <a class="btn gotoCart" href="{{ url_for('cart') }}">CART</a>
+    </div>
+
+</div>
+<div class="calculator" style="position: fixed; top: 80px; right: 0; z-index: 1000;"><a class="btn calcbtn"><i class="fa fa-calculator" style="font-size: 20px;"></i> cal.</a></div>
+<div class="modalCalculator">
+    <div class="calc">
+        <div class="form-group" style="text-align: center; width: 300px; margin: 0 auto; margin-top: 10px;">
+            <label>KCAL CALCULATOR</label>
+            <select class="form-control" name="gender" id="gender" style="width: 100%;">
+                <option >Choose gender..</option>
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+            </select>
+            <input class="form-control" type="text" name="weight" id="weight" placeholder="weight (kg)" style="width:100%;">
+            <input class="form-control" type="text" name="height" id="height" placeholder="height (cm)" style="width:100%;">
+            <input class="form-control" type="number" name="age" id="age" placeholder="age" style="width:100%;">
+            <select class="form-control" name="exercise" id="exercise" style="width: 100%;">
+                <option>Choose exercise..</option>
+                <option value="1">Little to no exercise</option>
+                <option value="2">Light exercise (1-3 days per week)</option>
+                <option value="3">Moderate exercise (3-5 days per week)</option>
+                <option value="4">Heavy exercise (6-7 days per week)</option>
+                <option value="5">Very heavy exercise (twice per day, extra heavy workouts)</option>
+            </select>
+            <div class="results" style="margin: 5%">
+                <h3>BMR: <span id="bmr"></span></h3>
+                <h3>Rec Kcal: <span id="reckcal"></span></h3>
+            </div>
+            <a class="calculateKCAL" style="margin: 0; background-color: grey; color: white; padding: 5px 120px 5px 120px;">Calculate</a>
+        </div>
+    </div>
+</div>
 
 <div style="overflow:auto">
     <div class="menu">
-        <a href="{{ url_for('cart') }}"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;"><img src="{{ url_for('static', filename='img/cart.png') }}" style="width: 7%"> Cart (<span>{{ cart_count() }}</span>)</div></a>
-        <a href="{{ url_for('filter', category="meat") }}"><div class="menuitem">meat & seafood</div></a>
-        <a href="#"><div class="menuitem">fruit & veg</div></a>
-        <a href="#"><div class="menuitem">frozen</div></a>
-        <a href="#"><div class="menuitem">dairy</div></a>
-        <a href="#"><div class="menuitem">bakery</div></a>
-        <a href="#"><div class="menuitem">beverages</div></a>
+        <input class="form-control search" type="text" name="search" id="search" onkeyup="searchFunction()" placeholder="Search..">
+        <a href="{{ url_for('cart') }}"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;"><img src="{{ url_for('static', filename='img/cart.png') }}" style="width: 7%"> Cart</div></a>
+        <a category="recipes" class="filterbtn"><div class="menuitem" style="margin-bottom: 5%; border-radius: 5px;">featured recipes</div></a>
+        <a category="" class="filterbtn"><div class="menuitem">all</div></a>
+        <a category="Meat & Seafood" class="filterbtn"><div class="menuitem">meat & seafood</div></a>
+        <a category="Fruit & Veg" class="filterbtn"><div class="menuitem">fruit & veg</div></a>
+        <a category="Frozen" class="filterbtn"><div class="menuitem">frozen</div></a>
+        <a category="Dairy" class="filterbtn"><div class="menuitem">dairy</div></a>
+        <a category="Bakery" class="filterbtn"><div class="menuitem">bakery</div></a>
+        <a category="Beverages" class="filterbtn"><div class="menuitem">beverages</div></a>
+        <a category="Others" class="filterbtn" value="Others"><div class="menuitem">others</div></a>
     </div>
 
+
     <div class="main">
-        <h3>SHOP</h3>
-        {% for item in items %}
-        <div class="card">
-            <div class="cardcontainer">
-{#                <img src="http://placehold.it/200x250">#}
-                <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}">
-                <div class="overlay"></div>
-                <div class="button">
-                    <a href="{{ url_for('addCart', item_id=item.id) }}"><img src="{{ url_for('static', filename='img/cart.png') }}"></a>
+        <h3>SHOP / <span id="directory"></span></h3>
+        <div class="shopmenu">
+            {% for item in items %}
+            <div class="card" id="card1">
+                <div class="cardcontainer">
+{#                    <img src="http://placehold.it/200x250">#}
+                    <img id="itemimg" src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'">
+                    <div class="overlay"></div>
+                    <div class="button">
+                        <a class="btn addCartBtn" href="{{ url_for('item', item_id=item.id) }}"><i class="fa fa-search"></i></a>
+                        {% if item.quantity > 0 %}<a class="btn addCartBtn" item_id="{{ item.id }}" cartcount="{{ cart_count() }}"><i class="fa fa-shopping-cart"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="cardinfo">
+                    <p style="float: left"><b><a href="{{ url_for('item', item_id=item.id) }}">{{ item.name }}</a></b><br>{{ item.info }}</p>
+                    <p style="text-align: right; overflow: auto">{% if item.quantity > 0 %}${{ '{0:.2f}'.format(item.price) }}{% else %}<span style="color: red; font-weight: bold;">OUT OF STOCK</span>{% endif %}</p>
+                    <p style="float: right;">
+                    {% if item.rating == 5 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 4 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 3 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 2 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    {% if item.rating == 1 %}
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span> ({{ item.rating_count }})
+                    {% endif %}
+                    </p>
                 </div>
             </div>
-            <div class="cardinfo">
-                <p style="float: left"><b><a href="{{ url_for('item', item_id=item.id) }}">{{ item.name }}</a></b><br>{{ item.info }}</p>
-                <p style="text-align: right; overflow: auto">${{ item.price }}</p>
-{#                <p style="float: right;"><span class="fa fa-star checked"></span>#}
-{#                    <span class="fa fa-star checked"></span>#}
-{#                    <span class="fa fa-star checked"></span>#}
-{#                    <span class="fa fa-star checked"></span>#}
-{#                    <span class="fa fa-star checked"></span></p>#}
-                <p style="float: right;">
-                {% if item.rating == 5 %}
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span> ({{ item.rating_count }})
-                {% endif %}
-                {% if item.rating == 4 %}
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star"></span> ({{ item.rating_count }})
-                {% endif %}
-                {% if item.rating == 3 %}
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span> ({{ item.rating_count }})
-                {% endif %}
-                {% if item.rating == 2 %}
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span> ({{ item.rating_count }})
-                {% endif %}
-                {% if item.rating == 1 %}
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span> ({{ item.rating_count }})
-                {% endif %}
-                </p>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
+<script>
+function searchFunction(){
+    filter = $('#search').val();
+
+    req = $.ajax({
+        url: '/search',
+        type: 'POST',
+        data: {
+            filter : filter
+        }
+    });
+
+    req.done(function(data){
+        $('.main').html(data);
+    });
+}
+$(document).ready( function() {
+    $(document).on('click', '.addCartBtn', function() {
+        item_id = $(this).attr('item_id');
+        req = $.ajax({
+            url: '/addCart',
+            type: 'POST',
+            data: {
+                item_id : item_id
+            }
+        });
+        req.done(function(data){
+            $('#cartcount').fadeOut(1000).fadeIn(1000);
+            $('#cartcount').text('(' + data.count + ')');
+            $('.shopcart').html(data);
+            $('.shake').animate({width: "40px"});
+            $('.shake').animate({width: "20px"});
+            $('.notification').animate({bottom:"40px"}, 500);
+            $('.notification').delay(500).animate({bottom:"-100px"},500);
+        });
+    });
+    $(document).on('click', '.filterbtn', function() {
+        filter = $(this).attr('category');
+        $('#directory').text(filter);
+        req = $.ajax({
+            url: '/filter',
+            type: 'POST',
+            data: {
+                filter : filter
+            }
+        });
+
+        req.done(function(data){
+            $('.shopmenu').html(data);
+        });
+    });
+
+    $(document).on('click', '.calculateKCAL', function() {
+
+        gender = $('#gender').val();
+        weight = $('#weight').val();
+        height = $('#height').val();
+        age = $('#age').val();
+        exercise = $('#exercise').val();
+
+        console.log(gender)
+
+        req = $.ajax({
+            url: '/bmrcalculate',
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            dataType: "json",
+            data: JSON.stringify({
+                'gender' : gender,
+                'weight' : weight,
+                'height' : height,
+                'age' : age,
+                'exercise' : exercise
+            })
+        });
+
+        req.done(function(data){
+            $('#bmr').text(data.bmr);
+            $('#reckcal').text(data.cal);
+        });
+    });
+
+    var click = true;
+    $(document).on('click', '.cartbtn', function() {
+        if (click === true)
+        {
+            {#$(".cartbtn").fadeOut(1000);#}
+            $(".modalcart").animate({width: "400px"});
+            click = false;
+        }
+        else{
+            {#$(".cartbtn").fadeIn(1000);#}
+            $(".modalcart").animate({width: "0px"});
+            click = true
+        }
+    });
+
+    var click = true;
+    $(document).on('click', '.calcbtn', function() {
+        if (click === true)
+        {
+            {#$(".cartbtn").fadeOut(1000);#}
+            $(".modalCalculator").animate({width: "400px"});
+            click = false;
+        }
+        else{
+            {#$(".cartbtn").fadeIn(1000);#}
+            $(".modalCalculator").animate({width: "0px"});
+            click = true
+        }
+    });
+});
+
+</script>
 {% endblock %}

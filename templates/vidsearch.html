@@ -7,6 +7,11 @@
 <li><a href="{{ url_for('vid_logout') }}">Logout</a></li>
 {% endblock %}
 
+{% block videologin %}
+<li><a href="{{ url_for('vid_signup') }}">Sign Up</a></li>
+<li><a href="{{ url_for('vid_login') }}">Login</a></li>
+{% endblock %}
+
 
 {% block style %}
 <link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">

@@ -23,7 +23,7 @@ a:hover {
 
 {% block content %}
 
-<div style="margin-bottom: -40px;">
+<div style="margin-top: 150px; margin-bottom: -70px;">
     <a href = "{{url_for('viewplaylist')}}" style="width:180px; margin-left:5px; margin-top: 20px; color:black; " class="btn btn-secondary">Return to Selections</a>
 </div>
 
@@ -37,7 +37,7 @@ a:hover {
 
 <div class="video">
 
-    <video class='videos' width="700" height="400" controls>
+    <video name = "{{load_vid_id.id}}" class='videos' width="700" height="400" controls>
 
         <source src="{{url_for('static', filename = 'assets/' + load_vid.link)}}" type="video/mp4">
         <source src="{{url_for('static', filename = 'assets/' + load_vid.link )}}" type="video/webm">
@@ -56,8 +56,8 @@ a:hover {
 
 <div style = "margin-left:10px;" class="card playlist">
         <div class="card-header">
-                Playlist
-             <a data-toggle="modal" data-target="#myModal"><i style = "font-size:15px; margin-top:3px; margin-left:195px;"class="fa fa-plus" aria-hidden="true"></i></a>
+                <b style ="font-size:20px;">Playlist</b>
+             <a data-toggle="modal" data-target="#myModal"><i style = "font-size:20px; margin-top:3px; margin-left:165px;"class="fa fa-plus" aria-hidden="true"></i></a>
          </div>
          <ul id = "searchlist" class="list-group list-group-flush">
         
@@ -65,11 +65,11 @@ a:hover {
            
              <li id='{{p.id}}' class="list-group-item playlist_id" name = "{{p.playlist_id}}">
                 <a href = "{{url_for('load_playlist_vid', id = p.id)}}">{{p.title}}
-                     <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
-                         <span aria-hidden="true">&times;</span>
-                     </a>
+                    <a type="button" name = "{{p.id}}" class="close ml-auto" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
                  </a> 
-             </li>
+            </li>
         
              {% endfor %}       
          </ul>
@@ -79,7 +79,7 @@ a:hover {
            <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">
-                 <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
+                    <h4 style = "font-size:25px;" class="modal-title" id="exampleModalLabel"><b>Select Saved Videos</b></h4>
                  <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">&times;</span>
                  </button>
@@ -115,6 +115,13 @@ a:hover {
 
     
 <script>
+
+$( document ).ready(function() {
+    var selected_vid = $('.videos').attr('name')
+    console.log(selected_vid)
+    console.log('#' + selected_vid)
+    $('#' + selected_vid ).addClass('vidhighlight')
+});
 
     $(function(){
         $('#searchlist').sortable({

@@ -3,6 +3,16 @@
 
 {% block title %} LifeStyle28 | Video  {% endblock %} 
 
+{% block video %}
+<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>
+<li><a href="{{ url_for('vid_logout') }}">Logout</a></li>
+{% endblock %}
+
+{% block videologin %}
+<li><a href="{{ url_for('vid_signup') }}">Sign Up</a></li>
+<li><a href="{{ url_for('vid_login') }}">Login</a></li>
+{% endblock %}
+
 {% block style %}
 <link href= "{{url_for('static', filename='css/viewvid.css')}}" rel="stylesheet" type="text/css">
 <link href= "{{url_for('static', filename='css/lightbox.min.css')}}" rel="stylesheet" type="text/css">
@@ -29,6 +39,10 @@
         }
 
         a { cursor: pointer; }
+
+        ul {
+           list-style-type: none;
+        }
     
 
 </style>
@@ -41,7 +55,7 @@
 <!-- Page Content -->
 
 
-<form method = "POST" action = "{{url_for('videosearch')}}" >
+<form style = "margin-top:130px;" method = "POST" action = "{{url_for('videosearch')}}" >
     <div class="col-lg-6">
         <div style = "margin-left:-6%;" class="input-group">
             {{form.hidden_tag()}}
@@ -55,13 +69,11 @@
 <div class="video">
 
 
-<video id = "playvid" width="800" height="500" controls>
+<video style = "margin-top:30px;" id = "playvid" name = "{{vid}}" width="700" height="400" controls>
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/mp4">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/webm">
     <source src="{{url_for('static', filename = 'assets/' + link)}}" type="video/opgg">
 </video> 
-
-
 
     
     <p style = "font-size:30px; color:black; font-weight:600; margin-top:10px;">{{title}}</p>
@@ -77,12 +89,20 @@
 
     <div style = "display: inline-block;">
 
+            <div style ="margin-top:-70px; float:right; padding:15px;">
+                <a data-toggle="modal" data-target="#myModal2" class = "clickadd">
+                    <span style = "font-size:30px;"><i class="fa fa-plus" aria-hidden="true"></i>                    
+                    </span><p style = "font-size:10px;">Add to Playlist</p>
+                </a>    
+            </div>
+
+
             {% if curr_save %}
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
                 <a class = "clicksave">
-                    <span style = "font-size:30px;"><i id = "saveicon" class="fa-check" aria-hidden="true"></i>                    
-                    </span><p class = "displaysave" style = "font-size:10px;">Saved</p>
+                    <span style = "font-size:30px;"><i id = "saveicon" class="fa-heart" aria-hidden="true"></i>                    
+                    </span><p class = "displaysave" style = "font-size:10px;">Favourited</p>
                 </a>
             </div>
 
@@ -90,14 +110,69 @@
 
             <div style ="margin-top:-70px; float:right; padding:15px;">
                 <a class = "clicksave">
-                        <span style = "font-size:30px;"><i id = "saveicon" class="fa fa-plus" aria-hidden="true"></i>                    
-                        </span><p class = "displaysave" style = "font-size:10px;">Save</p>
+                        <span style = "font-size:30px;"><i id = "saveicon" class="fa-heart-o" aria-hidden="true"></i>                    
+                        </span><p class = "displaysave" style = "font-size:10px;">Favourite</p>
                 </a>    
             </div>
             
-            {% endif %}
+           {% endif %}
 
+            <!-- Custom Modal for Save -->
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div style = "text-align:center;" class="modal-header">
+                        <h5 style = "font-size:26px;" class="modal-title" id="exampleModalLabel"><b>Save to...</b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success video-success alert-dismissible" role="alert">
+                                Video successfully saved.
+                        </div>
 
+                        <div class="alert alert-danger alert-dismissible video-delete" role="alert">
+                            Video successfully removed.
+                        </div>
+
+                        <div class="alert alert-success alert-dismissible playlist-success" role="alert">
+                                Playlist successfully created.
+                        </div>
+
+                        <ul id = "listplay">
+                            {% for a in all_playlist %}
+
+                            {% if check_playlist_save(a.id, vid) %}
+                            <li>
+                                <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox surecheck" name = "selectvid" value="1">
+                                {{a.title}}
+                                </label>
+                            </li>
+                            {% else %}
+                            <li>
+                                <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox" name = "selectvid" value="1">
+                                {{a.title}}
+                                </label>
+                            </li>
+                            {% endif %}
+
+                            {% endfor %}
+                        </ul>
+                    <hr>
+        
+                        <a id = "openplaylist" style = "font-size:15px;"><span style = "font-size:20px;"><i class="fa fa-plus-square" aria-hidden="true"></i></span>
+                        Create Playlist</a>
+                        <form style = "padding-top:15px;" id = "createplaylist">
+                            {{playform.hidden_tag()}}
+                            {{wtf.form_field(playform.title)}}
+                            {{wtf.form_field(playform.desc)}}
+                            <button class="btn btn-lg btn-primary btn-block" id = "submitplay" type="submit">Create</button>
+                        </form>
+                    </div>
+                 </div>
+                </div>
+            </div>
        
 
         <a id = "cdislikes">
@@ -279,12 +354,93 @@
 
 <script>
     $(document).ready(function() {
+
+        $('.surecheck').prop('checked', true);
+        $(".video-success").hide();
+        $(".video-delete").hide();
+        $(".playlist-success").hide();
+        $("#createplaylist").hide();
+
+        $("#openplaylist").on('click', function(){
+            $("#createplaylist").toggle();
+        });
+
+        $('#createplaylist').submit(function(event) {
+           event.preventDefault();
+           var video_id = $('#playvid').attr('name');
+           var form_data = { 'title' : $('#title').val(),
+                             'desc'  : $('#desc').val(),
+           }
+           req = $.ajax({
+                url : "{{url_for('create_playlist')}}",
+                type : 'POST',
+                data: JSON.stringify({value:video_id, form_data:form_data}),
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+                },
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+                });
+ 
+                req.done(function(data) {
+                    $(".playlist-success").delay(700).show().fadeOut('slow');
+                    $("#listplay").empty()
+                    $("#listplay").append(data.playlist);   
+                    $("#openplaylist").on('click', function(){
+                         $("#createplaylist").toggle();
+                    });    
+                });
+        });
+
+
+        $('.vid_checkbox').on('click', function(){
+            var play_id = $(this).attr('data-playid');
+            var checkbox = $('#' + play_id);
+            console.log(checkbox.is(':checked'));
+
+            if(checkbox.is(':checked')){
+                req = $.ajax({
+                url : "{{url_for('add_to_playlist', id = vid)}}",
+                type : 'POST',
+                beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+            },
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".video-success").delay(700).show().fadeOut('slow');
+                });
+
+            } else {
+    
+                req = $.ajax({
+                url : "{{url_for('delete_from_playlist', id = vid)}}",
+                type : 'POST',
+                beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+            },
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".video-delete").delay(700).show().fadeOut('slow');
+                });               
+            }
+        });
+        
     $('#clikes').on('click', function() {
        
         req = $.ajax({
         url : "{{url_for('likevideo', videoid = vid)}}",
         type : 'POST',
-
+        
       });
 
         req.done(function(data) {
@@ -298,7 +454,7 @@
         req = $.ajax({
         url : "{{url_for('dislikevideo', videoid = vid)}}",
         type : 'POST',
-
+     
       });
 
         req.done(function(data) {
@@ -323,20 +479,18 @@
     });
 });
 
-
 $('.clicksave').on('click', function() {
     req = $.ajax({
       url : "{{url_for('savevid', videoid = vid)}}",
       type : 'POST',
   });
-
     req.done(function(data) {
         if (data.save == "saved") {
-            $('.displaysave').html('Saved');
-            $('#saveicon').removeClass('fa fa-plus').addClass('fa-check');
+            $('.displaysave').html('Favourited');
+            $('#saveicon').removeClass('fa-heart-o').addClass('fa-heart');
         } else if (data.save == "save") {
-            $('.displaysave').html('Save');
-            $('#saveicon').removeClass('fa-check').addClass('fa fa-plus');
+            $('.displaysave').html('Favourite');
+            $('#saveicon').removeClass('fa-heart').addClass('fa-heart-o');
         } else {
             console.log("If you see this message, please check the code and fix the errors.")
         }

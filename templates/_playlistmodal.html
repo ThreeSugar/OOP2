@@ -1,0 +1,110 @@
+{% for a in all_playlist %}
+
+{% if check_playlist_save(a.id, vid) %}
+<li>
+    <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox surecheck" name = "selectvid" value="1">
+    {{a.title}}
+    </label>
+</li>
+{% else %}
+<li>
+    <label><input type="checkbox" id = "{{a.id}}" data-playid = "{{a.id}}" class = "vid_checkbox" name = "selectvid" value="1">
+    {{a.title}}
+    </label>
+</li>
+{% endif %}
+
+{% endfor %}
+
+
+{% block script %}
+
+<script>
+    $(document).ready(function() {
+
+        $('.surecheck').prop('checked', true);
+        $(".video-success").hide();
+        $(".video-delete").hide();
+        $(".playlist-success").hide();
+        $("#createplaylist").hide();
+
+        $("#openplaylist").on('click', function(){
+            $("#createplaylist").toggle();
+        });
+
+        $('#createplaylist').submit(function(event) {
+           event.preventDefault();
+           var video_id = $('#playvid').attr('name');
+           var form_data = { 'title' : $('#title').val(),
+                             'desc'  : $('#desc').val(),
+           }
+           req = $.ajax({
+                url : "{{url_for('create_playlist')}}",
+                type : 'POST',
+                data: JSON.stringify({value:video_id, form_data:form_data}),
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+                },
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+                });
+ 
+                req.done(function(data) {
+                    $(".playlist-success").delay(700).show().fadeOut('slow');
+                    $("#listplay").empty()
+                    $("#listplay").append(data.playlist);
+                    $("#openplaylist").on('click', function(){
+                         $("#createplaylist").toggle();
+                    });    
+                });
+        });
+
+
+        $('.vid_checkbox').on('click', function(){
+            var play_id = $(this).attr('data-playid');
+            var checkbox = $('#' + play_id);
+            console.log(checkbox.is(':checked'));
+
+            if(checkbox.is(':checked')){
+                req = $.ajax({
+                url : "{{url_for('add_to_playlist', id = vid)}}",
+                type : 'POST',
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+                },
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+                
+
+                });
+ 
+                req.done(function(data) {
+                    $(".video-success").delay(700).show().fadeOut('slow');
+                });
+
+            } else {
+    
+                req = $.ajax({
+                url : "{{url_for('delete_from_playlist', id = vid)}}",
+                type : 'POST',
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRFToken', '{{ playform.csrf_token._value() }}');
+                },
+                data: JSON.stringify({value:play_id}),
+                contentType: 'application/json;charset=UTF-8',
+                dataType: "json"
+
+                });
+ 
+                req.done(function(data) {
+                    $(".video-delete").delay(700).show().fadeOut('slow');
+                });               
+            }
+        });
+});
+
+</script>
+
+
+{% endblock %}

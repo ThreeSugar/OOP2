@@ -1,6 +1,16 @@
 {% extends 'vidlayout.html' %}
 
-{% block title %} Videos {% endblock %} 
+{% block title %} LifeStyle28 | Video  {% endblock %} 
+
+{% block video %}
+<li><a href="{{ url_for('dashboard') }}">{{ current_user.username }}</a></li>
+<li><a href="{{ url_for('vid_logout') }}">Logout</a></li>
+{% endblock %}
+
+{% block videologin %}
+<li><a href="{{ url_for('vid_signup') }}">Sign Up</a></li>
+<li><a href="{{ url_for('vid_login') }}">Login</a></li>
+{% endblock %}
 
 
 {% block style %}
@@ -58,7 +68,7 @@
 
 {% block content %}
 
-<form method = "POST" action = "{{url_for('videosearch')}}" >
+<form style = "margin-top:130px;" method = "POST" action = "{{url_for('videosearch')}}" >
         <div class="col-lg-6">
             <div style = "margin-left: -20px;" class="input-group">
                 {{form.hidden_tag()}}

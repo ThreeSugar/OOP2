@@ -208,6 +208,11 @@ class EditForm(FlaskForm):
 class VideoSearch(FlaskForm):
     search = StringField(validators=[InputRequired(), ])
 
+class AddToPlaylist(FlaskForm):
+    title = StringField('Title', validators=[InputRequired(), ])
+    desc = StringField('Description', validators=[InputRequired(), ])
+
+
 
 #INBOX
 
@@ -287,7 +292,6 @@ class FitnessPlaylist(db.Model):
     username = db.Column(db.String)
     title = db.Column(db.String)
     desc = db.Column(db.String)
-
 
 class NewPlaylist(FlaskForm):
     title = StringField('Title', validators=[InputRequired(), Length(min=4, max=90)])

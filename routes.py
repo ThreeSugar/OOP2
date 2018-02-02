@@ -11,6 +11,9 @@ from sqlalchemy.sql import select
 from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
+from flask_wtf.csrf import CSRFProtect
+
+
 
 from hashids import Hashids
 import requests
@@ -28,6 +31,7 @@ import pyrebase
 
 app = Flask(__name__)
 admin = Admin(app, name = 'LifeStyle28', template_mode = 'bootstrap3')
+
 
 #EMAIL SETTINGS
 app.config.update(
@@ -113,7 +117,13 @@ def utility_processor():
             flag = False
         return flag
 
-
+    def check_playlist_save(play_id, vid_id):
+        is_saved = SavePlaylistVids.query.filter_by(playlist_id=play_id).filter_by(video_id=vid_id).first()
+        if is_saved is not None:
+            return True
+        else:
+            return False
+        
     def show_cart_price():
         price = 0
         cart = Cart.query.all()
@@ -130,8 +140,8 @@ def utility_processor():
         return count
     
 
-    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag,
-                show_cart_price=show_cart_price, cart_count=cart_count)
+    return dict(render_user_id=render_user_id, check_inbox=check_inbox, tag_read=tag_read, tag_flag=tag_flag, 
+                check_playlist_save = check_playlist_save, show_cart_price=show_cart_price, cart_count=cart_count)
 
 
 #ADMIN OVERALL
@@ -924,12 +934,62 @@ def videoz(videoid):
     related = Video.query.filter_by(category = videoid.category).filter( ~Video.title.in_(s)).order_by("date desc").limit(5)
     # ~Video.title.in_(s) == Video.title NOT IN (select([Video.title]).where(Video.title == videoid.title))
     # 'NOT IN' omits all query results that contains videoid.title
+
+    #ADD VIDEO DIRECTLY TO PLAYLIST
+
+    all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
+    playform = AddToPlaylist()
     
     return render_template('displayvid1.html', link=link, name=name, cat=cat, desc=desc, \
                             date=date, title=title, vid = vid, comms = comms, form=form, related=related, \
                             tlikes = tlikes, tdislike = tdislike, \
-                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, signup_error=signup_error, tviews=tviews)
+                            curr_save = curr_save, vidform=vidform, vidsignup=vidsignup, error=error, \
+                            signup_error=signup_error, tviews=tviews, all_playlist=all_playlist, \
+                            playform=playform)
 
+#CUSTOM LOGOUT
+@app.route('/video/logout')
+def vid_logout():
+    logout_user()
+    return redirect(url_for('explorevideo'))
+
+#CUSTOM SIGNUP
+@app.route('/video/signup', methods=['GET', 'POST'])
+def vid_signup():
+    form = RegisterForm()
+    if current_user.is_authenticated == True:
+        return redirect(url_for('vid_login'))
+
+    if form.validate_on_submit():
+        new_user = User(firstname=form.firstname.data, lastname= form.lastname.data, 
+        username=form.username.data, email=form.email.data, password = form.password.data)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+
+        except IntegrityError: #because of db's unique constraint
+            flash('Email or Username has already been taken!', 'error')
+            return redirect(url_for('vid_signup'))
+
+        flash('Account successfully registered!', 'success')
+        return redirect(url_for('vid_login'))
+
+    return render_template('videosignup.html', form=form)
+
+#CUSTOM LOGIN
+@app.route('/video/login', methods=['GET', 'POST'])
+def vid_login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is not None and user.check_password(form.password.data): #SHA256 hashed 50,000 times
+                login_user(user)
+                return redirect(url_for('explorevideo'))
+        else: 
+            flash('Invalid username or password!')
+            return redirect(url_for('vid_login'))
+    return render_template('videologin.html', form=form)
 
 
 @app.route('/video/likes/<videoid>', methods=['GET', 'POST'])
@@ -1057,7 +1117,6 @@ def savevid(videoid):
          db.session.commit()
          return jsonify({'save':'save'})
         
-    
 
 @app.route('/video/delete/<videoid>')
 def deletevid(videoid):
@@ -1102,6 +1161,52 @@ def videofilter(option):
     searchy = search_json['value']
     search = Video.query.filter_by(category=option).filter(Video.title.ilike('%' + searchy + '%')).all()
     return jsonify({'search': render_template('filtersearch.html', search=search)}) 
+
+@app.route('/video/addtoplaylist/<id>', methods=['GET', 'POST'])
+def add_to_playlist(id):
+    selected_vid = Video.query.filter_by(id=id).first()
+    playid_json = request.get_json()
+    play_id = playid_json['value']
+
+    playlist_id = SavePlaylistVids.query.filter_by(playlist_id=play_id).all()
+    order_array = []
+    for play in playlist_id:
+        order_array.append(int(play.id))
+    new_order_no = len(order_array) + 1
+   
+    add_playlist = SavePlaylistVids(playlist_id=play_id, video_id=selected_vid.id, \
+                                    title=selected_vid.title, desc = selected_vid.description, \
+                                    order_no = new_order_no)
+    db.session.add(add_playlist)
+    db.session.commit()
+    return jsonify({'result' : 'success'})
+
+@app.route('/video/createplaylist', methods=['GET', 'POST'])
+def create_playlist():
+    data_json = request.get_json()
+    video_id_value = data_json['value']
+    form_data = data_json['form_data']
+    videoid = Video.query.filter_by(id = video_id_value).first()
+    vid = videoid.id
+    playform = NewPlaylist()
+    new_playlist = FitnessPlaylist(title = str(form_data['title']), desc = str(form_data['desc']), username = current_user.username)
+    db.session.add(new_playlist)
+    db.session.commit()
+    all_playlist = FitnessPlaylist.query.filter_by(username=current_user.username).all()
+    return jsonify({'playlist' : render_template('_playlistmodal.html', all_playlist=all_playlist, vid=vid, playform=playform)})
+       
+   
+@app.route('/video/deletefromplaylist/<id>', methods=['GET', 'POST'])
+def delete_from_playlist(id):
+    selected_vid = Video.query.filter_by(id=id).first()
+    playid_json = request.get_json()
+    play_id = playid_json['value']
+    delete_vid = SavePlaylistVids.query.filter_by(playlist_id=play_id)\
+                .filter_by(video_id=id).first()
+
+    db.session.delete(delete_vid)
+    db.session.commit()
+    return jsonify({'result' : 'success'})
    
 #FITNESS LIBRARY
 
@@ -1174,7 +1279,7 @@ def playlist_vid(id):
         savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
         
         return render_template('viewplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, play_id=play_id, \
-                            first_playlist_vid = first_playlist_vid)
+                            first_playlist_vid = first_playlist_vid, first_vid = first_vid)
     
     except IndexError:
         selected_playlist = FitnessPlaylist.query.filter_by(id=id).first()
@@ -1325,7 +1430,7 @@ def load_playlist_vid(id):
         savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
             
         return render_template('loadplaylistvid.html', savedvids=savedvids, playlist_vids=playlist_vids, \
-                                play_id=play_id, load_vid=load_vid)
+                                play_id=play_id, load_vid=load_vid, load_vid_id=load_vid_id)
 
     else:
         get_playlist_id = PlaylistSession.query.filter_by(username=current_user.username).first()

@@ -23,7 +23,7 @@ a:hover {
 
 {% block content %}
 
-<div style="margin-bottom: -40px;">
+<div style="margin-top: 150px; margin-bottom: -70px;">
     <a href = "{{url_for('viewplaylist')}}" style="width:180px; margin-left:5px; margin-top: 20px; color:black; " class="btn btn-secondary">Return to Selections</a>
 </div>
 
@@ -38,8 +38,8 @@ a:hover {
 
 <div style = "margin-left:10px;" class="card playlist">
     <div class="card-header">
-           Playlist
-        <a data-toggle="modal" data-target="#myModal"><i style = "font-size:15px; margin-top:3px; margin-left:195px;"class="fa fa-plus" aria-hidden="true"></i></a>
+            <b style ="font-size:20px;">Playlist</b>
+            <a data-toggle="modal" data-target="#myModal"><i style = "font-size:20px; margin-top:3px; margin-left:165px;"class="fa fa-plus" aria-hidden="true"></i></a>
     </div>
     <ul id = "searchlist" class="list-group list-group-flush">
 
@@ -63,7 +63,7 @@ a:hover {
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Select Saved Videos</h5>
+            <h4 style = "font-size:25px;" class="modal-title" id="exampleModalLabel"><b>Select Saved Videos</b></h4>
           <button type= "button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -128,7 +128,7 @@ $(function(){
     req = $.ajax({
     url : '/dashboard/playlist/viewvideo/delete/' + playlist_id,
     type : 'POST',
-
+   
     });
 
     req.done(function(data) {

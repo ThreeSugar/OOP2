@@ -5,10 +5,15 @@
 Lifestyle28 | Sign Up
 {% endblock %} 
 
+{% block videologin %}
+<li><a href="{{ url_for('vid_signup') }}">Sign Up</a></li>
+<li><a href="{{ url_for('vid_login') }}">Login</a></li>
+{% endblock %}
+
 {% block content %}
 <div class="container">
 
-  <form class="form-signin" method = "POST" action = "/signup">
+  <form class="form-signin" method = "POST" action = "/video/signup">
     <h2 class="form-signin-heading">Sign Up</h2>
 
     {% with messages = get_flashed_messages() %}

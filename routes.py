@@ -1848,6 +1848,9 @@ def addComment(item_id):
     item = Item.query.filter_by(id=item_id).first()
     count = Comments.query.filter_by(item_id=item_id).count()
 
+    if item.totalratings is None:
+        item.totalratings = 0 
+
     item.totalratings = int(item.totalratings)+int(rating)
     item.rating = int(item.totalratings / count)
     item.rating_count = count

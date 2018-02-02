@@ -1619,31 +1619,34 @@ def addCart():
     # return redirect(request.referrer)
     return jsonify({'cart': render_template('raymond/_shopcart.html', cart=cart), 'count': count})
 
-@app.route('/filter', methods=['POST'])
+@app.route('/filter', methods=['GET', 'POST'])
 def filter():
-    filter = request.form['filter']
+    filter_json = request.get_json()
+    filter = filter_json['filter']
     if filter is "":
         items = Item.query.all() #[item1, item2]
-        return render_template("raymond/shop-view.html", items=items, filter=filter)
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
     elif filter == "recipes":
         items = Recipe.query.all()
-        return render_template("raymond/shop-recipe.html", items=items, filter=filter)
+        return jsonify({'filter': render_template("raymond/shop-recipe.html", items=items, filter=filter)})
     else:
-        items = Item.query.filter(Item.category == filter).all()
-        return render_template("raymond/shop-view.html", items=items, filter=filter)
+        items = Item.query.filter_by(category=filter)
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
 
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def search():
-    filter = request.form['filter']
+    filter_json = request.get_json()
+    filter = filter_json['filter']
     if filter is "":
         items = Item.query.all()
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
     # else:
     #     items = Recipe.query.filter(func.lower(Recipe.name).contains(func.lower(filter))).all()
     #     return render_template("raymond/shop-recipe.html", items=items)
     else:
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
-        return render_template("raymond/shop-view.html", items=items)
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
 
 @app.route('/filterCalories', methods=['POST'])
 def filterCalories():
@@ -1656,8 +1659,7 @@ def filterCalories():
 def bmr_calculate():
 
     bmi_json = request.get_json()
-    print(bmi_json)
-    
+   
     gender = bmi_json['gender']
     weight = bmi_json['weight']
     height = bmi_json['height']

@@ -52,3 +52,25 @@
                 </div>
             </div>
             {% endfor %}
+
+
+<script>
+    function searchFunction(){
+        filter = $('#search').val();
+    
+        req = $.ajax({
+            url: '/search',
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            dataType: "json",
+            data: JSON.stringify({
+                'filter' : filter
+            })
+        });
+    
+        req.done(function(data){
+            $('.main').html(data.filter);
+        });
+    };
+
+ </script>

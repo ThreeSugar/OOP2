@@ -480,18 +480,17 @@ function searchFunction(){
     req = $.ajax({
         url: '/search',
         type: 'POST',
-        data: {
-            filter : filter
-        }
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+        data: JSON.stringify({
+            'filter' : filter
+        })
     });
 
     req.done(function(data){
-        $('.main').html(data);
+        $('.main').html(data.filter);
     });
 }
-
-
-
 
 $(document).ready( function() {
     $(document).on('click', '.addCartBtn', function() {
@@ -543,13 +542,16 @@ $(document).ready( function() {
         req = $.ajax({
             url: '/filter',
             type: 'POST',
-            data: {
-                filter : filter
-            }
+            contentType: 'application/json;charset=UTF-8',
+            dataType: "json",
+            data: JSON.stringify({
+                'filter' : filter
+            })
         });
 
         req.done(function(data){
-            $('.shopmenu').html(data);
+            $('.shopmenu').empty();
+            $('.shopmenu').append(data.filter);
         });
     });
 

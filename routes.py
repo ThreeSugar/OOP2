@@ -1612,11 +1612,12 @@ def addCart():
         return count
 
     cart = Cart.query.all()
+    count = cart_count()
 
     # return render_template('raymond/shop-cart.html', cart=cart, count=cart_count())
     # return jsonify({'count' : cart_count()})
     # return redirect(request.referrer)
-    return jsonify({'cart': render_template('raymond/_shopcart.html', cart=cart)})
+    return jsonify({'cart': render_template('raymond/_shopcart.html', cart=cart), 'count': count})
 
 @app.route('/filter', methods=['POST'])
 def filter():

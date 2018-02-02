@@ -502,7 +502,7 @@ $(document).ready( function() {
             })
         });
         req.done(function(data){
-            $('#cartcount').fadeOut(1000).fadeIn(1000);
+            $('#cartcount').html('(' + data.count + ')').fadeOut(1000).fadeIn(1000);
             $('.shopcart').empty();
             $('.shopcart').append(data.cart);
             $('#empty').html('');

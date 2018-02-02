@@ -1553,9 +1553,11 @@ def shop():
     bmi = BMR.query.first()
     return render_template("raymond/shop.html", items=items, cart=cart, bmi=bmi)
 
-@app.route('/addCart', methods=['POST'])
+@app.route('/addCart', methods=['GET', 'POST'])
 def addCart():
-    item_id = request.form['item_id']
+    item_json = request.get_json()
+    print(item_json)
+    item_id = item_json['item_id']
     items = Item.query.filter_by(id=item_id).first()
 
     if current_user.is_authenticated == True:
@@ -1613,9 +1615,10 @@ def addCart():
 
     cart = Cart.query.all()
 
-    return render_template('raymond/shop-cart.html', cart=cart, count=cart_count())
+    # return render_template('raymond/shop-cart.html', cart=cart, count=cart_count())
     # return jsonify({'count' : cart_count()})
     # return redirect(request.referrer)
+    return jsonify({'cart': render_template('raymond/_shopcart.html', cart=cart)})
 
 @app.route('/filter', methods=['POST'])
 def filter():

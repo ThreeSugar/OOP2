@@ -491,14 +491,16 @@ $(document).ready( function() {
         req = $.ajax({
             url: '/addCart',
             type: 'POST',
-            data: {
-                item_id : item_id
-            }
+            contentType: 'application/json;charset=UTF-8',
+            dataType: "json",
+            data: JSON.stringify({
+                'item_id' : item_id
+            })
         });
         req.done(function(data){
             $('#cartcount').fadeOut(1000).fadeIn(1000);
-            $('#cartcount').text('(' + data.count + ')');
-            $('.shopcart').html(data);
+            $('.shopcart').empty();
+            $('.shopcart').append(data.cart);
             $('.shake').animate({width: "40px"});
             $('.shake').animate({width: "20px"});
             $('.notification').animate({bottom:"40px"}, 500);

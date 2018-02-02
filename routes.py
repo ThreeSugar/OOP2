@@ -947,6 +947,49 @@ def videoz(videoid):
                             signup_error=signup_error, tviews=tviews, all_playlist=all_playlist, \
                             playform=playform)
 
+#CUSTOM LOGOUT
+@app.route('/video/logout')
+def vid_logout():
+    logout_user()
+    return redirect(url_for('explorevideo'))
+
+#CUSTOM SIGNUP
+@app.route('/video/signup', methods=['GET', 'POST'])
+def vid_signup():
+    form = RegisterForm()
+    if current_user.is_authenticated == True:
+        return redirect(url_for('vid_login'))
+
+    if form.validate_on_submit():
+        new_user = User(firstname=form.firstname.data, lastname= form.lastname.data, 
+        username=form.username.data, email=form.email.data, password = form.password.data)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+
+        except IntegrityError: #because of db's unique constraint
+            flash('Email or Username has already been taken!', 'error')
+            return redirect(url_for('vid_signup'))
+
+        flash('Account successfully registered!', 'success')
+        return redirect(url_for('vid_login'))
+
+    return render_template('videosignup.html', form=form)
+
+#CUSTOM LOGIN
+@app.route('/video/login', methods=['GET', 'POST'])
+def vid_login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is not None and user.check_password(form.password.data): #SHA256 hashed 50,000 times
+                login_user(user)
+                return redirect(url_for('explorevideo'))
+        else: 
+            flash('Invalid username or password!')
+            return redirect(url_for('vid_login'))
+    return render_template('videologin.html', form=form)
 
 
 @app.route('/video/likes/<videoid>', methods=['GET', 'POST'])

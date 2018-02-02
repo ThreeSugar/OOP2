@@ -1,50 +1,51 @@
-
-
 .playlist {
-    margin-top:150px;
-    width:300px;
+    margin-top: 150px;
+    width: 300px;
     position: absolute;
 }
 
 .video {
     float: right;
     margin-left: 500px;
-    margin-top:150px;
-    margin-bottom:200px;
+    margin-top: 150px;
+    margin-bottom: 200px;
     position: absolute;
 }
 
-.vidimg{
-    height:400px;
+.vidimg {
+    height: 400px;
     width: 700px;
     padding-bottom: 10px;
-}  
-
-.title{
-    font-size:30px;
 }
 
-.navbar{
+.title {
+    font-size: 30px;
+}
+
+.navbar {
     background: black;
-  }
+}
 
-
-.input-group{
+.input-group {
     margin-top: 100px;
     margin-bottom: 30px;
-    width:300px;
-    height:30px;
+    width: 300px;
+    height: 30px;
     position: absolute;
 }
 
-
-a:hover, a:visited, a:link, a:active
-{
+a:hover,
+a:visited,
+a:link,
+a:active {
     text-decoration: none;
-    color:grey;
+    color: grey;
 }
 
 .vidhighlight {
-    background-color:#D3D3D3;
+    background-color: #D3D3D3;
+    -moz-box-shadow: 3px 3px 5px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+    box-shadow: 3px 3px 5px 6px #ccc;
+    font-weight: 600;
 }
-

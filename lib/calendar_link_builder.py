@@ -27,6 +27,6 @@ def build_link(booking_details):
 # 7) [1] -> take the array, -> [12:55:00]
 # google calendar date format = -> join the date + time(24hrs) tgt
 #                               -> replace ':' with '' (empty)
-# return the format with a '/' -> ____(before the slash) is the START date & time
+# return the format with a "/" -> ____(before the slash) is the START date & time
 #                              -> ____(after the slash) is the END date & time
-#      for the Start & End i put it same date & time, Cus idk what the End date & time for the user thus, put it as the same
+#       for the Start & End i put it same date & time, Cus idk what the End date & time for the user thus, put it as the same

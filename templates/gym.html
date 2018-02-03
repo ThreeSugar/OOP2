@@ -85,12 +85,12 @@
             <input type="text" name="address" id="address" value="{{ gym['result']['formatted_address'] }}" style="display:none">
             <input type="text" name="gym" id="gym" value="{{ gym['result']['name'] }}" style="display:none" required>
             <div class="form-group">
-              <input type="text" name="name" class="form-control input-text" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Name must be 4 characters"
-                required />
+              <input type="text" name="name" class="form-control input-text" id="name" placeholder="Your Name" data-rule-minlength="2"
+                     data-rule-maxlength="40" data-msg="Enter a vaild name" required />
               <div class="validation"></div>
             </div>
             <div class="form-group">
-              <input type="number" class="form-control input-text" name="phone" id="phone" placeholder="Phone Number" data-rule="minlen:8" 
+              <input type="number" class="form-control input-text" name="phone" id="phone" placeholder="Phone Number" data-rule-minlength="8"
                 data-rule-maxlength="8" data-msg="Please enter a valid phone number" required/>
               <div class="validation"></div>
             </div>
@@ -151,7 +151,7 @@
 
 <!--
     line 9. get the result of the gym, extract the gym name and Convert it into a text form
-    line 16-17. create a const lat & lng, Save the lat & lng get into it.
+    line 16- 17. create a const lat & lng, Save the lat & lng get into it.
                 Convert the string to float (interger, number type)
     line 18-28. create function drawMap it take in the lat & lng
                 center (lat & lng) pass in the Map

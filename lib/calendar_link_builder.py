@@ -30,4 +30,3 @@ def build_link(booking_details):
 # return the format with a '/' -> ____(before the slash) is the START date & time
 #                              -> ____(after the slash) is the END date & time
 #      for the Start & End i put it same date & time, Cus idk what the End date & time for the user thus, put it as the same
-

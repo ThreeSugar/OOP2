@@ -1,0 +1,201 @@
+[
+    {
+        "id": 1,
+        "name": "SQUAT RACK",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/POWER-SQUAT-RACK.png",
+        "description": "Where serious squatting takes place. In fitness and strength training, the squat exercise trains your fully body.  All serious strength training regiments should incorporate the squat station gym equipment.",
+        "video": "https://www.youtube.com/embed/0SoDT-7Hpj8"
+    },
+
+    {
+        "id": 2,
+        "name": "BARBELLS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/BARBELLS.png",
+        "description": "A complementary piece to the squat rack. A barbell is essential to strength training, it holds the freeweights, or sometimes the weights are attached to the ends.",
+        "video": "https://www.youtube.com/embed/kwG2ipFRgfo" 
+    },
+
+    {
+        "id": 3,
+        "name": "BENCH PRESS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/BENCH-PRESS.png",
+        "description": "Used for upper body strength training exercises, where you are pushing weight upwards as you’re laying on your back. You want the perfect chest? This is one of the tools you use to train for that chest.",
+        "video": "https://www.youtube.com/embed/U4BS9EXvfyg"
+    },
+
+    {
+        "id": 4,
+        "name": "INCLINE BENCH PRESS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/INCLINE-BENCH-PRESS.png",
+        "description": "Essentially an elevated bench press, but the elevation affects the muscle being targeted.",
+        "video": "https://www.youtube.com/embed/11gY7Q5D5wo"
+    },
+
+    {
+        "id": 5,
+        "name": "HAMMER STRENGTH MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/HAMMER-STRENGTH-MACHINE.png",
+        "description": "A favorite among athletes, this mechanic focuses on explosiveness.",
+        "video": "https://www.youtube.com/embed/RNSArdOW-rw"
+    },
+
+    {
+        "id": 6,
+        "name": "CABLES AND PULLEYS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/CABLES-AND-PULLEYS.png",
+        "description": "Very diverse workout machine in the amount and types of exercises that can be performed by attaching grips to the end of the cables.",
+        "video": "https://www.youtube.com/embed/jP9-KZi2EFk"
+    },
+
+    {
+        "id": 7,
+        "name": "DUMBBELLS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/DUMBBELLS.png",
+        "description": "Pretty much the go-to gym equipment most people first think of when they think of bodybuilding. Varying in weight, but the same concept, a handle bar with weights on opposite ends. A must have free weight for any fitness regiment. There are even adjustable dumbbells with differing weights all in one piece.",
+        "video": "https://www.youtube.com/embed/E6VMg0E9JpE"
+    },
+
+    {
+        "id": 8,
+        "name": "PULLUP BAR",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/PULLUP-BAR.png",
+        "description": "The best tool for upper body exercise and strengthening. You can pull yourself up with any grip, though palms facing froward is the most popular one seen in demonstrations. Different grips and hand positions can affect different muscles. You pull yourself up, until your chin is over the bar.",
+        "video": "https://www.youtube.com/embed/W_vw0P8EVwQ"
+    },
+
+    {
+        "id": 9,
+        "name": "LAT PULLDOWN MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/LAT-PULLDOWN-MACHINE.png",
+        "description": "Used for strengthening your latissimus dorsi muscle, or lats as they are known. Pull downwards toward you, keeping your elbows and back straight. Google a picture of Bruce Lee and you’ll see the lats you’re capable of attaining with this machine.",
+        "video": "https://www.youtube.com/embed/JEb-dwU3VF4"
+    },
+
+    {
+        "id": 10,
+        "name": "LEG EXTENSION MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/LEG-EXTENSION-MACHINE.png",
+        "description": "Lifting the weights up with your quads, holding steady for a second or two once you fully extend at the top. Leg extension machines are the perfect gym equipment to use when you are rehabilitating from an injury or just trying to strength train your quads.",
+        "video": "https://www.youtube.com/embed/vXeHBMDcBkw"
+    },
+
+    {
+        "id": 11,
+        "name": "LEG CURL MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/LEG-CURL-MACHINE.png",
+        "description": "Laying on your stomach and facing the floor, lifting with your legs upwards towards your lower back. Sqeeuzing at the top and holding for a second or two, feel it in your hamstrings. A good tool to use for either toning down or bulking up your legs.",
+        "video": "https://www.youtube.com/embed/uyPwQksXJBo"
+    },
+
+    {
+        "id": 12,
+        "name": "HYPER EXTENSION BENCH",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/HYPER-EXTENSION-BENCH.png",
+        "description": "Standing on the gym machine in an angled position, facing downwards, move your upper body up and down. It not uncommon to hold a weight at your chest to increase the intensity, but be careful to not rush this Adding weights too quickly can and often does lead to injury during this type of exercise.",
+        "video": "https://www.youtube.com/embed/vx0jZBEmZcE"
+    },
+
+    {
+        "id": 13,
+        "name": "DIPPING BARS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/DIPPING-BARS.png",
+        "description": "Holding onto the handles, one with each hand, lower your body and lift yourself up. It’s important to adhere to good form as to avoid any potential shoulder injuries when dabbling with this gym equipment type.",
+        "video": "https://www.youtube.com/embed/sM6XUdt1rm4"
+    },
+
+    {
+        "id": 14,
+        "name": "SMITH MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/SMITH-MACHINE.png",
+        "description": "A squat assisting workout machine. Think of it as the squat rack that helps you when you don’t have anyone to spot you. Very good machine to use for practicing your squatting form. A go to machine for back strengthening after an injury of sort.",
+        "video": "https://www.youtube.com/embed/qPWXdq7idrI"
+    },
+
+    {
+        "id": 15,
+        "name": "PREACHER BENCH",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/PREACHER-BENCH.png",
+        "description": "While seated, the preacher curl bench helps you isolate and train your biceps. A perfect place for beginners to start biceps training by utilizing a lighter barbell and lifting up and down; slowly bringing the weight down",
+        "video": "https://www.youtube.com/embed/GERCafX8b8I"
+    },
+
+    {
+        "id": 16,
+        "name": "ABDOMINAL BENCH",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/ABDOMINAL-BENCH.png",
+        "description": "Designed with your abs in mind. It’s similar to the hyper extension machine, but for your abs. Important to practice and adhere to proper form when performing this exercise. Especially if you decide to hold onto weights as you’re lifting yourself up.",
+        "video": "https://www.youtube.com/embed/knUi-_EnCTM"
+    },
+
+    {
+        "id": 17,
+        "name": "LEG PRESS MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/LEG-PRESS-MACHINE.png",
+        "description": "Ultimate leg training machine. Laying down with you back against a makeshift wall, push the platform/weights upwards; do not lock your joints. Perfect machine to train legs with.",
+        "video": "https://www.youtube.com/embed/p9XmtGoHPAg"
+    },
+
+    {
+        "id": 18,
+        "name": "HACK SQUAT MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/HACK-SQUAT-MACHINE.png",
+        "description": "This machine combines the leg press machine and the squat machine for a super quad core combo. Another great piece of gym equipment to use on leg day.",
+        "video": "https://www.youtube.com/embed/ZmZ-tu_Rqc4"
+    },
+
+    {
+        "id": 19,
+        "name": "CALF MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/CALF-MACHINE.png",
+        "description": "Lifting the weights at the end by pushing upward with your feet by going on your toes. There are various types of these machines for working out, but the one pictured is by far the most common calf machine in the gym.",
+        "video": "https://www.youtube.com/embed/JbyjNymZOt0"
+    },
+
+    {
+        "id": 20,
+        "name": "LEG ABDUCTION / ABDUCTION MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/LEG-ADDUCTION-and-ABDUCTION-MACHINE.png",
+        "description": "Opening and closing your legs, pushing the weight resistance outwards. A most popular gym machine among ladies, perfect for toning legs and butt.",
+        "video": "https://www.youtube.com/embed/GmRSV_n2E_"
+    },
+
+    {
+        "id": 21,
+        "name": "PECK DECK MACHINE",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/PECK-DECK-MACHINE.png",
+        "description": "This type of gym equipment was designed to isolate and work the chest. A favorite for beginner bodybuilders as it has a unique motion that feels good when performing.",
+        "video": "https://www.youtube.com/embed/A_uwDymTVwY"
+    },
+
+    {
+        "id": 22,
+        "name": "KETTLEBELLS",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/KETTLEBELLS.png",
+        "description": "Kettle bells have become very popular in the fitness world, there are a ton of different exercises you can do with kettle bells. Fitness enthusiasts are using them for strength training and cardio. Take a look at the video for different ways to use kettle bells.",
+        "video": "https://www.youtube.com/embed/RjnyMfZb00M"
+    },
+
+    {
+        "id": 23,
+        "name": "WALL BALL",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/WALL-BALL.png",
+        "description": "Combined with a sit-up while throwing this ball against the ball and catching it; going all the way down again, and then up once more, and so on repeatedly. Perfect for anyone focusing or wanting to incorporate cardio and aerobic exercise into their routine.",
+        "video": "https://www.youtube.com/embed/cJxxsIVAQ_M"
+    },
+
+    {
+        "id": 24,
+        "name": "FOAM ROLLER",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/FOAM-ROLLER.png",
+        "description": "A perfect tool for reducing soreness, untying muscle knots, and increasing flexibility. The best way to use a foam roller is to incorporate it into your already existing fitness regiment, it will reduce stress on your body and help your body’s circulation.",
+        "video": "https://www.youtube.com/embed/NAuh5Pg8uYU"
+    },
+
+    {
+        "id": 25,
+        "name": "STABILITY BALL",
+        "image": "http://www.gymventures.com/wp-content/uploads/2016/01/Stability-Ball-Exercise-Ball-Equipment.png",
+        "description": "The most versatile tool for fitness enthusiasts, there are countless exercises to do with an exercise ball. A perfect thing to use this stability ball for is rehabilitation of injuries, stretching, and balance. Typically fitness enthusiasts have this tool in their home gyms, garage gym, or just laying around the house and use it every chance they get.",
+        "video": "https://www.youtube.com/embed/0QxBRu1W0Z4"
+    }
+]

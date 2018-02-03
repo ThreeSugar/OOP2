@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block title %} Gyms {% endblock %} {% block content %}
+<br />
+<div class="col">
+    <br />
+    <br />
+        <h2 style="text-transform: capitalize !important" class="text-center"> Nearby Gyms </h2>
+    <table class="table table-striped table-lg">
+        <thead class="thead thead-dark">
+            <tr>
+                <th scope="col">
+                    <h3 class="text-left"> GYM NAME</h3>
+                </th>
+                <th scope="col">
+                    <h3 class="text-left"> ADDRESS </h3>
+                </th>
+                <th scope="col">
+                    <h3 class="text-center"> STATUS </h3>
+                </th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gym in gyms["results"] %}
+            <tr>
+                <td scope="row"> {{ gym["name"] }} </td>
+                <td class="text-left"> {{ gym["vicinity"] }} </td>
+                <td class="text-center">
+                    <a href="#">
+                        {% if gym["opening_hours"] %} {% if gym['opening_hours']['open_now'] %}
+                        <!-- <p class="text-success"> CURRENTLY OPEN </p> -->
+                        <span class="glyphicon glyphicon-ok-circle text-success status" style="font-size: 30px" title="Currently Open"></span>
+                        {% else %}
+                        <!-- <p class="text-warning"> CURRENTLY CLOSED </p> -->
+                        <span class="glyphicon glyphicon-ban-circle text-danger status" style="font-size: 30px" title="Currently Closed"></span>
+                        {% endif %} {% else %} 
+                        <!-- <p class="text-danger"> STATUS UNKNOWN  </p> -->
+                        <span class="glyphicon glyphicon-question-sign text-warning status" style="font-size: 30px" title="Status Unknown"></span>
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    <a href="/gym/more/{{gym['place_id']}}" class="link btn btn-info btn-sm" style="font-size: 14px; padding: 2px 15px; margin-bottom: 0px;">
+                                                  
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+<style>
+    .thead>tr>th {
+        text-transform: uppercase;
+    }
+
+    .status {
+        cursor: pointer;
+    }
+
+</style>
+
+<!--
+     will create a list of gym
+     is the address of the gym
+     if the gym content contain opening hours, if the gym is open = True
+                                               if the gym is close = Flase
+                          so for True, will show the "currently open" text
+     the link will be different for each of the gym, cus each gym have different place_id
+-->

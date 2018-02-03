@@ -1,0 +1,147 @@
+{% extends 'cynthia/base.html' %} {% block title %} Gyms {% endblock %} {% block content %}
+<style>
+    .btn-small {
+        padding: 5px 10px;
+    }
+    .glyphicon {
+        margin-right: 5px;
+    }
+
+    .thumbnail {
+        margin-bottom: 20px;
+        padding: 0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+    }
+
+    .item.list-group-item {
+        float: none;
+        width: 100%;
+        background-color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .item.list-group-item:nth-of-type(odd):hover,
+    .item.list-group-item:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .item.grid-group-item:nth-of-type(odd):hover,
+    .item.grid-group-item:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .item.list-group-item .list-group-image {
+        margin-right: 10px;
+    }
+
+    .item.list-group-item .thumbnail {
+        margin-bottom: 0px;
+    }
+
+    .item.list-group-item .caption {
+        padding: 9px 9px 0px 9px;
+    }
+
+    .item.list-group-item:nth-of-type(odd) {
+        background: #eeeeee;
+    }
+
+    .item.list-group-item:before,
+    .item.list-group-item:after {
+        display: table;
+        content: " ";
+    }
+
+    .item.list-group-item:after {
+        clear: both;
+    }
+
+    .item.grid-group-item:after {
+        clear: both;
+    }
+
+    .list-group-item-text {
+        height: 100px !important;
+        margin: 0 0 11px;
+        overflow-wrap: normal;
+        font-family: 'Helvetica Neue', sans-serif;
+        font-size: 18px;
+        line-height: 24px;
+        margin: 0 0 24px;
+        text-align: justify;
+        text-justify: inter-word;
+    }
+
+    .list-group-item-heading {
+        font-size: 25px !important;
+    }
+
+    .title-text {
+        text-transform: capitalize !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#list').click(function (event) { event.preventDefault(); $('#products .item').addClass('list-group-item'); });
+        $('#grid').click(function (event) { event.preventDefault(); $('#products .item').removeClass('list-group-item'); $('#products .item').addClass('grid-group-item'); });
+    });
+</script>
+
+<div class="container">
+        <br />
+        <br />
+        <h2 class="text-center title-text">Gym Equipment  </h2>
+        <br />
+        <br />
+    <div id="products" class="row list-group">
+        {% for tool in tools %}
+        <div class="item  col-xs-6 col-lg-6">
+            <div class="thumbnail">
+                <br />
+                <h3 class="group inner list-group-item-heading text-center">
+                    {{ tool['name'] }}
+                </h3>
+                <img class="group list-group-image" src="{{ tool['image'] }}" alt="Gym Equipment Image"
+                />
+                <div class="caption">
+                        <h3 class="group inner list-group-item-heading text-center">
+                               ITEM DESCRIPTION
+                        </h3>
+                    <p class="group inner list-group-item-text">
+                            {{ tool['description'] }}    
+                    </p>
+                    <div class="row">
+                        <div class="col-xs-12">
+                                <h3 class="group inner list-group-item-heading text-center">
+                                        HOW TO USE
+                                </h3>
+                            <iframe width="540" height="315" src="{{ tool['video'] }}" frameborder="0" allow="autoplay; encrypted-media"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <center> 
+        {% if next_page %}
+                <a class="link btn btn-default btn-small" href="/gym/tools/{{ next_page }}">
+                    NEXT                 
+                    <span class="glyphicon glyphicon-forward"></span>
+
+                </a>
+            {% else %}
+                <a class="link btn btn-success btn-small" href="/gym/tools">
+                    <span class="glyphicon glyphicon-backward"></span>
+                    BACK
+                </a>
+        {% endif %}
+    </center>
+</div>
+{% endblock %}

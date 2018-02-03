@@ -1,6 +1,6 @@
 $(window).load(function () {
 
-    $('.main-nav li a, .servicelink').bind('click', function (event) {
+    $('a[href^="#"],.main-nav li a, .servicelink').bind('click', function (event) {
         var $anchor = $(this);
 
         $('html, body').stop().animate({

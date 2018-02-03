@@ -16,6 +16,7 @@ import datetime
 
 
 from hashids import Hashids
+from lib import message_builder
 import requests
 
 from models import *
@@ -39,12 +40,18 @@ app.config.update(
 	MAIL_SERVER='smtp.gmail.com',
 	MAIL_PORT=465,
 	MAIL_USE_SSL=True,
-	MAIL_USERNAME = 'threesugar123@gmail.com',
-	MAIL_PASSWORD = 'lifestyle28',
-    MAIL_DEFAULT_SENDER = 'threesugar123@gmail.com'
+	MAIL_USERNAME = 'findgym2@gmail.com',
+	MAIL_PASSWORD = 'uaplwjtchijsoknk',
+    MAIL_DEFAULT_SENDER = 'findgym2@gmail.com'
 	)
 
 mail = Mail(app)
+
+def sendmail(mail, msg_subject, msg_sender, msg_recipients, message_html):
+    message = Message(msg_subject, sender = msg_sender, recipients = msg_recipients)
+    message.html = message_html
+    mail.send(message)
+    return True
 
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
@@ -1477,7 +1484,7 @@ def update_order():
 #     result = FitnessGen.query.filter_by(category=type).filter_by(genid=lucky_no).first()
 #     return render_template('resultfit.html', result=result)
 
-####### HASSAN (BLOG) #### 
+#######HASSAN (BLOG) #### 
 
 @app.route('/blog')
 def blog():
@@ -2261,14 +2268,24 @@ def gym_info(place_id):
         booking_confirm_url = 'session/confirm/' + booking_id_string
         booking_details = dict()
         booking_details['id'] = int(new_booking_id)
+        booking_details['gym'] = request.form["gym"]
+        booking_details['address'] = request.form["address"]
         booking_details['name'] = request.form["name"]
         booking_details['phone_number'] = request.form["phone"]
         booking_details['email'] = request.form['email']
         booking_details['date_time'] = request.form['date_time']
         booking_details['id_string'] = booking_id_string
         new_booking_ref.set(booking_details)
-        return redirect(booking_confirm_url)
+        user_message = message_builder.user_message(booking_details)
+        gym_message = message_builder.gym_message(booking_details)
 
+        # Send a mail to user to show them a confirmation of their booking.
+        sendmail(mail, user_message['subject'], 'findgym2@gmail.com', [booking_details['email']], user_message['html'])
+        
+        # Send a message to the gym to let them know the user has scheduled a session
+        sendmail(mail, gym_message['subject'], 'findgym2@gmail.com', [gyms_email_address], gym_message['html'])
+        
+        return redirect(booking_confirm_url)
 
 @app.route('/session/confirm/<booking_id>')       
 def display_confirmation(booking_id):
@@ -2277,6 +2294,47 @@ def display_confirmation(booking_id):
     result = booking_ref.get().val()
     booking_details = dict(result)
     return render_template('cynthia/confirm.html', booking_details=booking_details)
+
+
+# email cancel(user & gym)
+@app.route('/session/user_cancel/<booking_id>')
+def user_delete_and_confirm(booking_id):
+    real_booking_id = hashids.decode(booking_id)[0]
+    booking_ref = db.child("bookings").child(real_booking_id)
+    booking_details = booking_ref.get().val()
+    booking_ref.remove()
+    user_cancel_message = message_builder.user_cancel_message(booking_details)
+    user_cancel_confirm_message = message_builder.user_cancel_confirm(booking_details)
+    sendmail(mail, user_cancel_message['subject'], 'findgym2@gmail.com', [gyms_email_address], user_cancel_message['html'])
+    sendmail(mail, user_cancel_confirm_message['subject'], 'findgym2@gmail.com', [booking_details['email']], user_cancel_confirm_message['html'])
+    return render_template('cynthia/confirm_delete.html', booking_details=booking_details)
+
+@app.route('/session/gym_cancel/<booking_id>')
+def gym_delete_and_confirm(booking_id):
+    real_booking_id = hashids.decode(booking_id)[0]
+    booking_ref = db.child("bookings").child(real_booking_id)
+    booking_details = booking_ref.get().val()
+    booking_ref.remove()
+    gym_cancel_message = message_builder.gym_cancel_message(booking_details)
+    gym_cancel_confirm_message = message_builder.gym_cancel_confirm(booking_details)
+    sendmail(mail, gym_cancel_message['subject'], 'findgym2@gmail.com', [booking_details['email']], gym_cancel_message['html'])
+    sendmail(mail, gym_cancel_confirm_message['subject'], 'findgym2@gmail.com', [gyms_email_address], gym_cancel_confirm_message['html'])
+    return render_template('cynthia/confirm_delete.html', booking_details = booking_details)
+
+
+# The gym equipment page
+@app.route('/gym/tools', methods=["GET"])
+def list_tools():
+    all_tools = requests.get('https://api.myjson.com/bins/r4kxh').json()
+    page_one = [tool for tool in all_tools if(tool['id'] <= 16)]
+    next_page = 2
+    return render_template('cynthia/equipment.html', tools = page_one, next_page = next_page)
+
+@app.route('/gym/tools/<page_id>', methods=["GET"])
+def list_tool_next_page(page_id):
+    all_tools = requests.get('https://api.myjson.com/bins/r4kxh').json()
+    page_two = [tool for tool in all_tools if(tool['id'] >= 17)]
+    return render_template('cynthia/equipment.html', tools = page_two)
 
 
 ### (DO NOT TOUCH)

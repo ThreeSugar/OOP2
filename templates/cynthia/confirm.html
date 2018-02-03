@@ -1,86 +1,184 @@
- {% extends 'cynthia/base.html' %} {% block title %} Booking Success {% endblock %} {% block content %}
+{% extends 'cynthia/base.html' %} {% block title %} Booking Success {% endblock %} {% block content %}
 <section class=" " id="">
     <div class="container">
-            
         <div class="row">
-            <div class="col-lg-7 col-sm-offset-3 body-part">            
-                <h1 class="text-success"> APPOINTMENT CONFIRMED! </h1>
+            <br />
+            <div class="col-lg-6 col-md-7 col-sm-offset-3 body-part">
+                <div class="card">
+                    <img class="card-img-top" src="http://nutritionandfitnesshub.com/wp-content/uploads/2016/01/health-fitness1_no_text.jpg"
+                        alt="Card image cap">
+                    <div class="card-body">
+                        <div class="card-block">
+                            <h3 class="card-title text-center">Appointment Details.</h3>
+                            <!-- <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.
+                                This content is a little bit longer..</p> -->
+                                <center>
+                                <div class="detail">
+                                    <p class="title">
+                                        <i class="fa-building-o icon"> Gym Name </i>
+                                    </p>
+                                    <p class="message">
+                                            {{ booking_details['gym'] }}
+                                    </p>
+                                </div>
 
-                <div class="text-success">
+                                <div class="detail">
+                                        <p class="title">
+                                            <i class="fa-user icon"> Name </i>
+                                        </p>
+                                        <p class="message">
+                                                {{ booking_details['name'] }}
+                                        </p>
+                                </div>
+
+                                <div class="detail">
+                                        <p class="title">
+                                            <i class="fa-phone icon"> Phone Number </i>
+                                        </p>
+                                        <p class="message">
+                                                {{ booking_details['phone_number'] }}
+                                        </p>
+                                </div>
+
+                                <div class="detail">
+                                        <p class="title">
+                                            <i class="fa-pencil icon"> Email Address </i>
+                                        </p>
+                                        <p class="message">
+                                                {{ booking_details['email'] }}
+                                        </p>
+                                </div>
+
+
+                                <div class="detail">
+                                        <p class="title">
+                                            <i class="fa-clock-o icon"> Date and Time </i>
+                                        </p>
+                                        <p class="message">
+                                                {{ booking_details['date_time'] }}
+                                        </p>
+                                </div>
+                            </center>
+                        </div>
+
+                        <div class="divider"></div>
+                        <div class="card-footer card-link">
+                            <!-- <small class="text-muted">Last updated 3 mins ago</small> -->
+                            <center>
+                                <a href="javascript:history.back()" class="link btn btn-primary back-info"> 
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+
+                                    BACK 
+                                </a>
+                                <a class="link btn btn-default print-btn" onclick="window.print()"> 
+                                        <span class="glyphicon glyphicon-print"></span>
+                                    PRINT 
+                                </a>
+                            </center>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="">
-                <div class="contact-info-box phone clearfix">
-
-                    
-                             
-                        </div>
-                        <div class="contact-info-box phone clearfix">                                
-                                <h3>
-                                    <i class="fa-user"></i>Name:</h3>
-                                <span> {{ booking_details['name'].upper()}} </span>
-                            </div>
-
-
-                    <div class="contact-info-box phone clearfix">
-                        <h3>
-                            <i class="fa-phone"></i>Phone:</h3>
-                        <span> {{ booking_details['phone_number']}}  </span>
-                    </div>
-                    <div class="contact-info-box email clearfix">
-                        <h3>
-                            <i class="fa-pencil"></i>email:</h3>
-                        <span> {{ booking_details['email'].upper()}} </span>
-                    </div>
-
-                    <div class="contact-info-box hours clearfix">
-                        <h3>
-                            <i class="fa-clock-o"></i>DATE:</h3>
-                        <span>
-                            {{ booking_details['date_time'].upper()}}    
-                        </span>                              
-                        
-                    </div>
-
-                    <div class="contact-info-box hours clearfix">
-                            <h3>
-                                <i class="fa-globe"></i>BOOKING ID:</h3>
-                            <span>
-                            <a href="/session/confirm/{{booking_details['id_string']}}">{{ booking_details['id_string'] }} <i class="fa-external-link"></i></a>                            </span>                              
-                            
-                        </div>
-
-
-                    <div class="contact-info-box hours clearfix">
-                                <a href="javascript:history.back()" class="btn btn-lg btn-primary back-info"> BACK </a>
-                                <a class="btn btn-lg btn-warning print-btn" onclick="window.print()"> PRINT </a>
-                        </div>
-            
-                </div>
-
             </div>
+
+            <style>
+                .contact-info-box h3 {
+                    width: auto;
+                    margin-right: 20px;
+                }
+
+
+                a {
+                    -webkit-transition: .25s all;
+                    transition: .25s all;
+                }
+
+                .card {
+                    padding-left: auto;
+                    padding-right: auto;
+                    margin-top: 15px;
+                    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+                    -webkit-transition: .25s box-shadow;
+                    transition: .25s box-shadow;
+                }
+
+                .card:focus,
+                .card:hover {
+                    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+                }
+
+                .card-inverse .card-img-overlay {
+                    background-color: rgba(51, 51, 51, 0.85);
+                    border-color: rgba(51, 51, 51, 0.85);
+                }
+
+                .card-img-top {
+                    margin-top: 10px;
+                }
+
+                .col-xs-12 {
+                    text-align: center;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                .row {
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                .card-title {
+                    padding: 10px;
+                }
+
+                .card-footer {
+                    padding: 10px;
+                }
+
+                .card-link a {
+                    padding: 10px;
+                    margin-bottom: 0;
+                    margin-left: 15px;
+                }
+
+
+                .card-link a:hoover {
+                    outline: none;
+                }
+
+                .divider {
+                    border-top: 2px solid silver;
+                    margin: 0 auto;
+                    float: none;
+                    width: 85%;
+                    margin-top: 20px;
+                }
+
+                .detail {
+                    margin: 0 auto;
+                    float: none;
+                    margin-bottom: 20px;
+                }
+
+                .message {
+                    margin-bottom: -5px;
+                    font-size: 22px;
+                    color: #333 !important;
+                }
+
+                .title {
+                    text-transform: uppercase;
+                }
+
+
+            </style>
         </div>
-
-        <style>
-            .contact-info-box h3 {
-                width: auto;
-                margin-right: 20px;
-            }
-
-            .print-btn {
-                margin-left: 10px;
-            }
-
-            .back-btn {
-                margin-right: 15px;
-            }
-        </style>
-    </div>
 </section>
 
 {% endblock %}
 
  <!--
-     line 20. .upper is to convert all the details that is type in by the user to UpperCase
-     line 55. onclick="window.print()"
-              By default the window, open the print, it is like build in function
+     line 72-76. .upper is to convert all the details that is type in by the user to UpperCase
+                  onclick="window.print()"
+                  By default the window, open the print, it is like build in function
  -->

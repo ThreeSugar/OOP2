@@ -12,6 +12,7 @@ from werkzeug.utils import secure_filename
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail, Message
 import datetime
+import pprint
 
 
 
@@ -2246,6 +2247,8 @@ def find_gyms():
         lat = str(location_coordinates["lat"])
         places_search_url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + lat + ',' + lng + '&rankby=distance&type=gym&keyword=gym&key=AIzaSyC-untCAlzyRtrAuJ6ShicN0aHCHMD94jg'
         places_response = requests.get(places_search_url).json()
+        pp = pprint.PrettyPrinter(width=50,depth=3)
+        pp.pprint(places_response)
         return render_template('cynthia/gyms.html', gyms=places_response)
 
 @app.route('/gym/more/<place_id>', methods=["GET", "POST"])

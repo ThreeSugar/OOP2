@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+{% block title %} Lifestyle28 | Admin Orders {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+.order-section{
+    margin-bottom: 100px;
+}
+.table{
+    width: 79%;
+    margin: 20px auto;
+    margin-bottom: 50px;
+    margin-top: 0px;
+}
+.orderadmin{
+    width: 90%;
+    margin: 20px auto;
+}
+.order-button{
+    width: 80%;
+    outline: 1px solid black;
+    margin: 0 auto;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+.order-button:hover {
+    cursor:pointer;
+    {#background-color: ghostwhite;#}
+    box-shadow: 0 16px 16px 0 rgba(0,0,0,0.2);
+}
+.orderid{
+    display: inline-block;
+    {#margin-right: 50px;#}
+    width: 150px;
+
+}
+.filtermenu{
+    width: 80%;
+    margin: 10px auto;
+    padding: 20px;
+}
+.menuid{
+    display: inline-block;
+    margin-right: 40px;
+    padding: 10px;
+    {#border: 1px solid black;#}
+    {#border-bottom-style: solid;#}
+    {#border-color: grey;#}
+}
+.menuid:hover{
+    border-bottom-style: solid;
+    border-color: grey;
+    {#box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2);#}
+}
+input[type=text] {
+    margin-right: 40px;
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    padding: 8px 10px 8px 10px;
+}
+.menuid a{
+    color: black;
+    text-decoration-line: none;
+}
+
+.dropbtn {
+    background-color: grey;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    width: 250px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: dimgrey;
+}
+</style>
+<div class="order-section">
+<div class="orderadmin">
+    <h2>Admin Orders</h2>
+</div>
+<div class="filtermenu">
+    <input type="text" name="search" id="search" placeholder="ORDER ID" onkeyup="searchFunction()">
+{#    <h3 class="menuid"><a href="">Delivery Status</a></h3>#}
+</div>
+<div class="orders">
+{% for i in group %}
+<div class="order-button" id="order-button{{ i[0].oid }}" table_id="{{ i[0].oid }}">
+    <h3 class="orderid" style="margin-left: 100px">Order ID: {{ i[0].oid }}</h3>
+{#    <h3 class="orderid">ID: {{ i[0].user_id }}</h3>#}
+{#    <h3 class="orderid">Order: {{ i[0].order_id }}</h3>#}
+    <h3 class="orderid" style="margin-left: 50px">Qty: {{ i[0].items_quantity }}</h3>
+    <h3 class="orderid" style="margin-right: 100px">Date: {{ i[0].date.strftime("%d %b %Y") }}</h3>
+{#    <h3 class="orderid">Status: <a href='{{ url_for('deliver', group_id=i[0].oid) }}'>{{ i[0].delivered }}</a></h3>#}
+{#    <h3 class="orderid">Status:#}
+        <div class="dropdown">
+        <button class="dropbtn"{% if i[0].delivered == 'Order Received' %}style="background-color: darkslategrey"{% elif i[0].delivered == 'Delivery Scheduled' %}style="background-color: darkblue"{% elif i[0].delivered == 'Delivery In Progress' %}style="background-color: darkorange"{% elif i[0].delivered == 'Delivery Completed' %}style="background-color: green"{% endif %} >{% if i[0].delivered == 'Order Received' %}<i class="fa fa-address-card-o" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery Scheduled' %}<i class="fa fa-calendar" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery In Progress' %}<i class="fa fa-truck" id="order-or" aria-hidden="true"></i>{% elif i[0].delivered == 'Delivery Completed' %}<i class="fa fa-archive" id="order-or" aria-hidden="true"></i>{% endif %} {{ i[0].delivered }}</button>
+            <div class="dropdown-content">
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Order Received') }}"><i class="fa fa-address-card-o" id="order-or" aria-hidden="true"></i> Order Received</a>
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery Scheduled') }}"><i class="fa fa-calendar" id="order-or" aria-hidden="true"></i> Delivery Scheduled</a>
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery In Progress') }}"><i class="fa fa-truck" id="order-or" aria-hidden="true"></i> Delivery In Progress</a>
+                <a href="{{ url_for('deliver', group_id=i[0].oid, status='Delivery Completed') }}"><i class="fa fa-archive" id="order-or" aria-hidden="true"></i> Delivery Completed</a>
+            </div>
+        </div>
+{#    </h3>#}
+    <i class="fa fa-caret-down" style="font-size: 24px; color: black; float: right; margin-right: 40px"></i>
+</div>
+<table class="table table-bordered table-striped table-hover order-info" id="order-info{{ i[0].oid }}" style="display: none">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Delivered</th>
+        </tr>
+    </thead>
+    <tbody id="admin-items">
+        {% for z in i %}
+        <tr>
+            <td>{{ z.oid }}</td>
+            <td>{{ z.name }}</td>
+            <td>{{ z.quantity }}</td>
+            <td>${{ '{0:.2f}'.format(z.price) }}</td>
+            <td>{{ z.date.strftime("%d %b %Y") }}</td>
+            <td>{{ z.delivered }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+</div>
+</div>
+
+<script>
+function searchFunction(){
+    filter = $('#search').val();
+
+    req = $.ajax({
+        url: '/searchOrdersID',
+        type: 'POST',
+        data: {
+            filter : filter
+        }
+    });
+
+    req.done(function(data){
+        $('.orders').html(data);
+    });
+}
+$(document).ready(function(){
+    $(".order-button").on('click', function() {
+        var table_id = $(this).attr('table_id');
+        $('.order-info').hide();
+        $("#order-info"+table_id).toggle();
+        $('#order-button'+table_id)[0].scrollIntoView(true);
+    });
+});
+
+</script>
+
+{% endblock %}

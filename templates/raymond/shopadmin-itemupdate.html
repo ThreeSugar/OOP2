@@ -1,0 +1,35 @@
+<ul>
+    <li>
+        <input value="{{ items.name }}" type="text" id="iname" class="field-style field-split align-left" placeholder="Name" required/>
+        <input value="{{ items.info }}" type="text" id="iinfo" class="field-style field-split align-right" placeholder="Info" required/>
+    </li>
+    <li>
+        <input value="{{ items.price }}" type="number" id="iprice" class="field-style field-split-2 align-left" placeholder="Price" required/>
+        <input value="{{ items.quantity }}" type="number" id="iquantity" class="field-style field-split-2 align-left" style="margin-left: 13px" placeholder="Quantity" required/>
+        <input value="{{ items.calories }}" type="number" id="icalories" class="field-style field-split align-right" placeholder="Calories" required/>
+    </li>
+    <li>
+        <select id="icategory" class="field-style field-split align-left category" required>
+            <option {% if items.category == "Others" %}selected{% endif %} value="Others">Others</option>
+            <option {% if items.category == "Meat & Seafood" %}selected{% endif %} value="Meat & Seafood">Meat & Seafood</option>
+            <option {% if items.category == "Fruit & Veg" %}selected{% endif %} value="Fruit & Veg">Fruit & Veg</option>
+            <option {% if items.category == "Frozen" %}selected{% endif %} value="Frozen">Frozen</option>
+            <option {% if items.category == "Dairy" %}selected{% endif %} value="Dairy">Dairy</option>
+            <option {% if items.category == "Bakery" %}selected{% endif %} value="Bakery">Bakery</option>
+            <option {% if items.category == "Beverages" %}selected{% endif %} value="Beverages">Beverages</option>
+        </select>
+        <input type="file" id="image" class="field-style field-split align-right">
+    </li>
+    <li>
+        <textarea id="idescription" class="field-style" placeholder="Description" required>{{ items.description }}</textarea>
+    </li>
+    <li>
+        <a class="btn updateItemSubmit" update_id="{{ items.id }}">UPDATE ITEM</a>
+    </li>
+    <li style="height: 50px">
+        <div id="successAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>
+        <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>
+        <div id="deleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>
+    </li>
+    <a class="btn newItem" style="float: right; background-color: grey; color: white; width: 200px" href="{{ url_for('shopadmin') }}">NEW ITEM</a>
+</ul>

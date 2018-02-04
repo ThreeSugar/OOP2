@@ -14,11 +14,10 @@
             {% block content %} {% endblock %}
         </section>
 
-        
+        <footer class="footer">
+            {% include 'cynthia/partials/footer.html' %}
+        </footer>
 
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-        <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='cynthia/js/custom/scroll-to.js') }}"></script>        
         <script type="text/javascript" src="{{ url_for('static', filename='cynthia/js/custom/wow.js') }}"></script>    
         <script type="text/javascript" src="{{ url_for('static', filename='cynthia/js/custom/scroll.js') }}"></script>
@@ -26,32 +25,8 @@
         <script type="text/javascript" src="{{ url_for('static', filename='cynthia/js/custom/main.js') }}"></script> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.min.js"></script>        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-       
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
     </body>
 
 </html>
 
-<!--
-    line 10. No all webpage have the header page, thus if the pages need the header i just have to add it in myself
-    line 14. I leave this empty as the content of the webpage will be different for all the pages
-    line 26. momment.min.js and line 27. datatimepicker:
-    -> in order to have datetimepicker to work i have to have momment.js.
-       Thus, momment.js have to be use before datetimepicker
--->
-
-<!--(information for all HTML pages)
-    navigation.js -> Nav bar
-    scroll-to -> affect the webpage when scrolling
-                     make the page move slowly to the
-                     section user wants to see (sth like smooth scrolling)
-    navigation.js, scroll.js, scroll-to.js, wow.js
-              -> all this come form the template that i used (not written by me)
-    Templated -> Partials
-                         -> is the HTML across all the webpage
-                            is sth common across all the web page,
-                            put them in a file so that i don't have to keep writting for all the webpages
-    Base.HTML -> the script are comment of all
-                 is sth the Parent class, when I want to create a  Child class. I just take the template of the
-                 Parent class and add on to it/add on function to it. DON'T have to write all over again
--->

@@ -1,0 +1,61 @@
+<ul>
+    <li>
+        <input type="text" id="rname" class="field-style field-split align-left" placeholder="Name" required/>
+        <input type="text" id="rinfo" class="field-style field-split align-right" placeholder="Info" required/>
+    </li>
+    <li>
+        <textarea id="ringredients" class="field-style" placeholder="Ingredients" required></textarea>
+        <textarea id="rpreperation" class="field-style" placeholder="Preperation" required></textarea>
+    </li>
+    <li>
+        <input class="item-search" id="rsearch" type="search" placeholder="Search items.." onkeyup="searchFunction()">
+        <ul id="filterOptions">
+            {% for i in items %}
+            <a class="filterOptionBtn" filter_id="{{ i.id }}" recipe_id="{{ new_id }}">
+                <li>
+                    <h3>ID: {{ i.id }}</h3>
+                    <img src="{{ url_for('static', filename='raymond/img/' ~ i.id ~ ".jpg") }}">
+                    <h3>Name: {{ i.name }}</h3>
+                    <h3>Info: {{ i.info }}</h3>
+                    <h3>Price: {{ i.price }}</h3>
+                    <h3>Category: {{ i.category }}</h3>
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>
+        <table style="width: 100%" class="table table-bordered" id="recipeitems-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item ID: </th>
+                    <th>Name: </th>
+                    <th>Calories: </th>
+                    <th>Change: </th>
+                    <th></th>
+                </tr>
+            </thead>
+            {% for i in recipe_items %}
+            <tbody>
+                <tr>
+                    <td>{{ i.id }}</td>
+                    <td>{{ i.item_id }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.calories }}</td>
+                    <td>{{ i.change }}</td>
+                    <td>Delete</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </li>
+    <li>
+        <a class="btn recipeSubmit">ADD RECIPE</a>
+    </li>
+    <li style="height: 50px">
+        <div id="rsuccessAlert" class="alert alert-success" role="alert" style="display: none;">New Item Added!</div>
+        <div id="rerrorAlert" class="alert alert-danger" role="alert" style="display: none;">All fields are required!</div>
+        <div id="rdeleteAlert" class="alert alert-danger" role="alert" style="display: none;">Item Deleted!</div>
+    </li>
+</ul>

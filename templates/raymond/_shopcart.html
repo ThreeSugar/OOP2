@@ -1,0 +1,35 @@
+{% for c in cart %}
+<table>
+    <td style="width: 20px; padding-left: 5px;">{{ c.id }}</td>
+    <td style="width: 40px" id="tableimg"><img src="{{ url_for('static', filename='raymond/img/' ~ c.item_id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'" style="width: 50px"></td>
+    <td style="padding: 10px 10px 10px 10px; width: 200px">
+        <p>{{ c.name }}</p>
+        <p>QTY: {{ c.quantity }}</p>
+    </td>
+    <td style="width: 50px; padding: 10px">${{ '{0:.2f}'.format(c.subtotal) }}</td>
+    <td style="width: 20px;"><a name = "{{c.item_id}}"class = "deleteCartBtn"  role="button"><img src='{{ url_for("static", filename="img/delete-icon.png") }}' style="width: 20px;"></a></td>
+</table>
+<hr style="color: black; margin: 0;">
+{% endfor %}
+
+<script>
+$(document).on('click', '.deleteCartBtn', function() {
+    item_id = $(this).attr('name');
+
+    req = $.ajax({
+        url: "/cart/" + item_id + "/delete",
+        type: 'POST',
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+        data: JSON.stringify({
+            'item_id' : item_id
+        })
+    });
+    req.done(function(data){
+        $('#cartcount').html('(' + data.count + ')').fadeOut(1000).fadeIn(1000);
+        $('.shopcart').empty();
+        $('.shopcart').append(data.cart);
+    });
+});
+
+</script>

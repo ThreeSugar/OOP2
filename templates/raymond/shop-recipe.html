@@ -1,0 +1,80 @@
+<div class="slidecontainer" style="">
+  <p>Filter calories:</p>
+    <input style="width: 200px;" type="range" min="1" max="1000" value="500" id="calrange"><p><span id="demo"></span> Calories</p>
+</div>
+<div class="recipes-sort">
+{% for item in items %}
+<div class="card cardrecipe" id="card1">
+    <div class="cardcontainer">
+{#            <img src="http://placehold.it/200x250">#}
+        <img style="width: 300px; height: 450px;" src="{{ url_for('static', filename='raymond/img/' "r-" ~ item.id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'">
+        <div class="overlay"></div>
+        <div class="button">
+            <a class="btn addCartBtn" href="{{ url_for('shop_recipe', item_id=item.id) }}"><i class="fa fa-search"></i></a>
+        </div>
+    </div>
+    <div class="cardinfo">
+        <p style="float: left"><b><a href="{{ url_for('shop_recipe', item_id=item.id) }}">{{ item.name }}</a></b><br>{{ item.info }}</p>
+{#        <p style="text-align: right; overflow: auto">{% if item.quantity > 1 %}${{ '{0:.2f}'.format(item.price) }}{% else %}<span style="color: red; font-weight: bold;">OUT OF STOCK</span>{% endif %}</p>#}
+        <p style="float: right;">
+        {% if item.rating == 5 %}
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span> ({{ item.rating_count }})
+        {% endif %}
+        {% if item.rating == 4 %}
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span> ({{ item.rating_count }})
+        {% endif %}
+        {% if item.rating == 3 %}
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span> ({{ item.rating_count }})
+        {% endif %}
+        {% if item.rating == 2 %}
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span> ({{ item.rating_count }})
+        {% endif %}
+        {% if item.rating == 1 %}
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span> ({{ item.rating_count }})
+        {% endif %}
+        </p>
+    </div>
+</div>
+{% endfor %}
+</div>
+<script>
+var slider = document.getElementById("calrange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+    output.innerHTML = this.value;
+
+    req = $.ajax({
+        url: '/filterCalories',
+        type: 'POST',
+        data: {
+            filter : this.value
+        }
+    });
+
+    req.done(function(data){
+        $('.recipes-sort').html(data);
+    });
+}
+</script>

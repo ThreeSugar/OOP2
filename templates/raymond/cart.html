@@ -29,6 +29,8 @@
     width: 80%;
     margin: auto;
     margin-bottom: 40px;
+    {#outline: 1px solid black;#}
+    {#text-align: center;#}
 }
 .table input{
     width: 40px;
@@ -43,18 +45,55 @@
     font-size: 25px;
     margin: 20px;
 }
+#cartbtn{
+    width: 100px;
+    {#float: left;#}
+    margin: 0;
+    color: white;
+    background-color: grey;
+    {#animation: shake 0.5s;#}
+    {#animation-iteration-count: infinite;#}
+}
+#cartbtn:hover{
+    color: white;
+    background-color: dimgrey;
+}
+.notification{
+    position: fixed;
+    right: 80px;
+    bottom: -100px;
+    background-color: whitesmoke;
+    box-shadow: 0 0 16px 0 rgba(0,0,0,0.5);
+    color: black;
+    padding: 20px 70px 20px 70px;
+    z-index: 1000;
+}
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
 </style>
+<div class="notification">Added to cart!</div>
 <div class="cart">
     <h3>YOUR CART</h3>
-    <table class="table" width="400">
+    <table class="table table-bordered table-striped table-hover" width="400">
         <thead class="thead-default">
             <tr>
                 <th>#</th>
+                <th></th>
                 <th>Name</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Subtotal</th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -63,20 +102,21 @@
             <form method="POST" action={{ url_for('updateCart', item_id=c.item_id) }}>
                 <tr>
                     <td>{{ c.id }}</td>
+                    <td><img src="{{ url_for('static', filename='raymond/img/' ~ c.item_id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'" style="width: 100px"></td>
                     <td>{{ c.name }}</td>
                     <td><input type="number" name="newquantity" value="{{ c.quantity }}"></td>
-    {#                <td>{{ c.quantity }}</td>#}
-                    <td>${{ c.price }}</td>
-                    <td>${{ c.subtotal }}</td>
-                    <td><button type="submit" class="btn btn-success" style="float: right">Update</button></td>
-{#                    <td><a href="{{ url_for('updateCart', item_id=c.item_id) }}" class="btn btn-success" role="button">Update</a></td>#}
-                    <td><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                    <td>${{ '{0:.2f}'.format(c.price) }}</td>
+                    <td>${{ '{0:.2f}'.format(c.subtotal) }}</td>
+                    <td style="width: 150px;"><button type="submit" class="btn" id="cartbtn">Update</button><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
                 </tr>
             </form>
             {% endfor %}
         </tbody>
     </table>
-    <p style="text-align: right; font-size: 25px; color: black"><a href="{{ url_for('shop') }}" class="btn btn-success" role="button" style="float: left; margin: 0px 50px 0px">Continue Shopping</a>Total: ${{ show_cart_price() }}<a href="#" class="btn btn-success" role="button" style="float: right; margin: 0px 150px 0px 50px">Checkout</a></p>
-{#    <p style="padding:0; margin:0">Total: {{ show_cart_price() }}</p>#}
+    {% if not cart %}
+            <p style="text-align: right; font-size: 25px; color: black"><a href="{{ url_for('shop') }}" class="btn"id="cartbtn" role="button" style="float: left; margin: 0px 50px 0px; width: 200px">Continue Shopping</a>Total: ${{ show_cart_price() }}<a class="btn" id="cartbtn" role="button" style="float: right; margin: 0px 150px 150px 50px; width: 200px;" disabled>Checkout</a></p>
+    {% else %}
+            <p style="text-align: right; font-size: 25px; color: black"><a href="{{ url_for('shop') }}" class="btn"id="cartbtn" role="button" style="float: left; margin: 0px 50px 0px; width: 200px">Continue Shopping</a>Total: ${{ show_cart_price() }}<a href="{{ url_for('checkoutform') }}" class="btn" id="cartbtn" role="button" style="float: right; margin: 0px 150px 150px 50px; width: 200px;">Checkout</a></p>
+    {% endif %}
 </div>
 {% endblock %}

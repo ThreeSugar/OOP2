@@ -1850,24 +1850,62 @@ def shop_recipe(item_id):
 def addRecipetoCart(item_id):
     recipe_items = RecipeIngredients.query.filter_by(recipe_id=item_id).all()
 
-    if current_user.is_authenticated == True:
-        user = User.query.filter_by(username=current_user.username).first()
-        uid = user.uid
-        for i in recipe_items:
-            item_id = i.item_id
-            item = Item.query.filter_by(id=item_id).first()
-            cart = Cart(user_id=uid,item_id=item.id,name=item.name,quantity=1,price=item.price,subtotal=item.price)
-            db.session.add(cart)
-            db.session.commit()
-    else:
-        for i in recipe_items:
-            item_id = i.item_id
-            item = Item.query.filter_by(id=item_id).first()
-            cart = Cart(user_id=0, item_id=item.id, name=item.name, quantity=1, price=item.price, subtotal=item.price)
-            db.session.add(cart)
-            db.session.commit()
+    try:
+        if current_user.is_authenticated == True:
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            for i in recipe_items:
+                item_id = i.item_id
+                item = Item.query.filter_by(id=item_id).first()
+                cart = Cart(user_id=uid,item_id=item.id,name=item.name,quantity=1,price=item.price,subtotal=item.price)
+                db.session.add(cart)
+                db.session.commit()
+        else:
+            for i in recipe_items:
+                item_id = i.item_id
+                item = Item.query.filter_by(id=item_id).first()
+                cart = Cart(user_id=0, item_id=item.id, name=item.name, quantity=1, price=item.price, subtotal=item.price)
+                db.session.add(cart)
+                db.session.commit()
 
-    return redirect(url_for('cart'))
+        return redirect(url_for('cart'))
+    
+    except IntegrityError:
+        db.session.rollback()
+        if current_user.is_authenticated == True:
+            user = User.query.filter_by(username=current_user.username).first()
+            uid = user.uid
+            for i in recipe_items:
+                item_id = i.item_id
+                item = Item.query.filter_by(id=item_id).first()
+                cart = Cart.query.filter_by(item_id=item.id).first()
+                cart.user_id = uid 
+                cart.item_id = item.id
+                cart.name = item.name
+                cart.quantity = 1
+                cart.price = item.price
+                cart.subtotal = item.price
+                db.session.commit()
+            
+            return redirect(url_for('cart'))
+
+        else:
+            for i in recipe_items:
+                item_id = i.item_id
+                item = Item.query.filter_by(id=item_id).first()
+                cart = Cart.query.filter_by(item_id=item.id).first()
+                cart.user_id = 0
+                cart.item_id = item.id
+                cart.name = item.name
+                cart.quantity = 1
+                cart.price = item.price
+                cart.subtotal = item.price
+                db.session.commit()
+            
+            return redirect(url_for('cart'))
+
+
+
 
 @app.route('/item/<int:item_id>/add', methods=['POST'])
 @login_required

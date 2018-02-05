@@ -1982,6 +1982,12 @@ def addRecipe():
 
     max_id = db.session.query(db.func.max(Recipe.id)).scalar()
 
+    if max_id is None:
+        max_id = 0
+    
+    else:
+        max_id += 1
+
     recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id+1).all()
 
     calories = 0

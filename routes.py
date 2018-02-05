@@ -14,8 +14,6 @@ from flask_mail import Mail, Message
 import datetime
 import pprint
 
-
-
 from hashids import Hashids
 from lib import message_builder
 import requests
@@ -57,6 +55,8 @@ def sendmail(mail, msg_subject, msg_sender, msg_recipients, message_html):
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
 
+gyms_email_address = 'thisappemail@gmail.com'
+
 
 app.secret_key = "development-key"
 db.init_app(app)
@@ -79,11 +79,11 @@ hashid_salt = 'impossible to guess'
 hashids = Hashids(salt=hashid_salt, min_length=4)
 
 config = {
-    "apiKey": "AIzaSyCiUhFnF68ufmbjxHWnPoMaaxGEKlfJPNc",
-    "authDomain": "gym-finder-9e3b6.firebaseapp.com",
-    "databaseURL": "https://gym-finder-9e3b6.firebaseio.com",
-    "storageBucket": "gym-finder-9e3b6.appspot.com"
-  }
+  "apiKey": "AIzaSyDrw2z11cWBjIVNWYKYcLCdjR0wCJ3w7HY",
+  "authDomain": "gym-finder-78813.firebaseapp.com",
+  "databaseURL": "https://gym-finder-78813.firebaseio.com",
+  "storageBucket": "gym-finder-78813.appspot.com"
+}
 
   #this is to register as an admin with full read/write access
 
@@ -2303,7 +2303,7 @@ def display_confirmation(booking_id):
 @app.route('/session/user_cancel/<booking_id>')
 def user_delete_and_confirm(booking_id):
     real_booking_id = hashids.decode(booking_id)[0]
-    booking_ref = db.child("bookings").child(real_booking_id)
+    booking_ref = firedb.child("bookings").child(real_booking_id)
     booking_details = booking_ref.get().val()
     booking_ref.remove()
     user_cancel_message = message_builder.user_cancel_message(booking_details)
@@ -2315,7 +2315,7 @@ def user_delete_and_confirm(booking_id):
 @app.route('/session/gym_cancel/<booking_id>')
 def gym_delete_and_confirm(booking_id):
     real_booking_id = hashids.decode(booking_id)[0]
-    booking_ref = db.child("bookings").child(real_booking_id)
+    booking_ref = firedb.child("bookings").child(real_booking_id)
     booking_details = booking_ref.get().val()
     booking_ref.remove()
     gym_cancel_message = message_builder.gym_cancel_message(booking_details)

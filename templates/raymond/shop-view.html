@@ -1,7 +1,6 @@
 {% for item in items %}
             <div class="card" id="card1">
                 <div class="cardcontainer">
-{#                    <img src="http://placehold.it/200x250">#}
                     <img src="{{ url_for('static', filename='raymond/img/' ~ item.id ~ ".jpg") }}" onerror="this.src='http://placehold.it/200x250'">
                     <div class="overlay"></div>
                     <div class="button">
@@ -54,23 +53,3 @@
             {% endfor %}
 
 
-<script>
-    function searchFunction(){
-        filter = $('#search').val();
-    
-        req = $.ajax({
-            url: '/search',
-            type: 'POST',
-            contentType: 'application/json;charset=UTF-8',
-            dataType: "json",
-            data: JSON.stringify({
-                'filter' : filter
-            })
-        });
-    
-        req.done(function(data){
-            $('.main').html(data.filter);
-        });
-    };
-
- </script>

@@ -124,7 +124,7 @@ input[type=text] {
 <div class="orders">
 {% for i in group %}
 <div class="order-button" id="order-button{{ i[0].oid }}" table_id="{{ i[0].oid }}">
-    <h3 class="orderid" style="margin-left: 100px">Order ID: {{ i[0].oid }}</h3>
+    <h3 class="orderid" style="margin-left: 25px">Order ID: {{ i[0].oid }}</h3>
 {#    <h3 class="orderid">ID: {{ i[0].user_id }}</h3>#}
 {#    <h3 class="orderid">Order: {{ i[0].order_id }}</h3>#}
     <h3 class="orderid" style="margin-left: 50px">Qty: {{ i[0].items_quantity }}</h3>

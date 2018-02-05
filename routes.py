@@ -14,8 +14,6 @@ from flask_mail import Mail, Message
 import datetime
 import pprint
 
-
-
 from hashids import Hashids
 from lib import message_builder
 import requests
@@ -57,6 +55,8 @@ def sendmail(mail, msg_subject, msg_sender, msg_recipients, message_html):
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/database.db'
 
+gyms_email_address = 'thisappemail@gmail.com'
+
 
 app.secret_key = "development-key"
 db.init_app(app)
@@ -79,11 +79,11 @@ hashid_salt = 'impossible to guess'
 hashids = Hashids(salt=hashid_salt, min_length=4)
 
 config = {
-    "apiKey": "AIzaSyCiUhFnF68ufmbjxHWnPoMaaxGEKlfJPNc",
-    "authDomain": "gym-finder-9e3b6.firebaseapp.com",
-    "databaseURL": "https://gym-finder-9e3b6.firebaseio.com",
-    "storageBucket": "gym-finder-9e3b6.appspot.com"
-  }
+  "apiKey": "AIzaSyDrw2z11cWBjIVNWYKYcLCdjR0wCJ3w7HY",
+  "authDomain": "gym-finder-78813.firebaseapp.com",
+  "databaseURL": "https://gym-finder-78813.firebaseio.com",
+  "storageBucket": "gym-finder-78813.appspot.com"
+}
 
   #this is to register as an admin with full read/write access
 
@@ -1416,7 +1416,6 @@ def delete_playlist_vid(id):
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
     return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
 
-
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])
 def load_playlist_vid(id):
     load_vid_id = SavePlaylistVids.query.filter_by(id = id).first()
@@ -1648,13 +1647,13 @@ def search():
     filter = filter_json['filter']
     if filter is "":
         items = Item.query.all()
-        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items)})
     # else:
     #     items = Recipe.query.filter(func.lower(Recipe.name).contains(func.lower(filter))).all()
     #     return render_template("raymond/shop-recipe.html", items=items)
     else:
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
-        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items)})
 
 @app.route('/filterCalories', methods=['POST'])
 def filterCalories():
@@ -1739,9 +1738,17 @@ def updateCart(item_id):
     db.session.commit()
     return redirect(url_for('cart'))
 
+@app.route('/cart/delete/<id>')
+def delete_this_cart(id):
+    items = Cart.query.filter_by(item_id=id).first()
+    db.session.delete(items)
+    db.session.commit()
+    return redirect(url_for('cart'))
+    
 @app.route('/cart/<int:item_id>/delete', methods=['GET','POST'])
 def deleteCart(item_id):
     item_json = request.get_json()
+    print(item_json)
     item_id = item_json['item_id']
     items = Cart.query.filter_by(item_id=item_id).first()
     db.session.delete(items)
@@ -1973,7 +1980,7 @@ def updateItemButton():
 
     return render_template("raymond/shopadmin-table.html", items=items)
 
-@app.route('/addRecipe', methods=['POST'])
+@app.route('/addRecipe', methods=['GET', 'POST'])
 def addRecipe():
     name = request.form['name']
     info = request.form['info']
@@ -1981,8 +1988,16 @@ def addRecipe():
     preperation = request.form['preperation']
 
     max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    print(max_id)
 
-    recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id+1).all()
+    if max_id is None:
+        max_id = 1
+    
+    else:
+        max_id += 1
+
+    print(max_id)
+    recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id).all()
 
     calories = 0
     price = 0
@@ -2303,7 +2318,7 @@ def display_confirmation(booking_id):
 @app.route('/session/user_cancel/<booking_id>')
 def user_delete_and_confirm(booking_id):
     real_booking_id = hashids.decode(booking_id)[0]
-    booking_ref = db.child("bookings").child(real_booking_id)
+    booking_ref = firedb.child("bookings").child(real_booking_id)
     booking_details = booking_ref.get().val()
     booking_ref.remove()
     user_cancel_message = message_builder.user_cancel_message(booking_details)
@@ -2315,7 +2330,7 @@ def user_delete_and_confirm(booking_id):
 @app.route('/session/gym_cancel/<booking_id>')
 def gym_delete_and_confirm(booking_id):
     real_booking_id = hashids.decode(booking_id)[0]
-    booking_ref = db.child("bookings").child(real_booking_id)
+    booking_ref = firedb.child("bookings").child(real_booking_id)
     booking_details = booking_ref.get().val()
     booking_ref.remove()
     gym_cancel_message = message_builder.gym_cancel_message(booking_details)

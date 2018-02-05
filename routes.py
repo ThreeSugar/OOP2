@@ -1738,9 +1738,17 @@ def updateCart(item_id):
     db.session.commit()
     return redirect(url_for('cart'))
 
+@app.route('/cart/delete/<id>')
+def delete_this_cart(id):
+    items = Cart.query.filter_by(item_id=id).first()
+    db.session.delete(items)
+    db.session.commit()
+    return redirect(url_for('cart'))
+    
 @app.route('/cart/<int:item_id>/delete', methods=['GET','POST'])
 def deleteCart(item_id):
     item_json = request.get_json()
+    print(item_json)
     item_id = item_json['item_id']
     items = Cart.query.filter_by(item_id=item_id).first()
     db.session.delete(items)

@@ -107,7 +107,7 @@
                     <td><input type="number" name="newquantity" value="{{ c.quantity }}"></td>
                     <td>${{ '{0:.2f}'.format(c.price) }}</td>
                     <td>${{ '{0:.2f}'.format(c.subtotal) }}</td>
-                    <td style="width: 150px;"><button type="submit" class="btn" id="cartbtn">Update</button><a href="{{ url_for('deleteCart', item_id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename="img/delete-icon.png") }}" style="width: 20px;"></a></td>
+                    <td style="width: 150px;"><button type="submit" class="btn" id="cartbtn">Update</button><a href="{{ url_for('delete_this_cart', id=c.item_id) }}" role="button"><img src="{{ url_for('static', filename='img/delete-icon.png') }}" style="width: 20px;"></a></td>
                 </tr>
             </form>
             {% endfor %}
@@ -120,3 +120,4 @@
     {% endif %}
 </div>
 {% endblock %}
+

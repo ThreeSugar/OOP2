@@ -16,6 +16,9 @@ a:hover {
     height: 440px;
 }
 
+.vidusername:hover {
+    text-decoration: underline; 
+}
 </style>
 
 {% endblock %}
@@ -43,7 +46,12 @@ a:hover {
             <source src="{{url_for('static', filename = 'assets/' +  first_playlist_vid.link )}}" type="video/opgg">
         </video>
     
-        <p style = "font-size:20px;" class="extitle"><b>{{first_playlist_vid.title}}</b></p>
+        <p style = "font-size:25px; padding-top:15px; padding-bottom:15px;" class="extitle"><b>{{first_playlist_vid.title}}</b></p>
+        <hr>
+        <p>Posted by: <a class = "vidusername" href = "{{url_for('profile', username=first_playlist_vid.username)}}">{{first_playlist_vid.username}}</a></p>
+        <p>Published on:  {{first_playlist_vid.date}} </p>
+        <p>Category: {{first_playlist_vid.category}} </p>
+        <hr>
         <div style="padding-bottom:10%; white-space: pre-line;" class='exdesc'>
              {{first_playlist_vid.description}}
         </div>

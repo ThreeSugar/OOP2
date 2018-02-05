@@ -16,6 +16,10 @@ a:hover {
     height: 440px;
 }
 
+.vidusername:hover {
+    text-decoration: underline; 
+}
+
 </style>
 
 {% endblock %}
@@ -46,9 +50,14 @@ a:hover {
     </video>
 
 
-<p style = "font-size:20px;" class="extitle"><b>{{load_vid.title}}</b></p>
+    <p style = "font-size:25px; padding-top:15px; padding-bottom:15px;" class="extitle"><b>{{load_vid.title}}</b></p>
+    <hr>
+    <p>Posted by: <a class = "vidusername" href = "{{url_for('profile', username=load_vid.username)}}">{{load_vid.username}}</a></p>
+    <p>Published on:  {{load_vid.date}} </p>
+    <p>Category: {{load_vid.category}} </p>
+    <hr>
     <div style="padding-bottom:10%; white-space: pre-line;" class='exdesc'>
-        {{load_vid.description}}
+         {{load_vid.description}}
     </div>
 </div>
 

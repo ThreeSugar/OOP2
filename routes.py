@@ -950,13 +950,11 @@ def filter():
     filter = request.form['filter']
     if filter is "":
         items = Item.query.all() #[item1, item2]
-        return render_template("raymond/shop-view.html", items=items, filter=filter)
     elif filter == "recipes":
         items = Recipe.query.all()
-        return render_template("raymond/shop-recipe.html", items=items, filter=filter)
     else:
         items = Item.query.filter(Item.category == filter).all()
-        return render_template("raymond/shop-view.html", items=items, filter=filter)
+    return render_template("raymond/shop-view.html", items=items, filter=filter)
 
 
 @app.route('/search', methods=['POST'])
@@ -964,12 +962,9 @@ def search():
     filter = request.form['filter']
     if filter is "":
         items = Item.query.all()
-    # else:
-    #     items = Recipe.query.filter(func.lower(Recipe.name).contains(func.lower(filter))).all()
-    #     return render_template("raymond/shop-recipe.html", items=items)
     else:
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
-        return render_template("raymond/shop-view.html", items=items)
+    return render_template("raymond/shop-view.html", items=items)
 
 @app.route('/filterCalories', methods=['POST'])
 def filterCalories():

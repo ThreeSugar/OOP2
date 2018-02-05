@@ -1416,7 +1416,6 @@ def delete_playlist_vid(id):
     savedvids = VideoSaved.query.filter_by(savedname=current_user.username).all()
     return jsonify({'playlist': render_template('_playlist.html', savedvids = savedvids, sorted_vid=sorted_vid) })
 
-
 @app.route('/dashboard/playlist/viewvideo/play/<id>', methods=['GET', 'POST'])
 def load_playlist_vid(id):
     load_vid_id = SavePlaylistVids.query.filter_by(id = id).first()
@@ -1973,7 +1972,7 @@ def updateItemButton():
 
     return render_template("raymond/shopadmin-table.html", items=items)
 
-@app.route('/addRecipe', methods=['POST'])
+@app.route('/addRecipe', methods=['GET', 'POST'])
 def addRecipe():
     name = request.form['name']
     info = request.form['info']
@@ -1981,14 +1980,16 @@ def addRecipe():
     preperation = request.form['preperation']
 
     max_id = db.session.query(db.func.max(Recipe.id)).scalar()
+    print(max_id)
 
     if max_id is None:
-        max_id = 0
+        max_id = 1
     
     else:
         max_id += 1
 
-    recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id+1).all()
+    print(max_id)
+    recipeItems = RecipeIngredients.query.filter_by(recipe_id = max_id).all()
 
     calories = 0
     price = 0

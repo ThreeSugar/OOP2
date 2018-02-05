@@ -528,6 +528,7 @@ def mark_flag():
         flag_id = flag['flag_id']
         inboxes = UserMail.query.filter_by(id=flag_id).first()
         marker = inboxes.flag
+        print(marker)
 
         if marker == True:
             inboxes.flag = False
@@ -623,7 +624,7 @@ def flaggedmsg(id):
     form = SendMessage(to = view_msg.sender)
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data, seen=False)
+        message=form.message.data, seen=False, flag=False)
         db.session.add(new_msg)
         db.session.commit()
         flash("Your message was successfully sent.", 'success')
@@ -660,7 +661,7 @@ def viewinbox(id):
     form = SendMessage(to = view_msg.sender)
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data, seen=False)
+        message=form.message.data, seen=False, flag=False)
         db.session.add(new_msg)
         db.session.commit()
         flash("Your message was successfully sent.", 'success')
@@ -701,7 +702,7 @@ def viewsent(id):
     form = SendMessage(to = view_msg.sender)
     if form.validate_on_submit():
         new_msg = UserMail(sender=current_user.username, target=form.to.data, subject=form.subject.data,
-        message=form.message.data, seen=False)
+        message=form.message.data, seen=False, flag=False)
         db.session.add(new_msg)
         db.session.commit()
         flash("Your message was successfully sent.", 'success')

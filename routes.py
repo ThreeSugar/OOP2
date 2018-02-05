@@ -1882,7 +1882,7 @@ def addRecipetoCart(item_id):
                 cart.user_id = uid 
                 cart.item_id = item.id
                 cart.name = item.name
-                cart.quantity = 1
+                cart.quantity += 1
                 cart.price = item.price
                 cart.subtotal = item.price
                 db.session.commit()
@@ -1897,7 +1897,7 @@ def addRecipetoCart(item_id):
                 cart.user_id = 0
                 cart.item_id = item.id
                 cart.name = item.name
-                cart.quantity = 1
+                cart.quantity += 1
                 cart.price = item.price
                 cart.subtotal = item.price
                 db.session.commit()

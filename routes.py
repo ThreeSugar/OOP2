@@ -197,7 +197,7 @@ def index(): #did not use wtforms for this because wtforms might accidentally br
         request.form['email'], request.form['subject'], request.form['message'])
         mail.send(msg)
         flash('Thank you for your feedback!')
-        return redirect(url_for('index'))
+        return redirect(url_for('index', _anchor='contact'))
 
     return render_template('index.html')
 

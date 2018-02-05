@@ -1648,13 +1648,13 @@ def search():
     filter = filter_json['filter']
     if filter is "":
         items = Item.query.all()
-        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items)})
     # else:
     #     items = Recipe.query.filter(func.lower(Recipe.name).contains(func.lower(filter))).all()
     #     return render_template("raymond/shop-recipe.html", items=items)
     else:
         items = Item.query.filter(func.lower(Item.name).contains(func.lower(filter))).all()
-        return jsonify({'filter': render_template("raymond/shop-view.html", items=items, filter=filter)})
+        return jsonify({'filter': render_template("raymond/shop-view.html", items=items)})
 
 @app.route('/filterCalories', methods=['POST'])
 def filterCalories():

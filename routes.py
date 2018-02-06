@@ -742,12 +742,17 @@ def vidmanage():
 @login_required
 def videdit(id):
     video = Video.query.get_or_404(id)
+    saved_playlist_vid = SavePlaylistVids.query.filter_by(video_id=id).all()
     form = EditForm(obj=video, desc = video.description, options = video.category) #default values for form so that users don't have to retype everything
     if form.validate_on_submit():
         video.title = form.title.data
         video.description = form.desc.data
         video.category = form.options.data
         db.session.commit()
+        for s in saved_playlist_vid:
+            s.title = form.title.data
+            s.desc = form.desc.data
+            db.session.commit()
         flash('Video successfully edited!')
         return redirect(url_for('vidmanage')) #render template will cause a 'function not iterable error'
 
@@ -760,6 +765,59 @@ def viddelete(id):
     video = Video.query.get_or_404(id)
     db.session.delete(video)
     db.session.commit()
+
+    video_comment = VideoComment.query.filter_by(videoid=id).all()
+    if video_comment is not None:
+        for v in video_comment:
+            db.session.delete(v)
+            db.session.commit()
+    else:
+        pass
+
+    video_likes = VideoLikes.query.filter_by(videoid=id).all()
+    if video_likes is not None:
+        for v in video_likes:
+            db.session.delete(v)
+            db.session.commit()
+    else:
+        pass
+
+    video_dislikes = VideoDislikes.query.filter_by(videoid=id).all()
+    if video_dislikes is not None:
+        for v in video_dislikes:
+            db.session.delete(v)
+            db.session.commit()
+    else:
+        pass
+
+    video_saved = VideoSaved.query.filter_by(videoid=id).all()
+    if video_saved is not None:
+        for v in video_saved:
+            db.session.delete(v)
+            db.session.commit()
+    
+    else:
+        pass
+
+    video_views = VideoViews.query.filter_by(videoid=id).all()
+    if video_views is not None:
+        for v in video_views:
+            db.session.delete(v)
+            db.session.commit()
+    
+    else:
+        pass
+
+    
+    save_playlist_vids = SavePlaylistVids.query.filter_by(video_id=id).all()
+    if save_playlist_vids is not None:
+        for s in save_playlist_vids:
+            db.session.delete(s)
+            db.session.commit()
+
+    else:
+        pass 
+
     flash('Video successfully deleted!')
     return redirect(url_for('vidmanage'))
 
@@ -1577,6 +1635,7 @@ def addCart():
         for c in check:
             if c.item_id == items.id:
                 c.quantity += 1
+                c.subtotal += c.price
                 db.session.commit()
                 check_item = True
                 break
@@ -1878,8 +1937,12 @@ def addRecipetoCart(item_id):
             uid = user.uid
             for i in recipe_items:
                 item_id = i.item_id
+                print(item_id)
                 item = Item.query.filter_by(id=item_id).first()
+                print(item.id)
                 cart = Cart.query.filter_by(item_id=item.id).first()
+                print('cart')
+                print(cart)
                 cart.user_id = uid 
                 cart.item_id = item.id
                 cart.name = item.name

@@ -1969,8 +1969,6 @@ def addRecipetoCart(item_id):
             return redirect(url_for('cart'))
 
 
-
-
 @app.route('/item/<int:item_id>/add', methods=['POST'])
 @login_required
 def addComment(item_id):
